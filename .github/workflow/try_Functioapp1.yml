@@ -7,7 +7,7 @@ name: Build and deploy Python project to Azure Function App - Functioapp1
 on:
   push:
     branches:
-      - try
+      - main
   workflow_dispatch:
 
 env:
