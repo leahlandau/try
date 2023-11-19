@@ -1,0 +1,35 @@
+name: :rocket: Publish
+
+  on:
+    push:
+      branches: ['main']
+
+  env:
+    REGISTRY: ghcr.io
+    IMAGE_NAME: ${{ github.repository }}
+
+  jobs:
+    build-and-push-image:
+      runs-on: ubuntu-latest
+    
+    # # Sets the permissions granted to the `GITHUB_TOKEN` for the actions in this job.
+      # permissions:
+      #   contents: read
+      #   packages: write
+      #   #
+
+      steps:
+        - name: :open_file_folder: Checkout repository
+          uses: actions/checkout@v4
+          
+        - name: :electric_plug:Login to the Container registry
+          uses: docker/login-action@v1
+          with:
+            registry: ${{ env.REGISTRY }}
+            username: ${{ github.actor }}
+            password: ${{ secrets.GITHUB_TOKEN }}
+  
+        - name: :building_construction: Build Image
+          run: |
+            docker build . --tag ghcr.io/skyvar/manage_storage_accounts:latest
+            docker push ghcr.io/skyvar/manage_storage_accounts:latest
