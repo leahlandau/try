@@ -1,5 +1,5 @@
-name: :rocket: Publish
-
+name: "jjhjhjhjhj"
+  rocket: Publish
   on:
     push:
       branches: ['main']
