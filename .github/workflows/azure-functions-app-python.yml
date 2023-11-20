@@ -13,7 +13,7 @@ jobs:
     
     # #Sets the permissions granted to the `GITHUB_TOKEN` for the actions in this job.
 
-
+        permissions: write-all
       # permissions:
       #   contents: read
       #   packages: write
@@ -33,5 +33,42 @@ jobs:
   
         - name: :building_construction:Build Image
           run: |
-            docker build . --tag ghcr.io/try/manage_storage_accounts:latest
-            docker push ghcr.io/try/manage_storage_accounts:latest
+            docker build . --tag ghcr.io/leahlandao/try:latest
+            docker push ghcr.io/leahlandao/try:latest
+
+# name: 🔖 Echo release  
+
+# on:
+#   push:
+#     branch:
+#     - 'main' 
+
+# jobs:
+#   build:
+#     name: Upload Release Asset
+#     runs-on: ubuntu-latest
+#     steps:
+#       - name: 🐳 Docker meta
+#         id: docker_meta
+#         uses: docker/metadata-action@v5
+#         with:
+#           images: LeahLandau
+
+#       - name: ⬆️ Echo Release latest
+#         run: echo "docker tags ${{steps.docker_meta.outputs.tags}}"
+        
+        
+#       - name: 🔌Login to GitHub Container Registry
+#         uses: docker/login-action@v1
+#         run : echo "name ${{github.actor}} pass ${{secrets.GITHUB_TOKEN}}"
+#         with:
+#           registry: ghcr.io
+#           username: ${{github.actor}}
+#           password: ${{secrets.GITHUB_TOKEN}}
+
+#       - name: 🏗️ Build and push
+#         uses: docker/build-push-action@v5
+#         with:
+#           context: .
+#           tags: ${{ steps.docker_meta.outputs.tags }}
+#           labels: ${{ steps.docker_meta.outputs.labels }}
