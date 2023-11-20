@@ -33,7 +33,7 @@ jobs:
   
         - name: :building_construction:Build Image
           run: |
-            docker build . --tag ghcr.io/leahlandao/try:latest
+            docker build . --tag ghcr.io/leahlandau/try:latest
             docker push ghcr.io/leahlandau/try:latest
 
 # name: 🔖 Echo release  
