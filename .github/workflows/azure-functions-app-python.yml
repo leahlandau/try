@@ -36,6 +36,20 @@ jobs:
             docker build . --tag ghcr.io/leahlandau/try:latest
             docker push ghcr.io/leahlandau/try:latest
 
+        - name: 🔌 Log in to Azure
+          uses: azure/login@v1
+          with:
+            creds: ${{ secrets.AZURE_CREDENTIALS }}
+            
+        - name: 🚀 Build and deploy Container App
+          uses: azure/container-apps-deploy-action@v1
+          with:
+            resource-group: ${{ secrets.AZURE_RESOURCE_GROUP }}
+            name: ${{ try }}
+            image: ${{ ghcr.io/leahlandau/try:latest }}
+            registry-username: ${{ github.actor }}
+            registry-password: ${{ secrets.GITHUB_TOKEN }}
+
 # name: 🔖 Echo release  
 
 # on:
