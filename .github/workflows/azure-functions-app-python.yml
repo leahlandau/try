@@ -31,4 +31,4 @@ jobs:
         - name: :building_construction:Build Image
           run: |
             docker build . --tag ghcr.io/skyvar/manage_storage_accounts:latest
-            docker push ghcr.io/LeahLandau/manage_storage_accounts:latest
+            docker push ghcr.io/try/manage_storage_accounts:latest
