@@ -57,6 +57,7 @@ jobs:
             docker tag ghcr.io/leahlandau/try:latest trydeploytofunctionapp.azurecr.io/azuretry:latest &&
             docker push trydeploytofunctionapp.azurecr.io/azuretry:latest
 
+
       - name: Deploy Docker image to Azure Function App
         uses: azure/webapps-deploy@v2
         with:
@@ -70,6 +71,8 @@ jobs:
         with:
           inlineScript: |
             az functionapp restart --name functioapp1 --resource-group NetworkWatcherRG
+
+
 
 # name: :rocket:Publish
 # on:
