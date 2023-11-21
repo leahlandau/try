@@ -1,150 +1,41 @@
 name: Deploy to Azure Function App
-
 on:
   push:
     branches: ['main']
-
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
-
       - name: Login to GitHub Container Registry
         uses: docker/login-action@v1
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
-
       - name: Build and push image to GitHub Container Registry
-        uses: docker/build-push-action@v5
-        with:
-          context: . 
-          push: true
-          tags: ghcr.io/leahlandau/try:latest
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          docker build . --tag ghcr.io/leahlandau/try:latest
+          docker push ghcr.io/leahlandau/try:latest
+      - name: Azure Login
+        run: az login
 
-      - name: Azure ACR Login
-        uses: azure/docker-login@v1
-        with:
-          login-server: trydeploytofunctionapp.azurecr.io
-          username: ${{ secrets.ACR_USERNAME }}
-          password: ${{ secrets.ACR_PASSWORD }}
+      - name: Configure Docker with Azure Container Registry credentials
+        run: az acr login --name trydeploytofunctionapp
 
+      - name: Pull Docker image from GitHub Container Registry
+        run: docker pull ghcr.io/leahlandau/try:latest
 
+      - name: Tag the Docker image for Azure Function App
+        run: docker tag ghcr.io/leahlandau/try:latest trydeploytofunctionapp.azurecr.io/azuretry:latest
 
-      # - name: Configure Docker with Azure Container Registry credentials
-      #   run: az acr login --name trydeploytofunctionapp
-
-      # - name: Pull Docker image from GitHub Container Registry
-      #   run: docker pull ghcr.io/leahlandau/try:latest
-
-      # - name: Tag the Docker image for Azure Function App
-      #   run: docker tag ghcr.io/leahlandau/try:latest trydeploytofunctionapp.azurecr.io/azuretry:latest
-
-      # - name: Push Docker image to Azure Container Registry
-      #   run: docker push trydeploytofunctionapp.azurecr.io/azuretry:latest
-
-      - name: Pull, Tag, and Push Docker Image
-        uses: docker/cli@v2
-        with:
-          args: >
-            pull ghcr.io/leahlandau/try:latest &&
-            docker tag ghcr.io/leahlandau/try:latest trydeploytofunctionapp.azurecr.io/azuretry:latest &&
-            docker push trydeploytofunctionapp.azurecr.io/azuretry:latest
-
+      - name: Push Docker image to Azure Container Registry
+        run: docker push trydeploytofunctionapp.azurecr.io/azuretry:latest
 
       - name: Deploy Docker image to Azure Function App
-        uses: azure/webapps-deploy@v2
-        with:
-          app-name: functioapp1
-          # slot-name: 
-          resource-group: NetworkWatcherRG
-          docker-custom-image-name: trydeploytofunctionapp.azurecr.io/azuretry:latest
-
-      - name: Restart Azure Function App
-        uses: azure/cli@v1
-        with:
-          inlineScript: |
-            az functionapp restart --name functioapp1 --resource-group NetworkWatcherRG
-
-
-
-# name: :rocket:Publish
-# on:
-#   push:
-#     branches: ['main']
-
-# env:
-#     REGISTRY: ghcr.io
-#     IMAGE_NAME: ${{ github.repository }}
-
-# jobs:
-#     build-and-push-image:
-#       runs-on: ubuntu-latest
-    
-#     # #Sets the permissions granted to the `GITHUB_TOKEN` for the actions in this job.
-
-#       permissions: write-all
-#       # permissions:
-#       #   contents: read
-#       #   packages: write
-#       #   #
-
-#       steps:
-#         - name: :open_file_folder:Checkout repository
-#           uses: actions/checkout@v4
+        run: |
+          az functionapp config container set --name lali-landau-be-carefull --resource-group NetworkWatcherRG --docker-custom-image-name trydeploytofunctionapp.azurecr.io/azuretry:latest
           
-#         - name: :electric_plug:Login to the Container registry
-#           uses: docker/login-action@v1
-#           with:
-#             registry: ${{ env.REGISTRY }}
-#             username: ${{ github.actor }}
-#             password: ${{ secrets.GITHUB_TOKEN }}
-  
-#         - name: :building_construction:Build Image
-#           run: |
-#             docker build . --tag ghcr.io/leahlandau/try:latest
-#             docker push ghcr.io/leahlandau/try:latest
-
-
-#         - name: Pull Docker image from GitHub Container Registry
-#           run: docker pull ghcr.io/leahlandau/try:latest
-
-#         - name: Azure Login
-#           run: az login
-
-#         - name: Configure Docker with Azure Container Registry credentials
-#           run: az acr login --name trydeploytofunctionapp
-
-#         - name: Tag the Docker image for Azure Function App
-#           run: docker tag ghcr.io/leahlandau/try:latest azuretry:latest
-
-#         - name: Push Docker image to Azure Container Registry
-#           run: docker push azuretry:latest
-
-#         - name: Deploy Docker image to Azure Function App
-#           run: |
-#             az functionapp config container set --name functioapp1 --resource-group NetworkWatcherRG --docker-custom-image-name azuretry:latest
-
-#         - name: Restart Azure Function App
-#           run: az functionapp restart --name functioapp1 --resource-group NetworkWatcherRG
-
-        # - name: 🔌 Log in to Azure
-        #   uses: azure/login@v1
-        #   with:
-        #     creds: ${{ secrets.AZURE_CREDENTIALS }}
-            
-        # - name:  Build and deploy Container App
-        #   uses: azure/container-apps-deploy-action@v1
-        #   with:
-        #     resource-group: ${{ secrets.AZURE_RESOURCE_GROUP }}
-        #     name: ${{ functioapp1 }}
-        #     image: ${{ ghcr.io/leahlandau/try:latest }}
-        #     registry-username: ${{ github.actor }}
-        #     registry-password: ${{ secrets.GITHUB_TOKEN }}
-
+      - name: Restart Azure Function App
+        run: az functionapp restart --name lali-landau-be-carefull --resource-group NetworkWatcherRG
