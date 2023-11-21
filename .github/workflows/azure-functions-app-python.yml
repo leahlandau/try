@@ -43,7 +43,7 @@ jobs:
           run: az login
 
         - name: Configure Docker with Azure Container Registry credentials
-          run: az acr login --name try
+          run: az acr login --name trydeploytofunctionapp
 
         - name: Tag the Docker image for Azure Function App
           run: docker tag ghcr.io/leahlandau/try:latest azuretry:latest
