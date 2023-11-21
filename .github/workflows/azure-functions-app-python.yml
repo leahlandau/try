@@ -33,14 +33,14 @@ name: 🚀 Publish
         #     docker build . --tag ghcr.io  /skyvar/manage_storage_accounts:latest
         #     docker push ghcr.io/skyvar/manage_storage_accounts:latest
 
-         - name:🏗️ Build and 🫸push image to GitHub Container Registry
-           uses: docker/build-push-action@v5
-           with:
-             context: . 
-             push: true
-             tags: ghcr.io/leahlandau/try:latest
-             username: ${{ github.actor }}
-             password: ${{ secrets.GITHUB_TOKEN }}
+        - name: 🏗️ Build and 🫸push image to GitHub Container Registry
+          uses: docker/build-push-action@v5
+          with:
+            context: . 
+            push: true
+            tags: ghcr.io/leahlandau/try:latest
+            username: ${{ github.actor }}
+            password: ${{ secrets.GITHUB_TOKEN }}
           
         - name: 🚀 deploy Container App
           uses:  Azure/functions-action@v1  
