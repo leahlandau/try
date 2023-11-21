@@ -44,7 +44,7 @@ jobs:
           uses: azure/container-apps-deploy-action@v1
           with:
             resource-group: ${{ secrets.AZURE_RESOURCE_GROUP }}
-            name: ${{ functioapp1 }}
+            # name: ${{ functioapp1 }}
             image: ${{ ghcr.io/leahlandau/try:latest }}
             registry-username: ${{ github.actor }}
             registry-password: ${{ secrets.GITHUB_TOKEN }}
