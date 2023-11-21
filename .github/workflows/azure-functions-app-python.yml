@@ -18,6 +18,7 @@ jobs:
         run: |
           docker build . --tag ghcr.io/leahlandau/try:latest
           docker push ghcr.io/leahlandau/try:latest
+          
       - name: Azure Login
         run: az login
 
