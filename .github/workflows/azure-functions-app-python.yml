@@ -52,10 +52,10 @@ jobs:
       - name: Pull, Tag, and Push Docker Image
         uses: docker/cli@v2
         with:
-        args: >
-          pull ghcr.io/leahlandau/try:latest &&
-          docker tag ghcr.io/leahlandau/try:latest trydeploytofunctionapp.azurecr.io/azuretry:latest &&
-          docker push trydeploytofunctionapp.azurecr.io/azuretry:latest
+          args: >
+            pull ghcr.io/leahlandau/try:latest &&
+            docker tag ghcr.io/leahlandau/try:latest trydeploytofunctionapp.azurecr.io/azuretry:latest &&
+            docker push trydeploytofunctionapp.azurecr.io/azuretry:latest
 
       - name: Deploy Docker image to Azure Function App
         uses: azure/webapps-deploy@v2
