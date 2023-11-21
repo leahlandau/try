@@ -41,10 +41,10 @@ jobs:
 
       - name: Deploy Docker image to Azure Function App
         run: |
-          az functionapp config container set --name functioapp1 --resource-group myfirstrail --docker-custom-image-name trydeploytofunctionapp.azurecr.io/azuretry:latest
+          az functionapp config container set --name functioapp1 --resource-group NetworkWatcherRG --docker-custom-image-name trydeploytofunctionapp.azurecr.io/azuretry:latest
 
       - name: Restart Azure Function App
-        run: az functionapp restart --name functioapp1 --resource-group myfirstrail
+        run: az functionapp restart --name functioapp1 --resource-group NetworkWatcherRG
 
 # name: :rocket:Publish
 # on:
@@ -101,10 +101,10 @@ jobs:
 
 #         - name: Deploy Docker image to Azure Function App
 #           run: |
-#             az functionapp config container set --name functioapp1 --resource-group myfirstrail --docker-custom-image-name azuretry:latest
+#             az functionapp config container set --name functioapp1 --resource-group NetworkWatcherRG --docker-custom-image-name azuretry:latest
 
 #         - name: Restart Azure Function App
-#           run: az functionapp restart --name functioapp1 --resource-group myfirstrail
+#           run: az functionapp restart --name functioapp1 --resource-group NetworkWatcherRG
 
         # - name: 🔌 Log in to Azure
         #   uses: azure/login@v1
