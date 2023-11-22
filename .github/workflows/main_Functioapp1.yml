@@ -23,14 +23,14 @@ jobs:
       uses: docker/login-action@v2
       with:
         registry: https://trydeploytofunctionapp.azurecr.io/
-        username: ${{ secrets.AzureAppService_ContainerUsername_a943d3fece1f4096a7f822a537a3da82 }}
-        password: ${{ secrets.AzureAppService_ContainerPassword_aec3acc7fdd44388ba6faee4367cd84c }}
+        username: ${{ secrets.AzureAppService_ContainerUsername_146ce6970c934fa6a459e52306c0c5fa }}
+        password: ${{ secrets.AzureAppService_ContainerPassword_b64024f465c24537b5ce5069fb81c4f0 }}
 
     - name: Build and push container image to registry
       uses: docker/build-push-action@v3
       with:
         push: true
-        tags: trydeploytofunctionapp.azurecr.io/${{ secrets.AzureAppService_ContainerUsername_a943d3fece1f4096a7f822a537a3da82 }}/azuretry:${{ github.sha }}
+        tags: trydeploytofunctionapp.azurecr.io/${{ secrets.AzureAppService_ContainerUsername_146ce6970c934fa6a459e52306c0c5fa }}/azuretry:${{ github.sha }}
         file: ./Dockerfile
 
   deploy:
@@ -47,5 +47,5 @@ jobs:
       with:
         app-name: 'Functioapp1'
         slot-name: 'production'
-        publish-profile: ${{ secrets.AzureAppService_PublishProfile_7d49a9108c9f4962823a767332fe8cb1 }}
-        images: 'trydeploytofunctionapp.azurecr.io/${{ secrets.AzureAppService_ContainerUsername_a943d3fece1f4096a7f822a537a3da82 }}/azuretry:${{ github.sha }}'
+        publish-profile: ${{ secrets.AzureAppService_PublishProfile_edad916003234fd4b9da48657b2234d2 }}
+        images: 'trydeploytofunctionapp.azurecr.io/${{ secrets.AzureAppService_ContainerUsername_146ce6970c934fa6a459e52306c0c5fa }}/azuretry:${{ github.sha }}'
