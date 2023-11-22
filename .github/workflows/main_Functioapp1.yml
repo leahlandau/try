@@ -1,51 +1,45 @@
-# Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
-# More GitHub Actions for Azure: https://github.com/Azure/actions
-
-name: Build and deploy container app to Azure Web App - Functioapp1
+name: 🚀 Publish
 
 on:
   push:
-    branches:
-      - main
-  workflow_dispatch:
+    branches: ['main']
 
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
 jobs:
-  build:
-    runs-on: 'ubuntu-latest'
-
-    steps:
-    - uses: actions/checkout@v2
-
-    - name: Set up Docker Buildx
-      uses: docker/setup-buildx-action@v2
-
-    - name: Log in to registry
-      uses: docker/login-action@v1
-      with:
-        registry: https://trydeploytofunctionapp.azurecr.io/
-        username: ${{ secrets.AzureAppService_ContainerUsername_616a49c2f65f4b5eb5ee64d3a3324707 }}
-        password: ${{ secrets.AzureAppService_ContainerPassword_836bfc3e1826467ea24796a0c6e0fcc7 }}
-
-    - name: Build and push container image to registry
-      uses: docker/build-push-action@v3
-      with:
-        push: true
-        tags: trydeploytofunctionapp.azurecr.io/${{ secrets.AzureAppService_ContainerUsername_616a49c2f65f4b5eb5ee64d3a3324707 }}/tryazure:${{ github.sha }}
-        file: ./Dockerfile
-
-  deploy:
+  build-and-deploy:
     runs-on: ubuntu-latest
-    needs: build
-    environment:
-      name: 'production'
-      url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
-
+  
+    permissions:
+      contents: read
+      packages: write
+    
     steps:
-    - name: Deploy to Azure Web App
-      id: deploy-to-webapp
-      uses: azure/webapps-deploy@v2
-      with:
-        app-name: 'Functioapp1'
-        slot-name: 'production'
-        publish-profile: ${{ secrets.AzureAppService_PublishProfile_cc49568f9d554a948dfebd22b7a5afc9 }}
-        images: 'trydeploytofunctionapp.azurecr.io/${{ secrets.AzureAppService_ContainerUsername_616a49c2f65f4b5eb5ee64d3a3324707 }}/tryazure:${{ github.sha }}'
+     - name: 📂 Checkout repository
+       uses: actions/checkout@v4
+    
+     - name: 🔌Login to the Container registry
+       uses: docker/login-action@v1
+       with:
+         registry: ${{ env.REGISTRY }}
+         username: ${{ github.actor }}
+         password: ${{ secrets.GITHUB_TOKEN }}
+
+
+     - name: 🏗️ Build and 🫸push image to GitHub Container Registry
+       uses: docker/build-push-action@v5
+       with: 
+        context: . 
+        push: true
+        tags: ghcr.io/leahlandau/try:latest
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+    
+
+     - name: 🚀 Deploy Container App
+       uses: Azure/functions-action@v1  
+       with:
+         app-name: ${{ secrets.AZURE_APP_NAME }} 
+         publish-profile: ${{ secrets.AZURE_PUBLISH_PROFILE }} 
+         respect-funcignore: true
