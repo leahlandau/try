@@ -49,6 +49,8 @@ jobs:
     #     with:
     #       creds: ${{ secrets.AZURE_CREDENTIALS }}
 
+
+
      - name: Azure Login
        run: az login
 
