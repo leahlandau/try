@@ -26,6 +26,7 @@ jobs:
          username: ${{ github.actor }}
          password: ${{ secrets.GITHUB_TOKEN }}
 
+
      - name: 🏗️ Build and 🫸push image to GitHub Container Registry
        uses: docker/build-push-action@v5
        with: 
@@ -35,6 +36,7 @@ jobs:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
     
+
      - name: 🚀 Deploy Container App
        uses: Azure/functions-action@v1  
        with:
