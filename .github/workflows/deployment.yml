@@ -34,7 +34,7 @@ jobs:
      - name: 🏗️ Build and 🫸push image to GitHub Container Registry
        uses: docker/build-push-action@v5
        with: 
-        context: . 
+        context: ./ 
         push: true
         tags: ghcr.io/leahlandau/try:latest
         username: ${{ github.actor }}
