@@ -10,7 +10,11 @@ env:
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
-  
+
+    defaults:
+      run:
+        working-directory: ./functionapp1
+
     permissions:
       contents: read
       packages: write
