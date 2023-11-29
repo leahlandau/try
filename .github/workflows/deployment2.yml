@@ -14,7 +14,7 @@ env:
   IMAGE_NAME: ${{ github.repository }}
 
 jobs: 
-build-and-deploy-directory2:
+  build-and-deploy-directory2:
     runs-on: ubuntu-latest
     steps:
       - name: 📂 Checkout repository
