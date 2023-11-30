@@ -2,8 +2,12 @@ name: Determine Modified Directory Python
 description: Determine if a specific directory has been modified (Python version)
 
 runs:
-  using: python
-  main: main.py
+  using: 'docker'
+  container:
+    image: python:3.9-slim
+  entrypoint: /bin/sh -c
+  args: |
+    python /main.py
 
 inputs:
   directory:
