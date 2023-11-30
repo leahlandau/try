@@ -4,17 +4,10 @@ description: 'Determine if a specific directory has been modified (Python versio
 runs:
   using: 'docker'
   image: 'python:3.9-slim'
-  entrypoint: '/bin/sh'
+  entrypoint: /bin/sh
+  env:
+    INPUT_DIRECTORY: ${{ inputs.directory }}
   args:
     - '-c'
     - |
-      python /github/workspace/.github/workflows/determine-modified-directory-python/main.py $INPUT_DIRECTORYwo
-inputs:
-  directory:
-    description: 'The directory to check for modifications'
-    required: true
-
-outputs:
-  modified:
-    description: 'Outputs whether the directory has been modified'
-    value: ${{ steps.check-modifications.outputs.modified }}
+      python /github/workspace/.github/actions/determine-modified-directory-python/main.py $INPUT_DIRECTORY
