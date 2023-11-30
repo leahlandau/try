@@ -23,7 +23,7 @@ jobs:
       - name: 🚀 Determine modified directory 2
         id: determine_directory2
         run: |
-          if git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep -q '^directory2/'; then
+          if git diff --name-only ${{ github.event.base_ref }} ${{ github.event.before }}  | grep -q '^directory2/'; then
             echo "Directory 2 has changes"
             echo "::set-output name=directory::directory2"
           else
