@@ -56,7 +56,6 @@ jobs:
         if: steps.determine_directory1.outputs.directory == 'directory1'
 
       - name: 🚀 Deploy Function App for Directory 1
-        if: steps.determine_directory1.outputs.directory == 'directory1'
         uses: azure/functions-action@v1
         with:
           app-name: ${{ secrets.AZURE_APP_NAME_DIRECTORY1 }}
