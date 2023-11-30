@@ -18,7 +18,7 @@ jobs:
       - name: 🚀 Determine modified directory 1
         id: determine_directory1
         run: |
-          if git diff --name-only ${{ github.sha }}^1 ${{ github.sha }} | grep -q '^directory1/'; then
+          if git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep -q '^directory1/'; then
             echo "Directory 1 has changes"
             echo "::set-output name=directory::directory1"
           else
@@ -33,9 +33,10 @@ jobs:
           registry: ${{ env.REGISTRY }}
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
+        if: steps.determine_directory1.outputs.directory == 'directory1'
+
 
       - name: 🏗️ Build and 🫸 push image to GitHub Container Registry for Directory 1
-        if: steps.determine_directory1.outputs.directory == 'directory1'
         uses: docker/build-push-action@v5
         with:
           context: ${{ steps.determine_directory1.outputs.directory }}
@@ -43,6 +44,7 @@ jobs:
           tags: ghcr.io/leahlandau/try-directory1:latest
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
+        if: steps.determine_directory1.outputs.directory == 'directory1'
 
       # - name: 🔌 Login to Azure
       #   uses: azure/login@v1
@@ -51,6 +53,7 @@ jobs:
 
       - name: Azure Login
         run: az login 
+        if: steps.determine_directory1.outputs.directory == 'directory1'
 
       - name: 🚀 Deploy Function App for Directory 1
         if: steps.determine_directory1.outputs.directory == 'directory1'
@@ -59,3 +62,4 @@ jobs:
           app-name: ${{ secrets.AZURE_APP_NAME_DIRECTORY1 }}
           package: ${{ github.workspace }}/directory1/
           publish-profile: ${{ secrets.AZURE_FUNCTIONAPP_PUBLISH_PROFILE_DIRECTORY1 }}
+        if: steps.determine_directory1.outputs.directory == 'directory1'

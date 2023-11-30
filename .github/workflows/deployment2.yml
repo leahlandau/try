@@ -37,6 +37,8 @@ jobs:
           registry: ${{ env.REGISTRY }}
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
+        if: steps.determine_directory2.outputs.directory == 'directory2'
+
 
       - name: 🏗️ Build and 🫸 push image to GitHub Container Registry for Directory 2
         uses: docker/build-push-action@v5
@@ -46,6 +48,7 @@ jobs:
           tags: ghcr.io/leahlandau/try-directory2:latest
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
+        if: steps.determine_directory2.outputs.directory == 'directory2'
 
       # - name: 🔌 Login to Azure
       #   uses: azure/login@v1
@@ -54,6 +57,7 @@ jobs:
 
       - name: Azure Login
         run: az login
+        if: steps.determine_directory2.outputs.directory == 'directory2'
 
       - name: 🚀 Deploy Function App for Directory 2
         uses: azure/functions-action@v1
@@ -61,3 +65,4 @@ jobs:
           app-name: ${{ secrets.AZURE_APP_NAME_DIRECTORY2 }}
           package: ${{ github.workspace }}/directory2/
           publish-profile: ${{ secrets.AZURE_FUNCTIONAPP_PUBLISH_PROFILE_DIRECTORY2 }}
+        if: steps.determine_directory2.outputs.directory == 'directory2'
