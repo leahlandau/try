@@ -17,7 +17,7 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: 🔎 Determine modified directory 2
+      - name: 🚀 Determine modified directory 2
         id: determine_directory2
         run: |
           git diff --name-only HEAD~1 ${{ github.sha }} > changes.txt
@@ -47,12 +47,12 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
         if: steps.determine_directory2.outputs.directory == 'directory2'
 
-      # - name: 🔑 Login to Azure
+      # - name: 🔌 Login to Azure
       #   uses: azure/login@v1
       #   with:
       #     creds: ${{ secrets.AZURE_CREDENTIALS }}
     
-      - name:🔑 Azure Login
+      - name: Azure Login
         run: az login 
         if: steps.determine_directory2.outputs.directory == 'directory2'
 
