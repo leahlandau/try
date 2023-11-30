@@ -8,8 +8,7 @@ runs:
   args:
     - '-c'
     - |
-      python /./.github/workflows/determine-modified-directory-python/main.py $INPUT_DIRECTORY
-
+      python /github/workspace/.github/workflows/determine-modified-directory-python/main.py $INPUT_DIRECTORYwo
 inputs:
   directory:
     description: 'The directory to check for modifications'
