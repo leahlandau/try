@@ -16,6 +16,7 @@ def test_function(mytimer: func.TimerRequest) -> None:
 
 
     logging.info('Python timer trigger function ran at %s', utc_timestamp)
-    logging.info('Python timer trigger function ran at %s', utc_timestamp)
+    # logging.info('Python timer trigger function ran at %s', utc_timestamp)
+    # logging.info('Python timer trigger function ran at %s', utc_timestamp)
 
 
