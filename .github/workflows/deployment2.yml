@@ -1,33 +1,31 @@
 name: 🚀 publish directory2
 
-on: 
-  push: 
-    branches: ['main'] 
+on:
+  push:
+    branches: ['main']
 
-
-defaults: 
-  run: 
-    working-directory: directory2 
-
-env: 
+env:
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}
 
-jobs: 
+jobs:
   build-and-deploy-directory2:
     runs-on: ubuntu-latest
     steps:
       - name: 📂 Checkout repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: 🚀 Determine modified directory 2
         id: determine_directory2
         run: |
-          if git diff --name-only ${{ github.event.base_ref }} ${{ github.event.before }}  | grep -q '^directory2/'; then
-            echo "Directory 2 has changes"
+          git diff --name-only HEAD~1 ${{ github.sha }} > changes.txt
+          if grep -q '^directory2/' changes.txt; then
+            echo "Directory 1 has changes"
             echo "::set-output name=directory::directory2"
           else
-            echo "No changes in Directory 2"
+            echo "No changes in Directory 1"
             exit 0
           fi
 
@@ -38,7 +36,6 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
         if: steps.determine_directory2.outputs.directory == 'directory2'
-
 
       - name: 🏗️ Build and 🫸 push image to GitHub Container Registry for Directory 2
         uses: docker/build-push-action@v5
@@ -54,15 +51,15 @@ jobs:
       #   uses: azure/login@v1
       #   with:
       #     creds: ${{ secrets.AZURE_CREDENTIALS }}
-
+    
       - name: Azure Login
-        run: az login
+        run: az login 
         if: steps.determine_directory2.outputs.directory == 'directory2'
 
       - name: 🚀 Deploy Function App for Directory 2
         uses: azure/functions-action@v1
         with:
-          app-name: ${{ secrets.AZURE_APP_NAME_DIRECTORY2 }}
+          app-name: ${{ secrets.AZURE_APP_NAME_directory2 }}
           package: ${{ github.workspace }}/directory2/
-          publish-profile: ${{ secrets.AZURE_FUNCTIONAPP_PUBLISH_PROFILE_DIRECTORY2 }}
+          publish-profile: ${{ secrets.AZURE_FUNCTIONAPP_PUBLISH_PROFILE_directory2 }}
         if: steps.determine_directory2.outputs.directory == 'directory2'

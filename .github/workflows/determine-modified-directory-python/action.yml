@@ -1,0 +1,16 @@
+name: Determine Modified Directory Python
+description: Determine if a specific directory has been modified (Python version)
+
+runs:
+  using: python
+  main: main.py
+
+inputs:
+  directory:
+    description: 'The directory to check for modifications'
+    required: true
+
+outputs:
+  modified:
+    description: 'Outputs whether the directory has been modified'
+    value: ${{ steps.check-modifications.outputs.modified }}
