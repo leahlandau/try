@@ -5,9 +5,17 @@ runs:
   using: 'docker'
   image: 'python:3.9-slim'
   entrypoint: /bin/sh
-  env:
-    INPUT_DIRECTORY: ${{ inputs.directory }}
   args:
     - '-c'
     - |
-      python /github/workspace/.github/actions/determine-modified-directory-python/main.py $INPUT_DIRECTORY
+      python /github/workspace/.github/actions/determine-modified-directory-python/main.py "${INPUT_DIRECTORY}"
+
+inputs:
+  directory:
+    description: 'The directory to check for modifications'
+    required: true
+
+outputs:
+  modified:
+    description: 'Outputs whether the directory has been modified'
+    value: ${{ steps.check-modifications.outputs.modified }}
