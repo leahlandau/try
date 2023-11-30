@@ -48,4 +48,3 @@ For more information on deployment options for Azure Functions, please visit thi
   
 To learn more specific guidance on developing Azure Functions with Python, please visit [Azure Functions Developer Python Guide](https://docs.microsoft.com/en-us/azure/azure-functions/functions-reference-python?tabs=asgi%2Capplication-level).
 
-gggggggggggggggggggggggg
