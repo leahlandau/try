@@ -5,9 +5,8 @@ runs:
   using: 'docker'
   container:
     image: python:3.9-slim
-  entrypoint: /bin/sh -c
-  args: |
-    python /main.py
+  command: |
+    python /main.py ${{ inputs.directory }}
 
 inputs:
   directory:
