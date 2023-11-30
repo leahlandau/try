@@ -8,7 +8,7 @@ runs:
   args:
     - '-c'
     - |
-      python /main.py $INPUT_DIRECTORY
+      python /action.py $INPUT_DIRECTORY
 
 inputs:
   directory:
