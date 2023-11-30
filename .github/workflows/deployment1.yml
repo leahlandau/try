@@ -25,6 +25,7 @@ jobs:
             echo "::set-output name=directory::directory1"
           else
             echo "No changes in Directory 1"
+            git diff --name-status @{u} ${{ github.sha }} # Add this line for logging
             exit 0
           fi
 
