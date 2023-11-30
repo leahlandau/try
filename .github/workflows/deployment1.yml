@@ -18,8 +18,7 @@ jobs:
       - name: 🚀 Determine modified directory 1
         id: determine_directory1
         run: |
-          git diff --name-only ${{ github.event.base_ref}} ${{ github.sha }} > changed_files.txt
-          if grep -q '^directory1/' changed_files.txt; then
+           if git diff --name-only HEAD^ HEAD | grep -q '^directory1/'; then
             echo "Directory 1 has changes"
             echo "::set-output name=directory::directory1"
           else
