@@ -77,7 +77,7 @@ jobs:
           context: ${{ steps.determine_directory1.outputs.directory }}
           tags: ${{ steps.get_release.outputs.tags }}
           labels: ${{ steps.docker_meta.outputs.labels }}  
-
+        if: steps.determine_directory1.outputs.directory == 'directory1'
       # - name: 🔑 Login to Azure
       #   uses: azure/login@v1
       #   with:
