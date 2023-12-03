@@ -35,9 +35,9 @@ jobs:
           prerelease: false
 
 
-      - name: 📁 Create ZIP Archive
-        run: |
-          zip -r repository.zip .
+      # - name: 📁 Create ZIP Archive
+      #   run: |
+      #     zip -r repository.zip .
 
       - name: ⬆️ Upload Release Asset
         id: upload-release-asset 
@@ -46,6 +46,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }} 
-          asset_path: ./repository.zip
-          asset_name: repository.zip
+          asset_path: ./try.tar.gz
+          asset_name: repository.tar.gz
           asset_content_type: application/zip 
