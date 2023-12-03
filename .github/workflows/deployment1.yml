@@ -11,6 +11,7 @@ env:
 jobs:
   build-and-deploy-directory1:
     runs-on: ubuntu-latest
+    if: steps.determine_directory1.outputs.directory == 'directory1' 
     steps:
       - name: 📂 Checkout repository
         uses: actions/checkout@v4
@@ -37,16 +38,7 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
         if: steps.determine_directory1.outputs.directory == 'directory1'
-
-      # - name: 🏗️ Build and 🫸 push image to GitHub Container Registry for Directory 1
-      #   uses: docker/build-push-action@v5
-      #   with:
-      #     context: ${{ steps.determine_directory1.outputs.directory }}
-      #     push: true
-      #     tags: ghcr.io/leahlandau/try-directory1:latest
-      #     username: ${{ github.actor }}
-      #     password: ${{ secrets.GITHUB_TOKEN }}
-      #   if: steps.determine_directory1.outputs.directory == 'directory1'
+ 
 
       - name: 🔖 Get release tag name
         id: get_release
@@ -55,11 +47,13 @@ jobs:
           GITHUB_TOKEN: ${{ github.token }}
         with:
           latest: true
+        if: steps.determine_directory1.outputs.directory == 'directory1'
 
       - name: ♻️ Set correct environment
         run: |
             TAG=${{ steps.get_release.outputs.tag_name }}
             echo "TAG=$TAG" >> "$GITHUB_ENV"
+        if: steps.determine_directory1.outputs.directory == 'directory1'
 
       - name: 🐳 Docker metadata
         id: docker_meta
@@ -70,7 +64,8 @@ jobs:
                 type=semver,pattern={{major}}.{{minor}}.{{patch}},value=${{ env.TAG }}
                 type=semver,pattern={{major}}.{{minor}},value=${{ env.TAG }}
                 type=semver,pattern={{major}},value=${{ env.TAG }}
-               
+        if: steps.determine_directory1.outputs.directory == 'directory1'
+      
       - name: 🏗️ Build Image
         uses: docker/build-push-action@v5
         with: 
