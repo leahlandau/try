@@ -1,4 +1,4 @@
-name: 🚀 publish directory2
+name: 🚀 Publish Directory
 
 on:
   push:
@@ -9,23 +9,29 @@ env:
   IMAGE_NAME: ${{ github.repository }}
 
 jobs:
-  build-and-deploy-directory2:
+  build-and-deploy:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        directory:
+          - directory1
+          - directory2
+
     steps:
       - name: 📂 Checkout repository
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
-      - name: 🚀 Determine modified directory 2
-        id: determine_directory2
+      - name: 🔎 Determine modified directory
+        id: determine_directory
         run: |
           git diff --name-only HEAD~1 ${{ github.sha }} > changes.txt
-          if grep -q '^directory2/' changes.txt; then
-            echo "Directory 1 has changes"
-            echo "::set-output name=directory::directory2"
+          if grep -q '^${{ matrix.directory }}/' changes.txt; then
+            echo "${{ matrix.directory }} has changes"
+            echo "::set-output name=directory::${{ matrix.directory }}"
           else
-            echo "No changes in Directory 2"
+            echo "No changes in ${{ matrix.directory }}"
             exit 0
           fi
 
@@ -35,31 +41,52 @@ jobs:
           registry: ${{ env.REGISTRY }}
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
-        if: steps.determine_directory2.outputs.directory == 'directory2'
+        if: steps.determine_directory.outputs.directory == '${{ matrix.directory }}'
 
-      - name: 🏗️ Build and 🫸 push image to GitHub Container Registry for Directory 2
-        uses: docker/build-push-action@v5
+      - name: 🔖 Get release tag name
+        id: get_release
+        uses: cardinalby/git-get-release-action@v1
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
         with:
-          context: ${{ steps.determine_directory2.outputs.directory }}
-          push: true
-          tags: ghcr.io/leahlandau/try-directory2:latest
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-        if: steps.determine_directory2.outputs.directory == 'directory2'
+          latest: true
+        if: steps.determine_directory.outputs.directory == '${{ matrix.directory }}'
 
-      - name: 🔌 Login to Azure
+      - name: ♻️ Set correct environment
+        run: |
+          TAG=${{ steps.get_release.outputs.tag_name }}
+          echo "TAG=$TAG" >> "$GITHUB_ENV"
+        if: steps.determine_directory.outputs.directory == '${{ matrix.directory }}'
+
+      - name: 🐳 Docker metadata
+        id: docker_meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ghcr.io/leahlandau/try-${{ matrix.directory }}
+          tags: |
+            type=semver,pattern={{major}}.{{minor}}.{{patch}},value=${{ env.TAG }}
+            type=semver,pattern={{major}}.{{minor}},value=${{ env.TAG }}
+            type=semver,pattern={{major}},value=${{ env.TAG }}
+          if: steps.determine_directory.outputs.directory == '${{ matrix.directory }}'
+
+      - name: 🏗️ Build Image 
+        uses: docker/build-push-action@v5
+        with: 
+          context: ${{ matrix.directory }}
+          tags: ${{ steps.get_release.outputs.tags }}
+          labels: ${{ steps.docker_meta.outputs.labels }}  
+        if: steps.determine_directory.outputs.directory == '${{ matrix.directory }}'
+
+      - name: 🔑 Login to Azure
         uses: azure/login@v1
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
-    
-      # - name: Azure Login
-      #   run: az login 
-      #   if: steps.determine_directory2.outputs.directory == 'directory2'
+        if: steps.determine_directory.outputs.directory == '${{ matrix.directory }}'
 
-      - name: 🚀 Deploy Function App for Directory 2
+      - name: 🚀 Deploy Function App for ${{ matrix.directory }}
         uses: azure/functions-action@v1
         with:
-          app-name: ${{ secrets.AZURE_APP_NAME_directory2 }}
-          package: ${{ github.workspace }}/directory2/
-          publish-profile: ${{ secrets.AZURE_FUNCTIONAPP_PUBLISH_PROFILE_directory2 }}
-        if: steps.determine_directory2.outputs.directory == 'directory2'
+          app-name: ${{ secrets["AZURE_APP_NAME_" + matrix.directory.toUpperCase()] }}
+          package: ${{ github.workspace }}/${{ matrix.directory }}/ 
+          publish-profile: ${{ secrets["AZURE_FUNCTIONAPP_PUBLISH_PROFILE_" + matrix.directory.toUpperCase()] }}
+        if: steps.determine_directory.outputs.directory == '${{ matrix.directory }}'
