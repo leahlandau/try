@@ -85,7 +85,7 @@ jobs:
 
       - name: Azure Login
         run: az login 
-        if: steps.determine_directory2.outputs.directory == 'directory2'
+        if: steps.determine_directory.outputs.directory == '${{ matrix.directory }}'
 
 
       # - name: 🚀 Deploy Function App for ${{ matrix.directory }}
