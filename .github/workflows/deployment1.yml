@@ -74,7 +74,7 @@ jobs:
       - name: 🏗️ Build Image
         uses: docker/build-push-action@v5
         with: 
-          context: ${{ steps.determine_directory1.outputs.directory1 }}
+          context: ${{ steps.determine_directory1.outputs.directory }}
           tags: ${{ steps.get_release.outputs.tags }}
           labels: ${{ steps.docker_meta.outputs.labels }}  
 
