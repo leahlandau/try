@@ -13,16 +13,16 @@ jobs:
       - name: 📂 Checkout code
         uses: actions/checkout@v2
 
-      - name: 🔵 Set up Python
+      - name: 🛠️ Set up Python
         uses: actions/setup-python@v2
         with:
-          python-version: '3.11'  
-          
+          python-version: '3.11'
+
       - name: ⏬ Install Dependencies
         run: |
           python -m pip install --upgrade pip
           # pip install -r requirements.txt  
-        
+
       - name: 🔖 Create Release
         id: create_release
         uses: actions/create-release@v1
@@ -34,11 +34,6 @@ jobs:
           draft: false
           prerelease: false
 
-
-      # - name: 📁 Create ZIP Archive
-      #   run: |
-      #     zip -r repository.zip .
-
       - name: ⬆️ Upload Release Asset
         id: upload-release-asset 
         uses: actions/upload-release-asset@v1
@@ -46,6 +41,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }} 
-          asset_path: try-1.18.tar.gz
-          asset_name: try-1.18.tar.gz
+          asset_path: ${{ github.workspace }}/*.zip
+          asset_name: repository_contents.zip
           asset_content_type: application/zip 
