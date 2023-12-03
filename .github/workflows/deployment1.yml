@@ -7,6 +7,7 @@ on:
 env:
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}
+  DIRECTORY_CHANGED: ${{ steps.determine_directory1.outputs.directory }}
 
 jobs:
   build-and-deploy-directory1:
@@ -37,55 +38,55 @@ jobs:
           registry: ${{ env.REGISTRY }}
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
-        if: steps.determine_directory1.outputs.directory == 'directory1'
+        if: ${{ env.DIRECTORY_CHANGED == 'directory1' }}
  
 
-      - name: 🔖 Get release tag name
-        id: get_release
-        uses: cardinalby/git-get-release-action@v1
-        env:
-          GITHUB_TOKEN: ${{ github.token }}
-        with:
-          latest: true
-        if: steps.determine_directory1.outputs.directory == 'directory1'
-
-      - name: ♻️ Set correct environment
-        run: |
-            TAG=${{ steps.get_release.outputs.tag_name }}
-            echo "TAG=$TAG" >> "$GITHUB_ENV"
-        if: steps.determine_directory1.outputs.directory == 'directory1'
-
-      - name: 🐳 Docker metadata
-        id: docker_meta
-        uses: docker/metadata-action@v5
-        with:
-          images: ghcr.io/leahlandau/try-directory1
-          tags: |
-                type=semver,pattern={{major}}.{{minor}}.{{patch}},value=${{ env.TAG }}
-                type=semver,pattern={{major}}.{{minor}},value=${{ env.TAG }}
-                type=semver,pattern={{major}},value=${{ env.TAG }}
-        if: steps.determine_directory1.outputs.directory == 'directory1'
-      
-      - name: 🏗️ Build Image
-        uses: docker/build-push-action@v5
-        with: 
-          context: ${{ steps.determine_directory1.outputs.directory }}
-          tags: ${{ steps.get_release.outputs.tags }}
-          labels: ${{ steps.docker_meta.outputs.labels }}  
-        if: steps.determine_directory1.outputs.directory == 'directory1'
-      # - name: 🔑 Login to Azure
-      #   uses: azure/login@v1
+      # - name: 🔖 Get release tag name
+      #   id: get_release
+      #   uses: cardinalby/git-get-release-action@v1
+      #   env:
+      #     GITHUB_TOKEN: ${{ github.token }}
       #   with:
-      #     creds: ${{ secrets.AZURE_CREDENTIALS }}
+      #     latest: true
+      #   if: steps.determine_directory1.outputs.directory == 'directory1'
 
-      - name: 🔑 Azure Login
-        run: az login 
-        if: steps.determine_directory1.outputs.directory == 'directory1'
+      # - name: ♻️ Set correct environment
+      #   run: |
+      #       TAG=${{ steps.get_release.outputs.tag_name }}
+      #       echo "TAG=$TAG" >> "$GITHUB_ENV"
+      #   if: steps.determine_directory1.outputs.directory == 'directory1'
 
-      - name: 🚀 Deploy Function App for Directory 1
-        uses: azure/functions-action@v1
-        with:
-          app-name: ${{ secrets.AZURE_APP_NAME_DIRECTORY1 }}
-          package: ${{ github.workspace }}/directory1/
-          publish-profile: ${{ secrets.AZURE_FUNCTIONAPP_PUBLISH_PROFILE_DIRECTORY1 }}
-        if: steps.determine_directory1.outputs.directory == 'directory1'
+      # - name: 🐳 Docker metadata
+      #   id: docker_meta
+      #   uses: docker/metadata-action@v5
+      #   with:
+      #     images: ghcr.io/leahlandau/try-directory1
+      #     tags: |
+      #           type=semver,pattern={{major}}.{{minor}}.{{patch}},value=${{ env.TAG }}
+      #           type=semver,pattern={{major}}.{{minor}},value=${{ env.TAG }}
+      #           type=semver,pattern={{major}},value=${{ env.TAG }}
+      #   if: steps.determine_directory1.outputs.directory == 'directory1'
+      
+      # - name: 🏗️ Build Image
+      #   uses: docker/build-push-action@v5
+      #   with: 
+      #     context: ${{ steps.determine_directory1.outputs.directory }}
+      #     tags: ${{ steps.get_release.outputs.tags }}
+      #     labels: ${{ steps.docker_meta.outputs.labels }}  
+      #   if: steps.determine_directory1.outputs.directory == 'directory1'
+      # # - name: 🔑 Login to Azure
+      # #   uses: azure/login@v1
+      # #   with:
+      # #     creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      # - name: 🔑 Azure Login
+      #   run: az login 
+      #   if: steps.determine_directory1.outputs.directory == 'directory1'
+
+      # - name: 🚀 Deploy Function App for Directory 1
+      #   uses: azure/functions-action@v1
+      #   with:
+      #     app-name: ${{ secrets.AZURE_APP_NAME_DIRECTORY1 }}
+      #     package: ${{ github.workspace }}/directory1/
+      #     publish-profile: ${{ secrets.AZURE_FUNCTIONAPP_PUBLISH_PROFILE_DIRECTORY1 }}
+      #   if: steps.determine_directory1.outputs.directory == 'directory1'
