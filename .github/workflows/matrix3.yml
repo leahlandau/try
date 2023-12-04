@@ -29,10 +29,9 @@ jobs:
           git diff --name-only HEAD~1 ${{ github.sha }} > changes.txt
           if grep -q '^${{ matrix.directory }}/' changes.txt; then
             echo "${{ matrix.directory }} has changes"
-            echo "directory=${{ matrix.directory }}" >> $GITHUB_ENV
+            echo "::set-output name=directory::${{ matrix.directory }}"
           else
             echo "No changes in ${{ matrix.directory }}"
-            echo "directory=None" >> $GITHUB_ENV
             exit 0
           fi
 
