@@ -7,14 +7,16 @@ on:
 env:
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}
-  DIRECTORIES: 'directory1,directory2'  
 
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        directory: ${{ env.DIRECTORIES }}  
+        directory:
+          - directory1
+          - directory2
+
     steps:
       - name: 📂 Checkout repository
         uses: actions/checkout@v4
