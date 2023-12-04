@@ -29,11 +29,13 @@ jobs:
           git diff --name-only HEAD~1 ${{ github.sha }} > changes.txt
           if grep -q '^${{ matrix.directory }}/' changes.txt; then
             echo "${{ matrix.directory }} has changes"
-            echo "::name=directory::${{ matrix.directory }}"
+            echo "directory=${{ matrix.directory }}" >> $GITHUB_ENV
           else
             echo "No changes in ${{ matrix.directory }}"
+            echo "directory=None" >> $GITHUB_ENV
             exit 0
           fi
+
 
       - name: 🔑 Login to the Container registry
         uses: docker/login-action@v1
