@@ -7,14 +7,14 @@ on:
 env:
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}
-  DIRECTORIES: 'directory1,directory2'  # Add more directories separated by comma
 
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        directory: ${{ env.DIRECTORIES }}  # Matrix strategy for multiple directories
+        - directory1
+        - directory2
     steps:
       - name: 📂 Checkout repository
         uses: actions/checkout@v4
