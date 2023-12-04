@@ -63,8 +63,8 @@ jobs:
       - name: 🚀 Deploy Function App for Directory
         uses: azure/functions-action@v1
         with:
-          app-name: ${{ secrets[join('AZURE_APP_NAME_', matrix.directory)] }}.toUpperCase
+          app-name: ${{ secrets[join('AZURE_APP_NAME_', matrix.directory)] }}.toUpperCase()
           package: ${{ github.workspace }}/${{ matrix.directory }}/
-          publish-profile: ${{ secrets[join('AZURE_FUNCTIONAPP_PUBLISH_PROFILE_', matrix.directory)] }}.toUpperCase
+          publish-profile: ${{ secrets[join('AZURE_FUNCTIONAPP_PUBLISH_PROFILE_', matrix.directory)] }}.toUpperCase()
         if: steps.determine_directory.outputs.directory == matrix.directory
         
