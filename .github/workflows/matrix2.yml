@@ -13,8 +13,10 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        - directory1
-        - directory2
+        directory:
+          - directory1
+          - directory2
+
     steps:
       - name: 📂 Checkout repository
         uses: actions/checkout@v4
@@ -51,28 +53,18 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
         if: steps.determine_directory.outputs.directory == matrix.directory
 
-      - name: 🔌 Login to Azure
-        uses: azure/login@v1
-        with:
-          creds: ${{ secrets.AZURE_CREDENTIALS }}
+      # - name: 🔌 Login to Azure
+      #   uses: azure/login@v1
+      #   with:
+      #     creds: ${{ secrets.AZURE_CREDENTIALS }}
+      - name: Azure Login
+        run: az login 
+        if: steps.determine_directory.outputs.directory == '${{ matrix.directory }}'
 
       - name: 🚀 Deploy Function App for Directory
-        run: |
-          case "${{ matrix.directory }}" in
-            'directory1')
-              APP_NAME="${{ secrets.AZURE_APP_NAME_directory1 }}"
-              PUBLISH_PROFILE="${{ secrets.AZURE_FUNCTIONAPP_PUBLISH_PROFILE_directory1 }}"
-              ;;
-            'directory2')
-              APP_NAME="${{ secrets.AZURE_APP_NAME_directory2 }}"
-              PUBLISH_PROFILE="${{ secrets.AZURE_FUNCTIONAPP_PUBLISH_PROFILE_directory2 }}"
-              ;;
-            *) echo "Unknown directory: ${{ matrix.directory }}"; exit 1 ;;
-          esac
-
-          azure/functions-action@v1 :
-            with:
-              app-name: ${{ APP_NAME }}
-              package: ${{ github.workspace }}/${{ matrix.directory }}/
-              publish-profile: ${{ PUBLISH_PROFILE }}
+        uses: azure/functions-action@v1
+        with:
+          app-name: ${{ secrets["AZURE_APP_NAME_" + matrix.directory] }}
+          package: ${{ github.workspace }}/${{ matrix.directory }}/  
+          publish-profile: ${{ secrets["AZURE_FUNCTIONAPP_PUBLISH_PROFILE_" + matrix.directory] }}
         if: steps.determine_directory.outputs.directory == matrix.directory
