@@ -94,15 +94,12 @@ jobs:
       #      package: ${{ github.workspace }}/${{ matrix.directory }}/
       #      publish-profile: ${{ secrets[format('AZURE_FUNCTIONAPP_PUBLISH_PROFILE_{0}', matrix.directory)] || '' }}
       #   if: steps.determine_directory.outputs.directory == matrix.directory
-
-      - name: 🚀 deploy Function App
-        uses: Azure/functions-action@v1  
+      - name: Azure Functions deployment
+        uses: Azure/functions-action@v1
         with:
-          resourceGroup: ${{ secrets.AZURE_RESOURCE_GROUP }}
-          acrName: ${{ secrets[format('AZURE_APP_NAME_{0}', matrix.directory)] || '' }}
-          imageToDeploy: ghcr.io/leahlandau/${{ matrix.directory }}:latest
-          registryUsername: ${{ github.actor }}
-          registryPassword: ${{ secrets.GITHUB_TOKEN }}
+          app-name: 'YourFunctionAppName'  # Replace with your Function App name
+          image: ghcr.io/leahlandau/${{ matrix.directory }}:latest  # Use your specific image here
+          registry-login: true
 
  
 
