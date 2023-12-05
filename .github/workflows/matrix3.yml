@@ -97,7 +97,7 @@ jobs:
       - name: Azure Functions deployment
         uses: Azure/functions-action@v1
         with:
-          app-name: 'YourFunctionAppName'  # Replace with your Function App name
+          app-name: ${{ secrets["AZURE_APP_NAME_" + matrix.directory.toUpperCase()] }}  
           image: ghcr.io/leahlandau/${{ matrix.directory }}:latest  # Use your specific image here
           registry-login: true
 
