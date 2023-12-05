@@ -15,7 +15,7 @@ jobs:
       matrix:
         directory:
           - directory1
-          - directory2
+          # - directory2
 
     steps:
       - name: 📂 Checkout repository
