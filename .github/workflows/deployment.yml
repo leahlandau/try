@@ -79,13 +79,13 @@ jobs:
           labels: ${{ steps.docker_meta.outputs.labels }}
         if: steps.determine_directory.outputs.directory == matrix.directory
 
-      - name: 🔌 Login to Azure
-        uses: azure/login@v1
-        with:
-          creds: ${{ secrets.AZURE_CREDENTIALS }}
-      # - name: Azure Login
-      #   run: az login 
-      #   if: steps.determine_directory.outputs.directory == matrix.directory 
+      # - name: 🔌 Login to Azure
+      #   uses: azure/login@v1
+      #   with:
+      #     creds: ${{ secrets.AZURE_CREDENTIALS }}
+      - name: Azure Login
+        run: az login 
+        if: steps.determine_directory.outputs.directory == matrix.directory 
 
       - name: 🚀 Deploy to Azure Function App
         uses: Azure/functions-container-action@v1
