@@ -115,4 +115,4 @@ jobs:
         uses: Azure/functions-container-action@v1
         with:
           app-name: ${{ secrets[format('AZURE_APP_NAME_{0}', matrix.directory)] || '' }}
-          image: ghcr.io/skyvar/LeahLandau:${{steps.docker_meta.outputs.tags}}
+          image: ghcr.io/leahlandau/try-${{ matrix.directory }}
