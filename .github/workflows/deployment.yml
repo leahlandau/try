@@ -15,7 +15,7 @@ jobs:
       matrix:
         directory:
           - directory1
-          # - directory2
+          - directory2
 
     steps:
       - name: 📂 Checkout repository
@@ -79,43 +79,17 @@ jobs:
           labels: ${{ steps.docker_meta.outputs.labels }}
         if: steps.determine_directory.outputs.directory == matrix.directory
 
-      # - name: 🔌 Login to Azure
-      #   uses: azure/login@v1
-      #   with:
-      #     creds: ${{ secrets.AZURE_CREDENTIALS }}
-      - name: Azure Login
-        run: az login 
-        if: steps.determine_directory.outputs.directory == matrix.directory 
+      - name: 🔌 Login to Azure
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+      # - name: Azure Login
+      #   run: az login 
+      #   if: steps.determine_directory.outputs.directory == matrix.directory 
 
-      # - name: 🚀 Deploy Function App for Directory
-      #   uses: azure/functions-action@v1
-      #   with:
-      #      app-name: ${{ secrets[format('AZURE_APP_NAME_{0}', matrix.directory)] || '' }}
-      #      package: ${{ github.workspace }}/${{ matrix.directory }}/
-      #      publish-profile: ${{ secrets[format('AZURE_FUNCTIONAPP_PUBLISH_PROFILE_{0}', matrix.directory)] || '' }}
-      #   if: steps.determine_directory.outputs.directory == matrix.directory
-      # - name: 🚀 Build and deploy Container App
-      #   uses: azure/container-apps-deploy-action@v1
-      #   with:
-      #     resource-group: ${{ secrets.AZURE_RESOURCE_GROUP }}
-      #     name:  hawkeye360 
-      #     image:  ghcr.io/skyvar/hawkeye360:${{steps.docker_meta.outputs.tags}}
-      #     registry-username: ${{ github.actor }}
-      #     registry-password: ${{ secrets.GITHUB_TOKEN }}
-      
-      # - name: 🚀 Deploy to Azure Function App
-      #   uses: Azure/functions-container-action@v1
-      #   with:
-      #     azure-function-name: ${{ secrets[format('AZURE_APP_NAME_{0}', matrix.directory)] || '' }}
-      #     image-name: ghcr.io/skyvar/LeahLandau:${{steps.docker_meta.outputs.tags}}
-      #     tag-name: ghcr.io/skyvar/LeahLandau:${{steps.docker_meta.outputs.tags}}
-      #     username: directory1\$directory1
-      #     password: z4c9v70nwufgoK6XSebAun5Hr9piKW8anRSbua7Bezglxf1lFikDgG2vjv8E
-
-      - name: Deploy to Azure Function App
+      - name: 🚀 Deploy to Azure Function App
         uses: Azure/functions-container-action@v1
         with:
           app-name: directory1
           image: ghcr.io/leahlandau/try-${{ matrix.directory }}
-          # app-name: ${{ secrets[format('AZURE_APP_NAME_{0}', matrix.directory)] || '' }}
-          # image: ghcr.io/skyvar/LeahLandau:${{steps.docker_meta.outputs.tags}}
+         

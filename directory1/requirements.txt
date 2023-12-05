@@ -10,3 +10,4 @@ python-dateutil
 pytest-cov
 python-dotenv
 azure-storage-blob
+      
