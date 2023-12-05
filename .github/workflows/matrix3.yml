@@ -94,13 +94,17 @@ jobs:
       #      package: ${{ github.workspace }}/${{ matrix.directory }}/
       #      publish-profile: ${{ secrets[format('AZURE_FUNCTIONAPP_PUBLISH_PROFILE_{0}', matrix.directory)] || '' }}
       #   if: steps.determine_directory.outputs.directory == matrix.directory
-      - name: Azure Functions deployment
-        uses: Azure/functions-action@v1
-        with:
-          app-name: ${{ secrets[format('AZURE_APP_NAME_{0}', matrix.directory)] || '' }} 
-          image: ghcr.io/leahlandau/${{ matrix.directory }}:latest  
-          registry-login: true
-
+      # - name: 🚀 Build and deploy Container App
+      #   uses: azure/container-apps-deploy-action@v1
+      #   with:
+      #     resource-group: ${{ secrets.AZURE_RESOURCE_GROUP }}
+      #     name:  hawkeye360 
+      #     image:  ghcr.io/skyvar/hawkeye360:${{steps.docker_meta.outputs.tags}}
+      #     registry-username: ${{ github.actor }}
+      #     registry-password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Deploy to Azure Function App
+        run: |
+          az functionapp config container set --name ${{ secrets[format('AZURE_APP_NAME_{0}', matrix.directory)] || '' }} --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} --docker-custom-image-name ghcr.io/skyvar/hawkeye360:${{steps.docker_meta.outputs.tags}}
 
 
 
