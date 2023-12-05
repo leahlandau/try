@@ -103,17 +103,19 @@ jobs:
       #     registry-username: ${{ github.actor }}
       #     registry-password: ${{ secrets.GITHUB_TOKEN }}
       
-      - name: 🚀 Deploy to Azure Function App
-        uses: Azure/functions-container-action@v1
-        with:
-          azure-function-name: ${{ secrets[format('AZURE_APP_NAME_{0}', matrix.directory)] || '' }}
-          image-name: ghcr.io/skyvar/LeahLandau:${{steps.docker_meta.outputs.tags}}
-          tag-name: ghcr.io/skyvar/LeahLandau:${{steps.docker_meta.outputs.tags}}
-          username: directory1\$directory1
-          password: z4c9v70nwufgoK6XSebAun5Hr9piKW8anRSbua7Bezglxf1lFikDgG2vjv8E
-
-      # - name: Deploy to Azure Function App
+      # - name: 🚀 Deploy to Azure Function App
       #   uses: Azure/functions-container-action@v1
       #   with:
-      #     app-name: ${{ secrets[format('AZURE_APP_NAME_{0}', matrix.directory)] || '' }}
-      #     image: ghcr.io/skyvar/LeahLandau:${{steps.docker_meta.outputs.tags}}
+      #     azure-function-name: ${{ secrets[format('AZURE_APP_NAME_{0}', matrix.directory)] || '' }}
+      #     image-name: ghcr.io/skyvar/LeahLandau:${{steps.docker_meta.outputs.tags}}
+      #     tag-name: ghcr.io/skyvar/LeahLandau:${{steps.docker_meta.outputs.tags}}
+      #     username: directory1\$directory1
+      #     password: z4c9v70nwufgoK6XSebAun5Hr9piKW8anRSbua7Bezglxf1lFikDgG2vjv8E
+
+      - name: Deploy to Azure Function App
+        uses: Azure/functions-container-action@v1
+        with:
+          app-name: directory1
+          image: ghcr.io/leahlandau/try-${{ matrix.directory }}
+          # app-name: ${{ secrets[format('AZURE_APP_NAME_{0}', matrix.directory)] || '' }}
+          # image: ghcr.io/skyvar/LeahLandau:${{steps.docker_meta.outputs.tags}}
