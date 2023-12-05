@@ -102,11 +102,14 @@ jobs:
       #     image:  ghcr.io/skyvar/hawkeye360:${{steps.docker_meta.outputs.tags}}
       #     registry-username: ${{ github.actor }}
       #     registry-password: ${{ secrets.GITHUB_TOKEN }}
-      - name: Deploy to Azure Function App
-        run: |
-          az functionapp config container set --name ${{ secrets[format('AZURE_APP_NAME_{0}', matrix.directory)] || '' }} --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} --docker-custom-image-name ghcr.io/skyvar/hawkeye360:${{steps.docker_meta.outputs.tags}}
-
-
+     - name: 🚀 Deploy to Azure Function App
+        uses: Azure/functions-container-action@v1
+        with:
+          azure-function-name: ${{ secrets[format('AZURE_APP_NAME_{0}', matrix.directory)] || '' }}
+          image-name: ghcr.io/skyvar/LeahLandau:${{steps.docker_meta.outputs.tags}}
+          tag-name: ghcr.io/skyvar/LeahLandau:${{steps.docker_meta.outputs.tags}}
+          # username: ${{ LL211600@greendreamteam.onmicrosoft.com }}
+          # password: ${{ secrets.AZURE_CREDENTIALS_PASSWORD }}
 
 
       
