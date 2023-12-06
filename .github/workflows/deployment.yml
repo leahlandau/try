@@ -126,5 +126,5 @@ jobs:
         with:
           app-name: ${{ secrets[format('AZURE_APP_NAME_{0}', matrix.directory)] || '' }}
           images: 'ghcr.io/leahlandau/${{ matrix.directory }}:latest'
-          publish-profile: ${{ secrets.AZURE_FUNCTIONAPP_PUBLISH_PROFILE }}
+          publish-profile: ${{ secrets[format('AZURE_FUNCTIONAPP_PUBLISH_PROFILE_{0}', matrix.directory)] || '' }}
         if: steps.determine_directory.outputs.directory == matrix.directory
