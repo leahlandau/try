@@ -111,8 +111,12 @@ jobs:
       #       # password: ${{ secrets.AZURE_CREDENTIALS_PASSWORD }}
 
 
-      - name: Deploy to Azure Function App
-        uses: Azure/functions-container-action@v1
-        with:
-          app-name: ${{ secrets[format('AZURE_APP_NAME_{0}', matrix.directory)] || '' }}
-          image: ghcr.io/leahlandau/try-${{ matrix.directory }}
+      # - name: Deploy to Azure Function App
+      #   uses: Azure/functions-container-action@v1
+      #   with:
+      #     app-name: ${{ secrets[format('AZURE_APP_NAME_{0}', matrix.directory)] || '' }}
+      #     image: ghcr.io/leahlandau/try-${{ matrix.directory }}
+  - name: Azure CLI Deploy Container Image
+    run: |
+      az functionapp config container set --name ${{ secrets[format('AZURE_APP_NAME_{0}', matrix.directory)] || '' }} --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} --docker-custom-image-name ghcr.io/leahlandau/${{ matrix.directory }}:latest
+    if: steps.determine_directory.outputs.directory == matrix.directory
