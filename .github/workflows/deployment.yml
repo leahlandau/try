@@ -100,6 +100,7 @@ jobs:
           imageToDeploy: ghcr.io/leahlandau/try-${{ matrix.directory }}:${{ steps.docker_meta.outputs.tags }}
           registryUsername: ${{ github.actor }}
           registryPassword: ${{ secrets.GITHUB_TOKEN }}
+          registryLoginServer: ghcr.io
       
       # - name: 🚀 Deploy to Azure Function App
       #   uses: Azure/functions-container-action@v1
