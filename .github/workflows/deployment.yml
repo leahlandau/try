@@ -116,7 +116,15 @@ jobs:
       #   with:
       #     app-name: ${{ secrets[format('AZURE_APP_NAME_{0}', matrix.directory)] || '' }}
       #     image: ghcr.io/leahlandau/try-${{ matrix.directory }}
-      - name: Azure CLI Deploy Container Image
-        run: |
-         az functionapp config container set --name ${{ secrets[format('AZURE_APP_NAME_{0}', matrix.directory)] || '' }} --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} --docker-custom-image-name ghcr.io/leahlandau/${{ matrix.directory }}:latest
+      # - name: Azure CLI Deploy Container Image
+      #   run: |
+      #    az functionapp config container set --name ${{ secrets[format('AZURE_APP_NAME_{0}', matrix.directory)] || '' }} --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} --docker-custom-image-name ghcr.io/leahlandau/${{ matrix.directory }}:latest
+      #   if: steps.determine_directory.outputs.directory == matrix.directory
+
+      - name: Azure Web Apps Deploy
+        uses: azure/webapps-deploy@v2
+        with:
+          app-name: ${{ secrets[format('AZURE_APP_NAME_{0}', matrix.directory)] || '' }}
+          images: 'ghcr.io/leahlandau/${{ matrix.directory }}:latest'
+          publish-profile: ${{ secrets.AZURE_FUNCTIONAPP_PUBLISH_PROFILE }}
         if: steps.determine_directory.outputs.directory == matrix.directory
