@@ -97,7 +97,7 @@ jobs:
         with:
           resource-group: ${{ secrets.AZURE_RESOURCE_GROUP }}
           name: LeahLandau
-          imageToDeploy:  ghcr.io/skyvar/LeahLandau:${{steps.docker_meta.outputs.tags}}
+          imageToDeploy: ghcr.io/leahlandau/try-${{ matrix.directory }}:${{ steps.docker_meta.outputs.tags }}
           registryUsername: ${{ github.actor }}
           registryPassword: ${{ secrets.GITHUB_TOKEN }}
       
