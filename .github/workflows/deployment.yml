@@ -96,7 +96,7 @@ jobs:
         uses: azure/container-apps-deploy-action@v1
         with:
           resourceGroup: ${{ secrets.AZURE_RESOURCE_GROUP }}
-          acrName: LeahLandau
+          acrName: TryDeploy
           imageToDeploy: ghcr.io/leahlandau/try-${{ matrix.directory }}:${{ steps.docker_meta.outputs.tags }}
           registryUsername: ${{ github.actor }}
           registryPassword: ${{ secrets.GITHUB_TOKEN }}
