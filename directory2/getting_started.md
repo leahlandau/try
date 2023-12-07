@@ -11,7 +11,7 @@ In addition to the [documentation](https://docs.microsoft.com/azure/azure-functi
 To learn more about the new programming model for Azure Functions in Python, see [Programming Models in Azure Functions](https://aka.ms/functions-programming-models).
 
 ## Notes
-
+<!--  -->
 - Mix and match of Functions written in the V1 programming model and the V2 programming model in the same Function App will not be supported.
 - At this time, the main functions file must be named `function_app.py`.
 
