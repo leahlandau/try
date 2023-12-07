@@ -19,7 +19,7 @@ jobs:
       - name: Log in to container registry
         uses: docker/login-action@v2
         with:
-          registry: https://ghcr.io/
+          registry: https://github.com/
           username: ${{ secrets.AzureAppService_ContainerUsername_e4441d2293124e6a95bc5e64676cff9e }}
           password: ${{ secrets.AzureAppService_ContainerPassword_860d040ff6a348589fe6cd121c24544a }}
 
@@ -28,7 +28,7 @@ jobs:
         with:
           context: .
           push: true
-          tags: ghcr.io/${{ secrets.AzureAppService_ContainerUsername_e4441d2293124e6a95bc5e64676cff9e }}/python:${{ github.sha }}
+          tags: github.com/${{ secrets.AzureAppService_ContainerUsername_e4441d2293124e6a95bc5e64676cff9e }}/python:${{ github.sha }}
           file: ./Dockerfile
 
     deploy:
@@ -46,4 +46,4 @@ jobs:
             app-name: 'deploydirectory'
             slot-name: 'production'
             publish-profile: ${{ secrets.AzureAppService_PublishProfile_aff92f69ba354d7a987ee9d85eb459cc }}
-            images: 'ghcr.io/${{ secrets.AzureAppService_ContainerUsername_e4441d2293124e6a95bc5e64676cff9e }}/python:${{ github.sha }}'
+            images: 'github.com/${{ secrets.AzureAppService_ContainerUsername_e4441d2293124e6a95bc5e64676cff9e }}/python:${{ github.sha }}'

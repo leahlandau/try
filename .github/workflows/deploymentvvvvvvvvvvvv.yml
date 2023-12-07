@@ -128,4 +128,11 @@ jobs:
       #     app-name: ${{ secrets[format('AZURE_APP_NAME_{0}', matrix.directory)] || '' }}
       #     images: 'ghcr.io/leahlandau/${{ matrix.directory }}:latest'
       #     publish-profile: ${{ secrets[format('AZURE_FUNCTIONAPP_PUBLISH_PROFILE_{0}', matrix.directory)] || '' }}
-      #   if: steps.determine_directory.outputs.directory == matrix.directory
+       #   if: steps.determine_directory.outputs.directory == matrix.directory
+      - name: AzureFunctionAppContainer
+        uses: AzureFunctionAppContainer@1
+        inputs:
+          azureSubscription: $(subscription)
+          appName: '$(app_name)'
+          # appSettings: '-DOCKER_REGISTRY_SERVER_URL $(registry_url) -DOCKER_REGISTRY_SERVER_USERNAME $(registry_username) -DOCKER_REGISTRY_SERVER_PASSWORD $(registry_password)'
+          imageName: '$(container_registry)/$(imageRepository):$(tag_version)'
