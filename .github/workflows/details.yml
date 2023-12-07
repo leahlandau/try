@@ -1,0 +1,17 @@
+name: 🚀 Publish Directories
+
+on:
+  push:
+    branches: ['main']
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+  steps:
+    - name: Print GitHub Actor
+      run: echo "GitHub Actor: ${{ github.actor }}"
