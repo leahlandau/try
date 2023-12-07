@@ -12,6 +12,6 @@ jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
 
-    steps:
-      - name: Print GitHub Actor
-        run: echo "GitHub Actor: ${{ github.actor }}"
+  steps:
+    - name: Print GitHub Actor
+      run: echo "${{ github.actor }}"
