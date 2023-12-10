@@ -1,0 +1,138 @@
+name: 🚀 Publish Directories
+
+on:
+  push:
+    branches: ['main']
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        directory:
+          # - directory1
+          - directory2
+
+    steps:
+      - name: 📂 Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: 🔎 Determine modified directory
+        id: determine_directory
+        run: |
+          git diff --name-only HEAD~1 ${{ github.sha }} > changes.txt
+          if grep -q '^${{ matrix.directory }}/' changes.txt; then
+            echo "${{ matrix.directory }} has changes"
+            echo "::set-output name=directory::${{ matrix.directory }}"
+          else
+            echo "No changes in ${{ matrix.directory }}"
+            exit 0
+          fi
+      - name: 🔑 Login to the Container registry
+        uses: docker/login-action@v1
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+        if: steps.determine_directory.outputs.directory == matrix.directory
+
+      - name: 🔖 Get release tag name
+        id: get_release
+        uses: cardinalby/git-get-release-action@v1
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        with:
+          latest: true
+        if: steps.determine_directory.outputs.directory == '${{ matrix.directory }}'
+
+      - name: ♻️ Set correct environment
+        run: |
+          TAG=${{ steps.get_release.outputs.tag_name }}
+          echo "TAG=$TAG" >> "$GITHUB_ENV"
+        if: steps.determine_directory.outputs.directory == '${{ matrix.directory }}'
+
+      - name: 🐳 Docker metadata
+        id: docker_meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ghcr.io/leahlandau/try-${{ matrix.directory }}
+          tags: |
+            type=semver,pattern={{major}}.{{minor}}.{{patch}},value=${{ env.TAG }}
+            type=semver,pattern={{major}}.{{minor}},value=${{ env.TAG }}
+            type=semver,pattern={{major}},value=${{ env.TAG }}
+        if: steps.determine_directory.outputs.directory == '${{ matrix.directory }}'
+
+      - name: 🏗️ Build and 🫸 push image to GitHub Container Registry
+        uses: docker/build-push-action@v5
+        with:
+          context: ${{ steps.determine_directory.outputs.directory }}
+          push: true
+          tags: ghcr.io/leahlandau/${{ matrix.directory }}:latest
+          labels: ${{ steps.docker_meta.outputs.labels }}
+        if: steps.determine_directory.outputs.directory == matrix.directory
+
+      # - name: 🔌 Login to Azure
+      #   uses: azure/login@v1
+      #   with:
+      #     creds: ${{ secrets.AZURE_CREDENTIALS }}
+      - name: Azure Login
+        run: az login 
+        if: steps.determine_directory.outputs.directory == matrix.directory 
+
+      # - name: 🚀 Deploy Function App for Directory
+      #   uses: azure/functions-action@v1
+      #   with:
+      #      app-name: ${{ secrets[format('AZURE_APP_NAME_{0}', matrix.directory)] || '' }}
+      #      package: ${{ github.workspace }}/${{ matrix.directory }}/
+      #      publish-profile: ${{ secrets[format('AZURE_FUNCTIONAPP_PUBLISH_PROFILE_{0}', matrix.directory)] || '' }}
+      #   if: steps.determine_directory.outputs.directory == matrix.directory
+      - name: 🚀 Build and deploy Container App
+        uses: azure/container-apps-deploy-action@v1
+        with:
+          resourceGroup: ${{ secrets.AZURE_RESOURCE_GROUP }}
+          acrName: TryDeploy
+          imageToDeploy: ghcr.io/leahlandau/try-${{ matrix.directory }}:${{ steps.docker_meta.outputs.tags }}
+          registryUsername: ${{ github.actor }}
+          registryPassword: ${{ secrets.GITHUB_TOKEN }}
+          # registryLoginServer: ghcr.io
+      
+      # - name: 🚀 Deploy to Azure Function App
+      #   uses: Azure/functions-container-action@v1
+      #   with:
+      #     azure-function-name: ${{ secrets[format('AZURE_APP_NAME_{0}', matrix.directory)] || '' }}
+      #     image-name: ghcr.io/skyvar/LeahLandau:${{steps.docker_meta.outputs.tags}}
+      #     tag-name: ghcr.io/skyvar/LeahLandau:${{steps.docker_meta.outputs.tags}}
+      #       # username: ${{ LL211600@greendreamteam.onmicrosoft.com }}
+      #       # password: ${{ secrets.AZURE_CREDENTIALS_PASSWORD }}
+
+
+      # - name: Deploy to Azure Function App
+      #   uses: Azure/functions-container-action@v1
+      #   with:
+      #     app-name: ${{ secrets[format('AZURE_APP_NAME_{0}', matrix.directory)] || '' }}
+      #     image: ghcr.io/leahlandau/try-${{ matrix.directory }}
+      # - name: Azure CLI Deploy Container Image
+      #   run: |
+      #    az functionapp config container set --name ${{ secrets[format('AZURE_APP_NAME_{0}', matrix.directory)] || '' }} --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} --docker-custom-image-name ghcr.io/leahlandau/${{ matrix.directory }}:latest
+      #   if: steps.determine_directory.outputs.directory == matrix.directory
+
+      # - name: Azure Web Apps Deploy
+      #   uses: azure/webapps-deploy@v2
+      #   with:
+      #     app-name: ${{ secrets[format('AZURE_APP_NAME_{0}', matrix.directory)] || '' }}
+      #     images: 'ghcr.io/leahlandau/${{ matrix.directory }}:latest'
+      #     publish-profile: ${{ secrets[format('AZURE_FUNCTIONAPP_PUBLISH_PROFILE_{0}', matrix.directory)] || '' }}
+       #   if: steps.determine_directory.outputs.directory == matrix.directory
+      # - name: AzureFunctionAppContainer
+      #   uses: AzureFunctionAppContainer@1
+      #   inputs:
+      #     azureSubscription: $(subscription)
+      #     appName: '$(app_name)'
+      #     # appSettings: '-DOCKER_REGISTRY_SERVER_URL $(registry_url) -DOCKER_REGISTRY_SERVER_USERNAME $(registry_username) -DOCKER_REGISTRY_SERVER_PASSWORD $(registry_password)'
+      #     imageName: '$(container_registry)/$(imageRepository):$(tag_version)'
