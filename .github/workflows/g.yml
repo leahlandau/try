@@ -88,6 +88,6 @@ jobs:
       - name: 🚀 Deploy to Azure Function App
         uses: Azure/functions-container-action@v1
         with:
-          app-name: directory1
+          app-name: directory4
           image: ghcr.io/leahlandau/try-${{ matrix.directory }}
          
