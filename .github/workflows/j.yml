@@ -12,5 +12,5 @@ jobs:
     steps:
       - name: docker login
         run: |
-        `export CR_PAT=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`
-        `echo $CR_PAT | docker login ghcr.io -u USERNAME --password-stdin`
+          `export CR_PAT=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`
+          `echo $CR_PAT | docker login ghcr.io -u USERNAME --password-stdin`
