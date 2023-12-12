@@ -3,9 +3,14 @@ name: 🚀 Publish Directories
 on:
   push:
     branches: ['main']
-
+    
   workflow_dispatch:
-
+  strategy:
+      matrix:
+        directory:
+          - directory10
+          - directory11
+          
 env:
   # AZURE_FUNCTIONAPP_PACKAGE_PATH: '.' 
   PYTHON_VERSION: '3.11' 
@@ -13,11 +18,7 @@ env:
 jobs:
   build:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        directory:
-          - directory10
-          - directory11
+    
 
     steps:
       - name: Checkout repository
