@@ -79,7 +79,7 @@ jobs:
       # Optional: Add step to run tests here
 
       - name: Zip artifact for deployment
-        run: zip format('release{0}', matrix.directory).zip ./${{ matrix.directory }} -r
+        run: zip ${{ matrix.directory }}.zip ./${{ matrix.directory }} -r
         # if: ${{ env.DIRECTORY }} == matrix.directory
         if: steps.determine_directory.outputs.directory == matrix.directory
 
