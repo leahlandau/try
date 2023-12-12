@@ -115,7 +115,7 @@ jobs:
         uses: Azure/functions-action@v1
         id: deploy-to-function
         with:
-          app-name: ${{ secrets[format('AZURE_APP_NAME_{0}', matrix.directory)] || '' }}
+          app-name: directory10
           slot-name: 'Production'
           # package: ${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}
           package: ${{ github.workspace }}/${{ matrix.directory }}/
