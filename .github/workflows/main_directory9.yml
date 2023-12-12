@@ -32,10 +32,8 @@ jobs:
         push: true
         tags: ghcr.io/leahlandau/try-directory9:${{ github.sha }}
         file: ./Dockerfile
-        
-    - name: 🔑 Azure Login
-      run: az login 
 
+    
   deploy:
     runs-on: ubuntu-latest
     needs: build
@@ -45,7 +43,9 @@ jobs:
 
     steps:
     
-
+    - name: 🔑 Azure Login
+      run: az login 
+      
     - name: 🚀 Deploy to Azure Function App
       uses: Azure/functions-container-action@v1
       with:
