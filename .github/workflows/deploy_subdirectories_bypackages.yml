@@ -109,7 +109,10 @@ jobs:
         run: unzip release.zip
         # if: ${{ env.DIRECTORY }} == matrix.directory
         if: steps.determine_directory.outputs.directory == matrix.directory
-
+        
+      - name: Azure Login
+        run: az login 
+        if: steps.determine_directory.outputs.directory == matrix.directory 
 
       - name: 'Deploy to Azure Functions'
         uses: Azure/functions-action@v1
