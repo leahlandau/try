@@ -73,7 +73,7 @@ jobs:
         with:
           context: ${{ steps.determine_directory.outputs.directory }}
           push: true
-          tags: ghcr.io/leahlandau/${{ matrix.directory }}:latest
+          tags: ghcr.io/leahlandau/try-${{ matrix.directory }}:latest
           labels: ${{ steps.docker_meta.outputs.labels }}
         if: steps.determine_directory.outputs.directory == matrix.directory
 
@@ -89,5 +89,5 @@ jobs:
         uses: Azure/functions-container-action@v1
         with:
           app-name: directory4
-          image: ghcr.io/leahlandau/try-${{ matrix.directory }}
+          image: ghcr.io/leahlandau/try-${{ matrix.directory }}:latest
          
