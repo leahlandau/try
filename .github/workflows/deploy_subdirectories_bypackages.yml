@@ -115,11 +115,11 @@ jobs:
         uses: Azure/functions-action@v1
         id: deploy-to-function
         with:
-          app-name: ${{ secrets[format('AZURE_APP_NAME_{0}', matrix.directory)] || '' }}
+          app-name: ${{ secrets[format('AZURE_APP_NAME_{0}', matrix.directory) || '']  }}
           slot-name: 'Production'
           # package: ${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}
           package:  ${{ github.workspace }}/${{ matrix.directory }}/
-          publish-profile: ${{ secrets[format('AZURE_FUNCTIONAPP_PUBLISH_PROFILE_{0}', matrix.directory)] || '' }}
+          publish-profile: ${{ secrets[format('AZURE_FUNCTIONAPP_PUBLISH_PROFILE_{0}', matrix.directory) || ''] }}
           # publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_A4FEA5A5E9E249ECBABA68D90AFED0DE }}
           scm-do-build-during-deployment: true
           enable-oryx-build: true
