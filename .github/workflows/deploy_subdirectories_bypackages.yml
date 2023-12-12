@@ -43,23 +43,23 @@ jobs:
         uses: actions/setup-python@v1
         with:
           python-version: ${{ env.PYTHON_VERSION }}
-        if: ${{ env.DIRECTORY }}== matrix.directory
+        if: ${{ env.DIRECTORY }}== '${{ matrix.directory }}'
 
       - name: Create and start virtual environment
         run: |
           python -m venv venv
           source venv/bin/activate
-        if: ${{ env.DIRECTORY }} == matrix.directory
+        if: ${{ env.DIRECTORY }} == '${{ matrix.directory }}'
 
       - name: Install dependencies
         run: pip install -r requirements.txt
-        if: ${{ env.DIRECTORY }} == matrix.directory
+        if: ${{ env.DIRECTORY }} == '${{ matrix.directory }}'
 
       # Optional: Add step to run tests here
 
       - name: Zip artifact for deployment
         run: zip release.zip ./${{ matrix.directory }} -r
-        if: ${{ env.DIRECTORY }} == matrix.directory
+        if: ${{ env.DIRECTORY }} == '${{ matrix.directory }}'
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v3
@@ -68,7 +68,7 @@ jobs:
           path: |
             release.zip
             !venv/
-        if: ${{ env.DIRECTORY }} == matrix.directory
+        if: ${{ env.DIRECTORY }} == '${{ matrix.directory }}'
 
   deploy:
     runs-on: ubuntu-latest
@@ -82,24 +82,24 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: python-app
-        if: ${{ env.DIRECTORY }} == matrix.directory
+        if: ${{ env.DIRECTORY }} == '${{ matrix.directory }}'
 
       - name: Unzip artifact for deployment
         run: unzip release.zip
-        if: ${{ env.DIRECTORY }} == matrix.directory
+        if: ${{ env.DIRECTORY }} == '${{ matrix.directory }}'
 
 
       - name: 'Deploy to Azure Functions'
         uses: Azure/functions-action@v1
         id: deploy-to-function
         with:
-          app-name: ${{ secrets["AZURE_APP_NAME_" + matrix.directory] }}
+          app-name:  ${{ secrets["AZURE_APP_NAME_" + matrix.directory.toUpperCase()] }}
           slot-name: 'Production'
           # package: ${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}
           package:  ${{ github.workspace }}/${{ matrix.directory }}/
-          publish-profile: ${{ secrets["AZURE_FUNCTIONAPP_PUBLISH_PROFILE_" + matrix.directory] }}
+          publish-profile: ${{ secrets["AZURE_FUNCTIONAPP_PUBLISH_PROFILE_" + matrix.directory.toUpperCase()] }}
           # publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_A4FEA5A5E9E249ECBABA68D90AFED0DE }}
           scm-do-build-during-deployment: true
           enable-oryx-build: true
-        if: ${{ env.DIRECTORY }} == matrix.directory
+        if: ${{ env.DIRECTORY }} == '${{ matrix.directory }}'
 
