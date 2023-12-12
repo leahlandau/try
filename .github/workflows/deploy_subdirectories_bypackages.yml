@@ -78,11 +78,14 @@ jobs:
 
       # Optional: Add step to run tests here
 
-      - name: Zip artifact for deployment
-        run: zip ${{ matrix.directory }}.zip ./${{ matrix.directory }} -r
-        # if: ${{ env.DIRECTORY }} == matrix.directory
+      # - name: Zip artifact for deployment
+      #   run: zip ${{ matrix.directory }}.zip ./${{ matrix.directory }} -r
+      #   # if: ${{ env.DIRECTORY }} == matrix.directory
+      #   if: steps.determine_directory.outputs.directory == matrix.directory
+      - name: Unzip artifact for deployment
+        run: unzip -o ${{ matrix.directory }}.zip
         if: steps.determine_directory.outputs.directory == matrix.directory
-
+      
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v3
         with:
