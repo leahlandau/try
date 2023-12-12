@@ -88,7 +88,7 @@ jobs:
         with:
           name: python-app
           path: |
-            release.zip
+            ${{ matrix.directory }}.zip
             !venv/
         # if: ${{ env.DIRECTORY }} == matrix.directory
         if: steps.determine_directory.outputs.directory == matrix.directory
@@ -114,7 +114,7 @@ jobs:
         if: steps.determine_directory.outputs.directory == matrix.directory
 
       - name: Unzip artifact for deployment
-        run: unzip release.zip
+        run: unzip ${{ matrix.directory }}.zip
         # if: ${{ env.DIRECTORY }} == matrix.directory
         if: steps.determine_directory.outputs.directory == matrix.directory
         
