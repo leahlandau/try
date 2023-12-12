@@ -10,8 +10,12 @@ env:
   # AZURE_FUNCTIONAPP_PACKAGE_PATH: '.' 
   PYTHON_VERSION: '3.11' 
 
+environment:
+      name: 'Production'
+      url: ${{ steps.deploy-to-function.outputs.webapp-url }}
+
 jobs:
-  build:
+  build and deploy:
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -90,19 +94,17 @@ jobs:
         # if: ${{ env.DIRECTORY }} == matrix.directory
         if: steps.determine_directory.outputs.directory == matrix.directory
 
-  deploy:
-    runs-on: ubuntu-latest
+  # deploy:
+    # runs-on: ubuntu-latest
     # strategy:
     #       matrix:
     #         directory:
     #           - directory10
     #           - directory11
-    needs: build
-    environment:
-      name: 'Production'
-      url: ${{ steps.deploy-to-function.outputs.webapp-url }}
+    # needs: build
     
-    steps:
+    
+    # steps:
       - name: Download artifact from build job
         uses: actions/download-artifact@v3
         with:
@@ -134,3 +136,4 @@ jobs:
         # if: ${{ env.DIRECTORY }} == matrix.directory
         if: steps.determine_directory.outputs.directory == matrix.directory
 
+  
