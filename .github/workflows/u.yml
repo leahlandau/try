@@ -1,0 +1,47 @@
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Log in to container registry
+        uses: docker/login-action@v2
+        with:
+          registry: https://mcr.microsoft.com/
+          username: ${{ secrets.AzureAppService_ContainerUsername_ac10f06ce2994759967c82c5e8280499 }}
+          password: ${{ secrets.AzureAppService_ContainerPassword_b48a75f3293d482ba46cf57977d42f32 }}
+
+      - name: Build and push container image to registry
+        uses: docker/build-push-action@v3
+        with:
+          context: .
+          push: true
+          tags: mcr.microsoft.com/${{ secrets.AzureAppService_ContainerUsername_ac10f06ce2994759967c82c5e8280499 }}/ghcr.io/leahlandau/try-directory5:${{ github.sha }}
+          file: ./Dockerfile
+
+    deploy:
+      runs-on: ubuntu-latest
+      needs: build
+      environment:
+        name: 'production'
+        url: ${{ steps.deploy-to-functions.outputs.functions-url }}
+
+      steps:
+        - name: Deploy to Azure Functions
+          id: deploy-to-functions
+          uses: azure/functions-deploy@v2
+          with:
+            app-name: 'directory5'
+            slot-name: 'production'
+            publish-profile: ${{ secrets.AzureAppService_PublishProfile_528401e5df774f1ca84f94d720d81cac }}
+            images: 'mcr.microsoft.com/${{ secrets.AzureAppService_ContainerUsername_ac10f06ce2994759967c82c5e8280499 }}/ghcr.io/leahlandau/try-directory5:${{ github.sha }}'
