@@ -49,3 +49,4 @@ jobs:
         slot-name: 'production'
         publish-profile: ${{ secrets.AzureAppService_PublishProfile_e1ab2e9bf2a145ac8ca756128f847f37 }}
         images: 'ghcr.io/leahlandau/try-directory9:${{ github.sha }}'
+        # 
