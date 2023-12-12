@@ -41,6 +41,9 @@ jobs:
     #   url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
 
     steps:
+    - name: 🔑 Azure Login
+      run: az login 
+      
     - name: 🚀 Deploy to Azure Function App
       uses: Azure/functions-container-action@v1
       with:
