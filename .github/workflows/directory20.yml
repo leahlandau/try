@@ -43,13 +43,13 @@ jobs:
 
         - name: 🔑 Azure Login
           run: az login
-          
+
         - name: Deploy to Azure Functions
           id: deploy-to-functions
           uses: Azure/functions-container-action@v1
           with:
             app-name: directory20
-            image: 'ghcr.io/leahlandau/try-directory9:${{ github.sha }}'
+            image: 'ghcr.io/leahlandau/try-directory20:${{ github.sha }}'
 
           #  - name: Deploy to Azure Functions
         #   id: deploy-to-functions
