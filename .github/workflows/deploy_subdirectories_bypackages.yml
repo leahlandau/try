@@ -119,8 +119,8 @@ jobs:
           package: ${{ github.workspace }}/${{ matrix.directory }}/
           publish-profile: ${{ secrets[format('AZURE_FUNCTIONAPP_PUBLISH_PROFILE_{0}', matrix.directory)] || '' }}
           # publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_A4FEA5A5E9E249ECBABA68D90AFED0DE }}
-          scm-do-build-during-deployment: true
-          enable-oryx-build: true
+          # scm-do-build-during-deployment: true
+          # enable-oryx-build: true
         # if: ${{ env.DIRECTORY }} == matrix.directory
         if: steps.determine_directory.outputs.directory == matrix.directory
 
