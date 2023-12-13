@@ -65,12 +65,16 @@ jobs:
       run: az login 
       
   
-    - name: 🚀 Deploy to Azure Web App
-      id: deploy-to-webapp
-      uses: azure/webapps-deploy@v2
+    # - name: 🚀 Deploy to Azure Web App
+    #   id: deploy-to-webapp
+    #   uses: azure/webapps-deploy@v2
+    #   with:
+    #     app-name: 'directory9'
+    #     slot-name: 'production'
+    #     publish-profile: ${{ secrets.AzureAppService_PublishProfile_e1ab2e9bf2a145ac8ca756128f847f37 }}
+    #     images: 'ghcr.io/leahlandau/try-directory9:${{ github.sha }}'
+    - name: 🚀 Deploy to Azure Function App
+      uses: Azure/functions-container-action@v1
       with:
-        app-name: 'directory9'
-        slot-name: 'production'
-        publish-profile: ${{ secrets.AzureAppService_PublishProfile_e1ab2e9bf2a145ac8ca756128f847f37 }}
-        images: 'ghcr.io/leahlandau/try-directory9:${{ github.sha }}'
-    
+        app-name: directory9
+        image: 'ghcr.io/leahlandau/try-directory9:${{ github.sha }}'
