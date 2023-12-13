@@ -22,13 +22,14 @@ jobs:
     - name: Log in to registry
       uses: docker/login-action@v2
       with:
-        registry: https://ghcr.io/
-        username: ${{ secrets.AzureAppService_ContainerUsername_b1c31551a4bb440c9121e9a0a3a08145 }}
-        password: ${{ secrets.AzureAppService_ContainerPassword_bf17ae51c7d5430aa1d85313940abaca }}
+        registry: ghcr.io
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Build and push container image to registry
       uses: docker/build-push-action@v3
       with:
+        context: ./directory2023
         push: true
         tags: ghcr.io/${{ secrets.AzureAppService_ContainerUsername_b1c31551a4bb440c9121e9a0a3a08145 }}/ghcr.io/leahlandau/try-directory2023:${{ github.sha }}
         file: ./directory2023/Dockerfile
@@ -55,8 +56,8 @@ jobs:
     #     images: 'ghcr.io/${{ secrets.AzureAppService_ContainerUsername_b1c31551a4bb440c9121e9a0a3a08145 }}/ghcr.io/leahlandau/try-directory2023:${{ github.sha }}'
 
     - name: Deploy to Azure Functions
-     id: deploy-to-functions
-     uses: Azure/functions-container-action@v1
-     with:
-       app-name: directory20
-       images: 'ghcr.io/${{ secrets.AzureAppService_ContainerUsername_b1c31551a4bb440c9121e9a0a3a08145 }}/ghcr.io/leahlandau/try-directory2023:${{ github.sha }}'
+      id: deploy-to-functions
+      uses: Azure/functions-container-action@v1
+      with:
+        app-name: directory20
+        images: 'ghcr.io/${{ secrets.AzureAppService_ContainerUsername_b1c31551a4bb440c9121e9a0a3a08145 }}/ghcr.io/leahlandau/try-directory2023:${{ github.sha }}'
