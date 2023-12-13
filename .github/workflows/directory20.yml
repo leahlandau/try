@@ -28,7 +28,7 @@ jobs:
         with:
           # context: .
           push: true
-          tags: ghcr.io/${{ secrets.AzureAppService_ContainerUsername_f652fa3c2fde4eb1bd4535d17c432454 }}/ghcr.io/leahlandau/try-directory20:${{ github.sha }}
+          tags: ghcr.io/${{ secrets.AzureAppService_ContainerUsername_f652fa3c2fde4eb1bd4535d17c432454 }}/leahlandau/try-directory20:${{ github.sha }}
           file: ./Dockerfile
 
   deploy:
@@ -46,4 +46,4 @@ jobs:
             app-name: 'directory20'
             slot-name: 'production'
             publish-profile: ${{ secrets.AzureAppService_PublishProfile_da0ec3ceb44d436e9df6937eb6207c7a }}
-            images: 'ghcr.io/${{ secrets.AzureAppService_ContainerUsername_f652fa3c2fde4eb1bd4535d17c432454 }}/ghcr.io/leahlandau/try-directory20:${{ github.sha }}'
+            images: 'ghcr.io/${{ secrets.AzureAppService_ContainerUsername_f652fa3c2fde4eb1bd4535d17c432454 }}/leahlandau/try-directory20:${{ github.sha }}'
