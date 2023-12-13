@@ -38,7 +38,12 @@ jobs:
         name: 'production'
         url: ${{ steps.deploy-to-functions.outputs.app-url }}
 
+
       steps:
+
+        - name: 🔑 Azure Login
+          run: az login
+          
         - name: Deploy to Azure Functions
           id: deploy-to-functions
           uses: Azure/functions-container-action@v1
