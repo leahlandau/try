@@ -31,7 +31,7 @@ jobs:
       with:
         context: ./directory2023
         push: true
-        tags: ghcr.io/${{ secrets.AzureAppService_ContainerUsername_b1c31551a4bb440c9121e9a0a3a08145 }}/ghcr.io/leahlandau/try-directory2023:${{ github.sha }}
+        tags: ghcr.io/${{ secrets.AzureAppService_ContainerUsername_b1c31551a4bb440c9121e9a0a3a08145 }}/leahlandau/try-directory2023:${{ github.sha }}
         file: ./directory2023/Dockerfile
 
   deploy:
@@ -53,11 +53,11 @@ jobs:
     #     app-name: 'directory2023'
     #     slot-name: 'production'
     #     publish-profile: ${{ secrets.AzureAppService_PublishProfile_da34fe16f77d4f80b2403cf72d4f4b19 }}
-    #     images: 'ghcr.io/${{ secrets.AzureAppService_ContainerUsername_b1c31551a4bb440c9121e9a0a3a08145 }}/ghcr.io/leahlandau/try-directory2023:${{ github.sha }}'
+    #     images: 'ghcr.io/${{ secrets.AzureAppService_ContainerUsername_b1c31551a4bb440c9121e9a0a3a08145 }}/leahlandau/try-directory2023:${{ github.sha }}'
 
     - name: Deploy to Azure Functions
       id: deploy-to-functions
       uses: Azure/functions-container-action@v1
       with:
         app-name: directory20
-        images: 'ghcr.io/${{ secrets.AzureAppService_ContainerUsername_b1c31551a4bb440c9121e9a0a3a08145 }}/ghcr.io/leahlandau/try-directory2023:${{ github.sha }}'
+        images: 'ghcr.io/${{ secrets.AzureAppService_ContainerUsername_b1c31551a4bb440c9121e9a0a3a08145 }}/leahlandau/try-directory2023:${{ github.sha }}'
