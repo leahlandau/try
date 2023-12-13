@@ -1,0 +1,76 @@
+name: 🏗️ Build and 🚀deploy container app to Azure Web App - directory9
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  🏗️build:
+    runs-on: 'ubuntu-latest'
+
+    steps:
+    - name: 📂 Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+    - name: 🐳 Set up Docker Buildx
+      uses: docker/setup-buildx-action@v2
+
+    - name: 🔑 Log in to registry
+      uses: docker/login-action@v2
+      with:
+        registry: ghcr.io
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: 🔖 Get release tag name
+      id: get_release
+      uses: cardinalby/git-get-release-action@v1
+      env:
+        GITHUB_TOKEN: ${{ github.token }}
+      with:
+        latest: true
+
+    - name: ♻️ Set correct environment
+      run: |
+        TAG=${{ steps.get_release.outputs.tag_name }}
+        echo "TAG=$TAG" >> "$GITHUB_ENV"
+
+    - name: 🐳 Docker metadata
+      id: docker_meta
+      uses: docker/metadata-action@v5
+      with:
+        images: ghcr.io/leahlandau/try-directory1
+        tags: |
+              type=semver,pattern={{major}}.{{minor}}.{{patch}},value=${{ env.TAG }}
+              type=semver,pattern={{major}}.{{minor}},value=${{ env.TAG }}
+              type=semver,pattern={{major}},value=${{ env.TAG }}
+              
+    - name: 🏗️ Build and 🚢 push container image to registry
+      uses: docker/build-push-action@v3
+      with:
+        push: true
+        tags: ghcr.io/leahlandau/try-directory9:${{ github.sha }}
+        file: ./directory9/Dockerfile
+
+    
+  🚀deploy:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+    - name: 🔑 Azure Login
+      run: az login 
+      
+  
+    - name: 🚀 Deploy to Azure Web App
+      id: deploy-to-webapp
+      uses: azure/webapps-deploy@v2
+      with:
+        app-name: 'directory9'
+        slot-name: 'production'
+        publish-profile: ${{ secrets.AzureAppService_PublishProfile_e1ab2e9bf2a145ac8ca756128f847f37 }}
+        images: 'ghcr.io/leahlandau/try-directory9:${{ github.sha }}'
+    
