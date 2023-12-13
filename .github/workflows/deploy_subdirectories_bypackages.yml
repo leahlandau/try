@@ -29,20 +29,6 @@ jobs:
           fetch-depth: 0
 
 
-      # - name: 🔎 Determine modified directory
-      #   id: determine_directory
-      #   run: |
-      #     git diff --name-only HEAD~1 ${{ github.sha }} > changes.txt
-      #     if grep -q '^${{ matrix.directory }}/' changes.txt; then
-      #       echo "${{ matrix.directory }} has changes"
-      #       # echo "::set-output name=directory::${{ matrix.directory }}"
-      #       DIRECTORY=${{ matrix.directory }}
-      #       echo "DIRECTORY=$DIRECTORY" >> "$GITHUB_ENV"
-
-      #     else
-      #       echo "No changes in ${{ matrix.directory }}"
-      #       exit 0
-      #     fi
       - name: 🔎 Determine modified directory
         id: determine_directory
         run: |
