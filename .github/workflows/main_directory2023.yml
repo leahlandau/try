@@ -31,7 +31,7 @@ jobs:
       with:
         context: ./directory2023
         push: true
-        tags: ghcr.io/${{ secrets.AzureAppService_ContainerUsername_b1c31551a4bb440c9121e9a0a3a08145 }}/try-directory2023:${{ github.sha }}
+        tags: ghcr.io/leahlandau/try-directory2023:${{ github.sha }}
         file: ./directory2023/Dockerfile
 
   deploy:
@@ -60,4 +60,4 @@ jobs:
       uses: Azure/functions-container-action@v1
       with:
         app-name: directory20
-        images: 'ghcr.io/${{ secrets.AzureAppService_ContainerUsername_b1c31551a4bb440c9121e9a0a3a08145 }}/try-directory2023:${{ github.sha }}'
+        images: 'ghcr.io/leahlandau/try-directory2023:${{ github.sha }}'
