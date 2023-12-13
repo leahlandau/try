@@ -19,8 +19,8 @@ jobs:
     strategy:
       matrix:
         directory:
-          - directory10
           - directory11
+          - directory12
 
     steps:
       - name: Checkout repository
