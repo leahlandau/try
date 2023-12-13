@@ -78,21 +78,21 @@ jobs:
 
       # Optional: Add step to run tests here
 
-      - name: Zip artifact for deployment
-        run: zip release-${{ matrix.directory }}.zip ./${{ matrix.directory }} -r
-        # if: ${{ env.DIRECTORY }} == matrix.directory
-        if: steps.determine_directory.outputs.directory == matrix.directory
+      # - name: Zip artifact for deployment
+      #   run: zip release-${{ matrix.directory }}.zip ./${{ matrix.directory }} -r
+      #   # if: ${{ env.DIRECTORY }} == matrix.directory
+      #   if: steps.determine_directory.outputs.directory == matrix.directory
       
       
-      - name: Upload artifact for deployment job
-        uses: actions/upload-artifact@v3
-        with:
-          name: python-app
-          path: |
-            release-${{ matrix.directory }}.zip
-            !venv/
-        # if: ${{ env.DIRECTORY }} == matrix.directory
-        if: steps.determine_directory.outputs.directory == matrix.directory
+      # - name: Upload artifact for deployment job
+      #   uses: actions/upload-artifact@v3
+      #   with:
+      #     name: python-app
+      #     path: |
+      #       release-${{ matrix.directory }}.zip
+      #       !venv/
+      #   # if: ${{ env.DIRECTORY }} == matrix.directory
+      #   if: steps.determine_directory.outputs.directory == matrix.directory
 
   # deploy:
     # runs-on: ubuntu-latest
@@ -107,17 +107,17 @@ jobs:
     #   url: ${{ steps.deploy-to-function.outputs.webapp-url }}
     
     # steps:
-      - name: Download artifact from build job
-        uses: actions/download-artifact@v3
-        with:
-          name: python-app
-        # if: ${{ env.DIRECTORY }} == matrix.directory
-        if: steps.determine_directory.outputs.directory == matrix.directory
+      # - name: Download artifact from build job
+      #   uses: actions/download-artifact@v3
+      #   with:
+      #     name: python-app
+      #   # if: ${{ env.DIRECTORY }} == matrix.directory
+      #   if: steps.determine_directory.outputs.directory == matrix.directory
 
-      - name: Unzip artifact for deployment
-        run: unzip release-${{ matrix.directory }}.zip
-        # if: ${{ env.DIRECTORY }} == matrix.directory
-        if: steps.determine_directory.outputs.directory == matrix.directory
+      # - name: Unzip artifact for deployment
+      #   run: unzip release-${{ matrix.directory }}.zip
+      #   # if: ${{ env.DIRECTORY }} == matrix.directory
+      #   if: steps.determine_directory.outputs.directory == matrix.directory
         
       - name: Azure Login
         run: az login 
