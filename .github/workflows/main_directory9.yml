@@ -31,7 +31,7 @@ jobs:
       with:
         push: true
         tags: ghcr.io/leahlandau/try-directory9:${{ github.sha }}
-        file: ./Dockerfile
+        file: ./directory9/Dockerfile
 
     
   deploy:
