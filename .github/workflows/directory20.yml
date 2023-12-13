@@ -31,7 +31,7 @@ jobs:
           tags: ghcr.io/${{ secrets.AzureAppService_ContainerUsername_f652fa3c2fde4eb1bd4535d17c432454 }}/ghcr.io/leahlandau/try-directory20:${{ github.sha }}
           file: ./Dockerfile
 
-    deploy:
+  deploy:
       runs-on: ubuntu-latest
       needs: build
       environment:
