@@ -5,6 +5,8 @@ ENV AzureWebJobsScriptRoot=/home/site/wwwroot \
     AzureWebJobsFeatureFlags=EnableWorkerIndexing \ 
     AzureWebJobsStorage=UseDevelopmentStorage=true 
 
+EXPOSE 80
+
 COPY requirements.txt /
 RUN pip install -r /requirements.txt
 
