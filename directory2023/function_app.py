@@ -1,7 +1,7 @@
 import azure.functions as func
 import logging
 import datetime
-# import datetime
+import datetime
 
 app = func.FunctionApp()
 
