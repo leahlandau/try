@@ -1,17 +1,37 @@
-FROM mcr.microsoft.com/azure-functions/python:3.0
+FROM mcr.microsoft.com/azure-functions/python:4-python3.10
 
 ENV AzureWebJobsScriptRoot=/home/site/wwwroot \
-    AzureFunctionsJobHost__Logging__Console__IsEnabled=true
+    AzureFunctionsJobHost__Logging__Console__IsEnabled=true \
+    AzureWebJobsFeatureFlags=EnableWorkerIndexing \ 
+    AzureWebJobsStorage=UseDevelopmentStorage=true 
+
+COPY requirements.txt /
+RUN pip install -r /requirements.txt
 
 COPY . /home/site/wwwroot
+# FROM mcr.microsoft.com/azure-functions/python:3.0
+# FROM microsoft/azure-functions-python3.6:v2.0.11737-alpha
 
-COPY requirements.txt requirements.txt
+# ENV AzureWebJobsScriptRoot=/home/site/wwwroot \
+#     AzureFunctionsJobHost__Logging__Console__IsEnabled=true
 
-RUN pip install -r requirements.txt
+# COPY . /home/site/wwwroot
 
-CMD ["python", "-m", "function_app"]
+# COPY requirements.txt requirements.txt
+
+# RUN cd /home/site/wwwroot && pip install -r requirements.txt
+
+# RUN cd /home/site/wwwroot
 
 
+# RUN pip install -r requirements.txt
+
+# CMD ["python", "-m", "function_app"]
+
+
+
+
+# Install requirements
 
 
 
