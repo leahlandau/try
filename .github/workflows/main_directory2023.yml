@@ -33,6 +33,10 @@ jobs:
         push: true
         tags: ghcr.io/leahlandau/try-directory2023:${{ github.sha }}
         file: ./directory2023/Dockerfile
+    
+    -name: run locally
+     run: docker run -p 80:80 ghcr.io/leahlandau/try-directory2023:${{ github.sha }}
+
 
   deploy:
     runs-on: ubuntu-latest
