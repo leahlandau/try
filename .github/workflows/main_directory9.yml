@@ -1,7 +1,7 @@
 # Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
 # More GitHub Actions for Azure: https://github.com/Azure/actions
 
-name: Build and deploy container app to Azure Web App - directory2024
+name: Build and deploy container app to Azure Web App - directory9
 
 on:
   push:
@@ -29,13 +29,13 @@ jobs:
     - name: Build and push container image to registry
       uses: docker/build-push-action@v3
       with:
-        context: ./directory2024
+        context: ./directory9
         push: true
-        tags: ghcr.io/leahlandau/try-directory2024:${{ github.sha }}
-        file: ./directory2024/Dockerfile
+        tags: ghcr.io/leahlandau/try-directory9:${{ github.sha }}
+        file: ./directory9/Dockerfile
     
     # - name: run locally
-    #   run: docker run -p 8181:80 ghcr.io/leahlandau/try-directory2024:${{ github.sha }}
+    #   run: docker run -p 8181:80 ghcr.io/leahlandau/try-directory9:${{ github.sha }}
 
 
   deploy:
@@ -54,15 +54,15 @@ jobs:
     #   id: deploy-to-webapp
     #   uses: azure/webapps-deploy@v2
     #   with:
-    #     app-name: 'directory2024'
+    #     app-name: 'directory9'
     #     slot-name: 'production'
     #     publish-profile: ${{ secrets.AzureAppService_PublishProfile_da34fe16f77d4f80b2403cf72d4f4b19 }}
-    #     images: 'ghcr.io/${{ secrets.AzureAppService_ContainerUsername_b1c31551a4bb440c9121e9a0a3a08145 }}/leahlandau/try-directory2024:${{ github.sha }}'
+    #     images: 'ghcr.io/${{ secrets.AzureAppService_ContainerUsername_b1c31551a4bb440c9121e9a0a3a08145 }}/leahlandau/try-directory9:${{ github.sha }}'
 
     - name: Deploy to Azure Functions
       id: deploy-to-functions
       uses: Azure/functions-container-action@v1
       with:
-        app-name: directory2024
-        image: 'ghcr.io/leahlandau/try-directory2024:${{ github.sha }}'
+        app-name: directory9
+        image: 'ghcr.io/leahlandau/try-directory9:${{ github.sha }}'
 # 
