@@ -12,6 +12,11 @@ on:
 jobs:
   build:
     runs-on: 'ubuntu-latest'
+    strategy:
+      matrix:
+        directory:
+          - directory11
+          - directory12
 
     steps:
     
@@ -19,17 +24,17 @@ jobs:
       with:
         fetch-depth: 0
 
-    - name: 🔎 Determine modified directory 1
-      id: determine_directory1
+    - name: 🔎 Determine modified directory
+      id: determine_directory
       run: |
-        git diff --name-only HEAD~1 ${{ github.sha }} > changes.txt
-        if grep -q '^directory1/' changes.txt; then
-          echo "Directory 1 has changes"
-          echo "::set-output name=directory::directory1"
-        else
-          echo "No changes in Directory 1"
-          exit 0
-        fi
+       git diff --name-only HEAD~1 ${{ github.sha }} > changes.txt
+       if grep -q '^${{ matrix.directory }}/' changes.txt; then
+         echo "${{ matrix.directory }} has changes"
+         echo "::set-output name=directory::${{ matrix.directory }}"
+       else
+         echo "No changes in ${{ matrix.directory }}"
+         exit 0
+       fi
 
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v2
