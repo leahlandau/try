@@ -38,8 +38,7 @@ jobs:
       - name: 📁 Create ZIP Archive
         run: |
           # zip -r repository.zip .
-          zip -r repository.zip . -x "directory1/*" -x "directory2/*"
-
+          zip -r directory1.zip directory1
 
       - name: ⬆️ Upload Release Asset
         id: upload-release-asset 
