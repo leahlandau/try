@@ -37,29 +37,15 @@ jobs:
 
       - name: 📁 Create ZIP Archive
         run: |
-          # zip -r repository.zip .
-          zip -r directory9.zip ./directory9
-          zip -r directory10.zip ./directory10
-
+          zip -r repository.zip .
 
       - name: ⬆️ Upload Release Asset
-        id: upload-release-asset-directory9
+        id: upload-release-asset 
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }} 
-          asset_path: ./directory9.zip
-          asset_name: directory9.zip
+          asset_path: ./repository.zip
+          asset_name: repository.zip
           asset_content_type: application/zip 
-
-      - name: ⬆️ Upload Release Asset
-        id: upload-release-asset-directory10
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }} 
-          asset_path: ./directory10.zip
-          asset_name: directory10.zip
-          asset_content_type: application/zip
