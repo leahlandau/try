@@ -114,6 +114,6 @@ jobs:
       id: deploy-to-functions
       uses: Azure/functions-container-action@v1
       with:
-        app-name: ${{ matrix.directory }}
+        app-name: matrix.directory
         image: 'ghcr.io/leahlandau/try-${{ matrix.directory }}:${{ steps.get_release.outputs.tag_name }}'
       if: env.DIRECTORY == matrix.directory
