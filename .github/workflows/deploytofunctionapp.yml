@@ -20,8 +20,8 @@ jobs:
     strategy:
       matrix:
         directory:
-          # - directory2026
-          - directory2027
+          - directory2026
+          # - directory2027
 
     steps:
     - name: 📂 Checkout repository
