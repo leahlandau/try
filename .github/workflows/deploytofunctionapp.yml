@@ -12,7 +12,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  build:
+ build:
     runs-on: 'ubuntu-latest'
     strategy:
       matrix:
@@ -91,14 +91,14 @@ jobs:
       if: env.DIRECTORY == matrix.directory
 
     
-  deploy:
-    runs-on: ubuntu-latest
-    needs: build
-    environment:
-      name: 'production'
-      url: ${{ steps.deploy-to-functions.outputs.app-url }}
+ deploy:
+   runs-on: ubuntu-latest
+   needs: build
+   environment:
+     name: 'production'
+     url: ${{ steps.deploy-to-functions.outputs.app-url }}
 
-    steps:
+   steps:
      
     - name: 🔑 Azure Login
       run: az login
@@ -110,10 +110,10 @@ jobs:
     #     creds: ${{ secrets.AZURE_CREDENTIALS }}
         # if: env.DIRECTORY == matrix.directory
 
-   - name: Deploy to Azure Functions
-     id: deploy-to-functions
-     uses: Azure/functions-container-action@v1
-     with:
-       app-name: ${{ matrix.directory }}
-       image: 'ghcr.io/leahlandau/try-${{ matrix.directory }}:${{ steps.get_release.outputs.tag_name }}'
-     if: env.DIRECTORY == matrix.directory
+    - name: Deploy to Azure Functions
+      id: deploy-to-functions
+      uses: Azure/functions-container-action@v1
+      with:
+        app-name: ${{ matrix.directory }}
+        image: 'ghcr.io/leahlandau/try-${{ matrix.directory }}:${{ steps.get_release.outputs.tag_name }}'
+      if: env.DIRECTORY == matrix.directory
