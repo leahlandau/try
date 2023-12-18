@@ -12,8 +12,11 @@ on:
   workflow_dispatch:
 
 jobs:
- build:
+ build and deploy:
     runs-on: 'ubuntu-latest'
+    environment:
+      name: 'production'
+      url: ${{ steps.deploy-to-functions.outputs.app-url }}
     strategy:
       matrix:
         directory:
@@ -100,9 +103,9 @@ jobs:
 #          - directory2024
 
   #  needs: build
-   environment:
-     name: 'production'
-     url: ${{ steps.deploy-to-functions.outputs.app-url }}
+  #  environment:
+  #    name: 'production'
+  #    url: ${{ steps.deploy-to-functions.outputs.app-url }}
 
   #  steps:
      
@@ -110,8 +113,8 @@ jobs:
       run: az login
       if: env.DIRECTORY == matrix.directory
 
-    - name: echo matrix.directory
-      run:  echo "${{ matrix.directory }} has changes"
+    # - name: echo matrix.directory
+    #   run:  echo "${{ matrix.directory }} has changes"
     # - name: 🔌 Login to Azure
     #   uses: azure/login@v1
     #   with:
