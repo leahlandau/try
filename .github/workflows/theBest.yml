@@ -41,7 +41,7 @@ jobs:
     environment:
       name: 'production'
       url: ${{ steps.deploy-to-webapp.outputs.app-url }}
-
+# 
     steps:
      
     - name: 🔑 Azure Login
