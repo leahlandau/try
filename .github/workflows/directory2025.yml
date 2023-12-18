@@ -53,3 +53,4 @@ jobs:
         #     slot-name: 'production'
         #     publish-profile: ${{ secrets.AzureAppService_PublishProfile_956adb7de4e64da5a56908565d117047 }}
         #     images: 'ghcr.io/${{ secrets.AzureAppService_ContainerUsername_0c5fc59530394e2aa04a86d7f98e1b48 }}/ghcr.io/leahlandau/try-directory2025:${{ github.sha }}'
+        # 
