@@ -93,6 +93,12 @@ jobs:
     
  deploy:
    runs-on: ubuntu-latest
+   strategy:
+     matrix:
+       directory:
+         - directory2023
+         - directory2024
+
    needs: build
    environment:
      name: 'production'
@@ -111,8 +117,7 @@ jobs:
     #   with:
     #     creds: ${{ secrets.AZURE_CREDENTIALS }}
         # if: env.DIRECTORY == matrix.directory
-    - name: echo matrix.directory
-      run: echo "directory:${{ matrix.directory }}
+ 
       
     - name: Deploy to Azure Functions
       id: deploy-to-functions
