@@ -83,9 +83,11 @@ jobs:
       with:
         # context: ./${{ matrix.directory }}
         push: true
-        tags: ${{ steps.get_release.outputs.tags }}
+        # tags: ${{ steps.get_release.outputs.tags }}
+        tags: ghcr.io/leahlandau/try-${{ matrix.directory }}:${{ steps.get_release.outputs.tag_name }}
         labels: ${{ steps.docker_meta.outputs.labels }}
-        file: ./matrix.directory/Dockerfile
+        file: ./${{ matrix.directory }}/Dockerfile
+
       if: env.DIRECTORY == matrix.directory
 
     
