@@ -28,7 +28,7 @@ jobs:
         with:
           context: ./directory2025
           push: true
-          tags: ghcr.io/${{ secrets.AzureAppService_ContainerUsername_0c5fc59530394e2aa04a86d7f98e1b48 }}/ghcr.io/leahlandau/try-directory2025:${{ github.sha }}
+          tags: ghcr.io/leahlandau/try-directory2025:${{ github.sha }}
           file: ./directory2025/Dockerfile
 
     deploy:
@@ -42,7 +42,7 @@ jobs:
 
         - name: 🔑 Azure Login
           run: az login
-          
+
         - name: Deploy to Azure Functions
           id: deploy-to-functions
           uses: Azure/functions-container-action@v1
