@@ -91,20 +91,20 @@ jobs:
       if: env.DIRECTORY == matrix.directory
 
     
- deploy:
-   runs-on: ubuntu-latest
-   strategy:
-     matrix:
-       directory:
-         - directory2023
-         - directory2024
+#  deploy:
+#    runs-on: ubuntu-latest
+#    strategy:
+#      matrix:
+#        directory:
+#          - directory2023
+#          - directory2024
 
-   needs: build
+  #  needs: build
    environment:
      name: 'production'
      url: ${{ steps.deploy-to-functions.outputs.app-url }}
 
-   steps:
+  #  steps:
      
     - name: 🔑 Azure Login
       run: az login
