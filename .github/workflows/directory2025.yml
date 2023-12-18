@@ -44,8 +44,8 @@ jobs:
         id: deploy-to-functions
         uses: Azure/functions-container-action@v1
         with:
-        app-name: directory2025
-        image: 'ghcr.io/leahlandau/try-directory2025:${{ github.sha }}'
+          app-name: directory2025
+          image: 'ghcr.io/leahlandau/try-directory2025:${{ github.sha }}'
       # - name: Deploy to Azure Functions
       #   id: deploy-to-functions
       #   uses: azure/functions-deploy@v2
