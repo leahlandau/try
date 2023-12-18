@@ -81,7 +81,7 @@ jobs:
     - name: 🏗️ Build and push container image to registry
       uses: docker/build-push-action@v3
       with:
-        context: ./${{ matrix.directory }}
+        # context: ./${{ matrix.directory }}
         push: true
         tags: ${{ steps.get_release.outputs.tags }}
         labels: ${{ steps.docker_meta.outputs.labels }}
