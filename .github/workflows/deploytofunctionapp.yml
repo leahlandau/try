@@ -20,9 +20,9 @@ jobs:
     strategy:
       matrix:
         directory:
-          - directory2026
+          # - directory2026
           - directory2027
-          
+
     steps:
     - name: 📂 Checkout repository
       uses: actions/checkout@v4
@@ -84,7 +84,7 @@ jobs:
     - name: 🏗️ Build and push container image to registry
       uses: docker/build-push-action@v3
       with:
-        # context: ./${{ matrix.directory }}
+        context: ./${{ matrix.directory }}
         push: true
         # tags: ${{ steps.get_release.outputs.tags }}
         tags: ghcr.io/leahlandau/try-${{ matrix.directory }}:${{ steps.get_release.outputs.tag_name }}
