@@ -37,7 +37,7 @@ jobs:
 
       - name: 📁 Create ZIP Archive
         run: |
-          zip -r repository.zip .
+          zip -r directory2023.zip ./directory2023
 
       - name: ⬆️ Upload Release Asset
         id: upload-release-asset 
@@ -46,6 +46,21 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }} 
-          asset_path: ./repository.zip
-          asset_name: repository.zip
+          asset_path: ./directory2023.zip
+          asset_name: directory2023.zip
+          asset_content_type: application/zip 
+
+      - name: 📁 Create ZIP Archive
+        run: |
+          zip -r directory2024.zip ./directory2024
+
+      - name: ⬆️ Upload Release Asset
+        id: upload-release-asset 
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }} 
+          asset_path: ./directory2024.zip
+          asset_name: directory2024.zip
           asset_content_type: application/zip 
