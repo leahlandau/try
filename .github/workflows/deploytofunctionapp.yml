@@ -104,6 +104,8 @@ jobs:
       run: az login
       if: env.DIRECTORY == matrix.directory
 
+    - name: echo matrix.directory
+      run:  echo "${{ matrix.directory }} has changes"
     # - name: 🔌 Login to Azure
     #   uses: azure/login@v1
     #   with:
