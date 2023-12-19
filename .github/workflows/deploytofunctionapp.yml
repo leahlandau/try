@@ -18,8 +18,8 @@ jobs:
     strategy:
       matrix:
         directory:
-          - emails
-          - subscriptions_automation
+          - emails1
+          - subscriptions-automation1
 
     steps:
     - name: 📂 Checkout repository
@@ -98,6 +98,6 @@ jobs:
       id: deploy-to-functions
       uses: Azure/functions-container-action@v1
       with:
-        app-name: ${{ secrets[format('AZURE_APP_NAME_{0}', matrix.directory)] || '' }}
+        app-name: func-${{ matrix.directory }}
         image: 'ghcr.io/${{ github.actor }}/${{ github.repository }}-${{ matrix.directory }}:${{ steps.get_release.outputs.tag_name }}'
       if: env.DIRECTORY == matrix.directory
