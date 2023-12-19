@@ -64,6 +64,7 @@ jobs:
       id: downcase
       with:
           string: ${{ github.repository }}
+      if: env.DIRECTORY == matrix.directory
 
     - name: ♻️ Set correct environment
       run: |
