@@ -77,7 +77,7 @@ jobs:
       id: docker_meta
       uses: docker/metadata-action@v5
       with:
-        images: ghcr.io/${{ env.REPO }}-${{ matrix.directory }}
+        images: ghcr.io/env.REPO-${{ matrix.directory }}
         tags: |
           type=semver,pattern={{major}}.{{minor}}.{{patch}},value=${{ env.TAG }}
           type=semver,pattern={{major}}.{{minor}},value=${{ env.TAG }}
@@ -89,7 +89,7 @@ jobs:
       with:
         context: ./${{ matrix.directory }}/src
         push: true
-        tags: ghcr.io/${{ env.REPO }}-${{ matrix.directory }}:${{ steps.get_release.outputs.tag_name }}
+        tags: ghcr.io/env.REPO-${{ matrix.directory }}:${{ steps.get_release.outputs.tag_name }}
         labels: ${{ steps.docker_meta.outputs.labels }}
         file: ./${{ matrix.directory }}/src/Dockerfile
       if: env.DIRECTORY == matrix.directory
@@ -107,5 +107,5 @@ jobs:
       uses: Azure/functions-container-action@v1
       with:
         app-name: func-${{ matrix.directory }}
-        image: 'ghcr.io/${{ env.REPO }}-${{ matrix.directory }}:${{ steps.get_release.outputs.tag_name }}'
+        image: 'ghcr.io/env.REPO-${{ matrix.directory }}:${{ steps.get_release.outputs.tag_name }}'
       if: env.DIRECTORY == matrix.directory
