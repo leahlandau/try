@@ -95,13 +95,14 @@ jobs:
         file: ./${{ matrix.directory }}/src/Dockerfile
       if: env.DIRECTORY == matrix.directory
 
-    - name: 🔑 Login to Azure
-      uses: azure/login@v1
-      with:
-        creds: ${{ secrets.AZURE_CREDENTIALS }}
-      if: env.DIRECTORY == matrix.directory
+    # - name: 🔑 Login to Azure
+    #   uses: azure/login@v1
+    #   with:
+    #     creds: ${{ secrets.AZURE_CREDENTIALS }}
+    #   if: env.DIRECTORY == matrix.directory
  
-    
+    - name: login to azure
+      run: az login
 
     - name: 🚀 Deploy to Azure Functions
       id: deploy-to-functions
