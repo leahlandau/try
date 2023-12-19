@@ -69,7 +69,7 @@ jobs:
       run: |
         TAG=${{ steps.get_release.outputs.tag_name }}
         echo "TAG=$TAG" >> "$GITHUB_ENV"
-        REPO=${{ steps.downcase.output.lowercase }}
+        REPO=${{ steps.string.outputs.lowercase }}
         echo "REPO=$REPO" >> "$GITHUB_ENV"
       if: env.DIRECTORY == matrix.directory
 
