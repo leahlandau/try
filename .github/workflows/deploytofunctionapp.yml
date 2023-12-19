@@ -100,4 +100,5 @@ jobs:
       uses: Azure/functions-container-action@v1
       with:
         app-name: func-${{ matrix.directory }}
-        image: 'ghcr.io/${{ github.actor | lower }}/${{ github.repository | lower }}-${{ matrix.directory | lower }}:${{ steps.get_release.outputs.tag_name }}'      if: env.DIRECTORY == matrix.directory
+        image: 'ghcr.io/${{ github.actor | lower }}/${{ github.repository | lower }}-${{ matrix.directory | lower }}:${{ steps.get_release.outputs.tag_name }}'      
+      if: env.DIRECTORY == matrix.directory
