@@ -16,7 +16,7 @@ jobs:
     strategy:
       matrix:
         directory:
-          - emails1
+          # - emails1
           - subscriptions-automation1
 
     steps:
