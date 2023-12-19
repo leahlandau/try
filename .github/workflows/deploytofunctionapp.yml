@@ -72,7 +72,7 @@ jobs:
       id: docker_meta
       uses: docker/metadata-action@v5
       with:
-        images: ghcr.io/${{ github.actor }}/${{ github.repository }}-${{ matrix.directory }}
+        images: ghcr.io/${{ github.repository }}-${{ matrix.directory }}
         tags: |
           type=semver,pattern={{major}}.{{minor}}.{{patch}},value=${{ env.TAG }}
           type=semver,pattern={{major}}.{{minor}},value=${{ env.TAG }}
@@ -84,7 +84,7 @@ jobs:
       with:
         context: ./${{ matrix.directory }}/src
         push: true
-        tags: ghcr.io/${{ github.actor }}/${{ github.repository }}-${{ matrix.directory }}:${{ steps.get_release.outputs.tag_name }}
+        tags: ghcr.io/${{ github.repository }}-${{ matrix.directory }}:${{ steps.get_release.outputs.tag_name }}
         labels: ${{ steps.docker_meta.outputs.labels }}
         file: ./${{ matrix.directory }}/src/Dockerfile
       if: env.DIRECTORY == matrix.directory
