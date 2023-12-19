@@ -5,9 +5,6 @@ on:
     branches:
       - main
 
-# env:
-#   REGISTRY: ghcr.io
-
 jobs:
  build-and-deploy:
     runs-on: 'ubuntu-latest'
@@ -62,17 +59,25 @@ jobs:
         latest: true
       if: env.DIRECTORY == matrix.directory
 
+    - name: 🔄 downcase REPO
+      uses: ASzc/change-string-case-action@v1
+      id: downcase
+      with:
+          string: ${{ github.repository }}
+
     - name: ♻️ Set correct environment
       run: |
         TAG=${{ steps.get_release.outputs.tag_name }}
         echo "TAG=$TAG" >> "$GITHUB_ENV"
+        REPO=${{ steps.downcase.output.lowercase }}
+        echo "REPO=$REPO" >> "$GITHUB_ENV"
       if: env.DIRECTORY == matrix.directory
 
     - name: 🐳 Docker metadata
       id: docker_meta
       uses: docker/metadata-action@v5
       with:
-        images: ghcr.io/${{ github.repository }}-${{ matrix.directory }}
+        images: ghcr.io/${{ env.REPO }}-${{ matrix.directory }}
         tags: |
           type=semver,pattern={{major}}.{{minor}}.{{patch}},value=${{ env.TAG }}
           type=semver,pattern={{major}}.{{minor}},value=${{ env.TAG }}
@@ -84,7 +89,7 @@ jobs:
       with:
         context: ./${{ matrix.directory }}/src
         push: true
-        tags: ghcr.io/${{ github.repository }}-${{ matrix.directory }}:${{ steps.get_release.outputs.tag_name }}
+        tags: ghcr.io/${{ env.REPO }}-${{ matrix.directory }}:${{ steps.get_release.outputs.tag_name }}
         labels: ${{ steps.docker_meta.outputs.labels }}
         file: ./${{ matrix.directory }}/src/Dockerfile
       if: env.DIRECTORY == matrix.directory
@@ -95,10 +100,12 @@ jobs:
         creds: ${{ secrets.AZURE_CREDENTIALS }}
       if: env.DIRECTORY == matrix.directory
  
+    
+
     - name: 🚀 Deploy to Azure Functions
       id: deploy-to-functions
       uses: Azure/functions-container-action@v1
       with:
         app-name: func-${{ matrix.directory }}
-        image: 'ghcr.io/${{ github.repository }}-${{ matrix.directory }}:${{ steps.get_release.outputs.tag_name }}'
+        image: 'ghcr.io/${{ env.REPO }}-${{ matrix.directory }}:${{ steps.get_release.outputs.tag_name }}'
       if: env.DIRECTORY == matrix.directory
