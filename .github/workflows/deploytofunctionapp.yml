@@ -5,8 +5,8 @@ on:
     branches:
       - main
 
-env:
-  REGISTRY: ghcr.io
+# env:
+#   REGISTRY: ghcr.io
 
 jobs:
  build-and-deploy:
@@ -48,7 +48,7 @@ jobs:
     - name: 🔑 Log in to registry
       uses: docker/login-action@v2
       with:
-        registry: env.REGISTRY
+        registry: ghcr.io
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
       if: env.DIRECTORY == matrix.directory
