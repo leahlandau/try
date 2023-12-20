@@ -19,11 +19,12 @@ env:
 jobs:
   job1:
     runs-on: ubuntu-latest
-     strategy:
+    strategy:
       matrix:
         directory:
           - emails
           - subscriptions-automation
+
 
     steps:
       - uses: actions/checkout@v3
