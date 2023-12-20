@@ -127,10 +127,6 @@ resource "azurerm_function_app" "function_app" {
   }
   
   site_config {
-    linux_fx_version = "python|3.11"
-  }
-
-  site_config {
     always_on         = true
     linux_fx_version  = var.linux_fx_version
   }
