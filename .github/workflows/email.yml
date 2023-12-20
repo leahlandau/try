@@ -1,0 +1,45 @@
+name: '🌍 Terraform Automation'
+
+on:
+  workflow_dispatch:
+
+env:
+  TF_VAR_subscription_id: ${{secrets.SUBSCRIPTION_ID}}
+  TF_VAR_email_sender: ${{secrets.EMAIL_SENDER}}
+  TF_VAR_sender_email_password: ${{secrets.EMAIL_SENDER_PASSWORD}}
+  TF_VAR_DOCKER_REGISTRY_SERVER_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
+  TF_VAR_DOCKER_REGISTRY_SERVER_USERNAME: ${{ github.actor }}
+  TF_VAR_DOCKER_REGISTRY_SERVER_URL: https://ghcr.io
+
+jobs:
+  job1:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: 🧩 HashiCorp - Setup Terraform
+        uses: hashicorp/setup-terraform@v2.0.0
+      
+      - name: 🔑 Login to Azure
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}  
+
+      - name: 🏗️ Terraform Init
+        id: init
+        run: |
+          cd emails/terraform   
+          terraform init -input=false
+
+      - name: 📋 Terraform Plan
+        id: plan
+        run: |
+          cd emails/terraform  
+          terraform plan -out=tfplan -input=false
+
+      - name: ✅ Terraform Apply
+        id: apply
+        run: |
+          cd emails/terraform  
+          terraform apply -input=false -auto-approve tfplan
+          
