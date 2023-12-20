@@ -3,6 +3,7 @@ name: '🌍 Terraform Automation'
 on:
   workflow_dispatch:
 
+
 env:
   TF_VAR_subscription_id: ${{secrets.SUBSCRIPTION_ID}}
   TF_VAR_RECIPIENT_EMAIL: ${{secrets.RECIPIENT_EMAIL}}
@@ -18,6 +19,12 @@ env:
 jobs:
   job1:
     runs-on: ubuntu-latest
+    strategy:
+    matrix:
+      directory:
+        - emails
+        - subscriptions-automation
+
     steps:
       - uses: actions/checkout@v3
 
@@ -31,17 +38,17 @@ jobs:
       - name: 🏗️ Terraform Init
         id: init
         run: |
-          cd subscriptions-automation/terraform  
+          cd ${{ matrix.directory }}/terraform  
           terraform init -input=false
 
       - name: 📋 Terraform Plan
         id: plan
         run: |
-          cd subscriptions-automation/terraform 
+          cd ${{ matrix.directory }}/terraform   
           terraform plan -out=tfplan -input=false
 
       - name: ✅ Terraform Apply
         id: apply
         run: |
-          cd subscriptions-automation/terraform   
+          cd ${{ matrix.directory }}/terraform    
           terraform apply -input=false -auto-approve tfplan
