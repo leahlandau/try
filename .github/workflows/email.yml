@@ -34,15 +34,21 @@ jobs:
           cd emails/terraform   
           terraform init -input=false
 
-      - name: 📋 Terraform Plan
-        id: plan
-        run: |
-          cd emails/terraform  
-          terraform plan -out=tfplan -input=false
+      # - name: 📋 Terraform Plan
+      #   id: plan
+      #   run: |
+      #     cd emails/terraform  
+      #     terraform plan -out=tfplan -input=false
 
-      - name: ✅ Terraform Apply
+      # - name: ✅ Terraform Apply
+      #   id: apply
+      #   run: |
+      #     cd emails/terraform  
+      #     terraform apply -input=false -auto-approve tfplan
+          
+
+      - name: ✅ Terraform Destroy
         id: apply
         run: |
           cd emails/terraform  
-          terraform apply -input=false -auto-approve tfplan
-          
+          terraform destroy
