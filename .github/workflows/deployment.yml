@@ -98,7 +98,8 @@ jobs:
     - name: 🔑 Login to Azure
       uses: azure/login@v1
       with:
-        creds: ${{ secrets.AZURE_CREDENTIALS }}
+        # creds: ${{ secrets.AZURE_CREDENTIALS }}
+        creds: ${{secrets.AZURE_CLIENT_SECRET}} ${{secrets.SUBSCRIPTION_ID}} ${{secrets.AZURE_TENANT_ID}} ${{secrets.AZURE_CLIENT_ID}}
       if: env.DIRECTORY == matrix.directory
  
     - name: 🚀 Deploy to Azure Functions
