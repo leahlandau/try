@@ -42,16 +42,23 @@ jobs:
           cd ${{ matrix.directory }}/terraform  
           terraform init -input=false
 
-      - name: 📋 Terraform Plan
-        id: plan
-        run: |
-          cd ${{ matrix.directory }}/terraform   
-          terraform plan -out=tfplan -input=false
+      # - name: 📋 Terraform Plan
+      #   id: plan
+      #   run: |
+      #     cd ${{ matrix.directory }}/terraform   
+      #     terraform plan -out=tfplan -input=false
 
-      - name: ✅ Terraform Apply
-        id: apply
+      # - name: ✅ Terraform 5
+      #   id: apply
+      #   run: |
+      #     cd ${{ matrix.directory }}/terraform    
+      #     terraform apply -input=false -auto-approve tfplan
+
+
+      - name: ✅ Terraform 5
+        id: destroy
         run: |
           cd ${{ matrix.directory }}/terraform    
-          terraform apply -input=false -auto-approve tfplan
+          terraform destroy  -auto-approve     
 
-# 
+ 
