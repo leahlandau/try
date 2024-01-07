@@ -4,7 +4,7 @@ on:
   push:
     branches:
       # - feature/ci-cd
-      -main
+      - main
     paths:
       - 'emails/**'
       - 'subscriptions/**'
