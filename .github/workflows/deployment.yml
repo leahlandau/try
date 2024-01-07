@@ -22,9 +22,9 @@ jobs:
       - name: 🔎 Determine modified directories
         id: determine_directories
         run: |
+          echo "${{ github.event.paths}}"
           changed_files=$(git diff --name-only HEAD^ HEAD)
           declare -a changed_dirs=()
-          echo "${{ github.event.paths}}"
           for path in "${{ github.event.paths}}"; do
             for file in $changed_files; do
               if [[ "$file" =~ ^$path ]]; then
