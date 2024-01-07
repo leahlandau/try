@@ -26,7 +26,6 @@ jobs:
           declare -a paths=(
             'emails'
             'subscriptions'
-            # Add more directories here if needed, same as in 'paths' above
           )
           changed_files=$(git diff --name-only HEAD^ HEAD)
           declare -a changed_dirs=()
@@ -40,9 +39,9 @@ jobs:
               fi
             done
           done
-          # json_array=$(printf '"%s"\n' "${changed_dirs[@]}")
-          # echo "Changed directories: $json_array"
-          echo "::set-output name=changed_directories::[${changed_dirs[@]}]"
+          json_array=$(printf '"%s"\n' "${changed_dirs[@]}")
+          echo "Changed directories: $json_array"
+          echo "::set-output name=changed_directories::[$json_array | jq -R . -s]"
           
   build-and-deploy:
     runs-on: 'ubuntu-latest'
