@@ -24,7 +24,7 @@ jobs:
         run: |
           changed_files=$(git diff --name-only HEAD^ HEAD)
           declare -a changed_dirs=()
-          for path in 'emails' 'subscriptions'; do
+          for path in "${{ github.event.paths }}"; do
             for file in $changed_files; do
               if [[ "$file" =~ ^$path ]]; then
                 dir=$(echo "$file" | cut -d'/' -f1,2)
