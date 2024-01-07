@@ -26,7 +26,7 @@ jobs:
           declare -A changed_dirs=()
           for file in $changed_files; do
             if [[ "$file" == emails/* || "$file" == subscriptions/* ]]; then
-              dir=$(echo "$file" | cut -d'/' -f1)
+              dir=$(echo "$file" | cut -d'/' -f1,2)
               changed_dirs["$dir"]=1
             fi
           done
