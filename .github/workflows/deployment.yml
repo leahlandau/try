@@ -92,13 +92,13 @@ jobs:
         directory: ${{ fromJson(needs.common-steps.outputs.changed_directories) }}
     
     steps:
-      - name: 📂 Checkout repository
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
+     - name: 📂 Checkout repository
+       uses: actions/checkout@v4
+       with:
+         fetch-depth: 0
 
-      - name: print-name
-        run:
+     - name: print-name
+       run:
          echo ${{matrix.directory}}
          exit 0
 
