@@ -19,8 +19,14 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Read GITHUB_EVENT_PATH content
-        run: cat "$GITHUB_EVENT_PATH"
+      - name: Extract changed paths
+        run: |
+          EVENT_CONTENT=$(cat "$GITHUB_EVENT_PATH")
+
+          CHANGED_PATHS=$(echo "$EVENT_CONTENT" | jq '.commits[].added + .commits[].modified + .commits[].removed' | jq -s 'flatten | unique')
+
+          echo "Changed Paths: $CHANGED_PATHS"
+
 
 
       - name: 🔍 Determine modified directory
