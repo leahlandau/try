@@ -143,9 +143,7 @@ jobs:
       - name: 🔎 Determine modified directory
         id: determine_directory
         run: |
-            echo 'emails/func-emails'
-            exit 0
-
+          echo '["emails/func-emails"]'
 
   build-and-deploy:
     runs-on: 'ubuntu-latest'
