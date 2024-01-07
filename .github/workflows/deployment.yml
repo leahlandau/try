@@ -7,6 +7,7 @@ on:
     paths:
       - 'emails/**'
       - 'subscriptions/**'
+      # Add more directories here if needed
 
 jobs:
   common-steps:
@@ -29,7 +30,7 @@ jobs:
               changed_dirs["$dir"]=1
             fi
           done
-          json_array=$(printf '%s\n' "${!changed_dirs[@]}" | jq -R . | jq -s .)
+          json_array=$(printf '%s\n' "${!changed_dirs[@]}" | jq -R -s 'split("\n") | map({directory: .})')
           echo "Changed directories: $json_array"
           echo "::set-output name=changed_directories::$json_array"
           
@@ -43,5 +44,5 @@ jobs:
     steps:
       - name: print-name
         run:
-          echo ${{matrix.directory}};
+          echo ${{matrix.directory.directory}};
           exit 0
