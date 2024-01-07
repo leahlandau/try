@@ -292,7 +292,7 @@ jobs:
     needs: common-steps
     strategy:
       matrix:
-        directory: ${{ needs.common-steps.outputs.changed_directories }}
+        directory: ${{fromJson(needs.common-steps.outputs.changed_directories)}}
     
     steps:
       - name: print-name
