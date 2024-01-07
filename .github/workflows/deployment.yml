@@ -147,8 +147,8 @@ jobs:
 
       - name: 🔎 Determine modified directory
         id: determine_directories
-        run: |        
-          # Get list of changed files
+        run: |   
+             
           changed_files=$(git diff --name-only HEAD^ HEAD)
           
           # Initialize an array to store changed directories
