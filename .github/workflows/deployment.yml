@@ -7,7 +7,6 @@ on:
     paths:
       - 'emails/**'
       - 'subscriptions/**'
-      # Add more directories here if needed
 
 jobs:
   common-steps:
@@ -39,9 +38,9 @@ jobs:
               fi
             done
           done
-          json_array=$(printf '"%s"\n' "${changed_dirs[@]}")
+          json_array=$(printf '"%s" ' "${changed_dirs[@]}")
           echo "Changed directories: $json_array"
-          echo "::set-output name=changed_directories::[$json_array | jq -R . -s]"
+          echo "::set-output name=changed_directories::$json_array"
           
   build-and-deploy:
     runs-on: 'ubuntu-latest'
