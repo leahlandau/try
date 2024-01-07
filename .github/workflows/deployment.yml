@@ -22,11 +22,21 @@ jobs:
       - name: 🔎 Determine modified directories
         id: determine_directories
         run: |
-         
+          changed_files=$(git diff --name-only HEAD^ HEAD)
+          declare -a changed_dirs=()
           for path in "${{ github.event.paths}}"; do
-            echo "${path}" 
+            for file in $changed_files; do
+              if [[ "$file" =~ ^$path ]]; then
+                dir=$(echo "$file" | cut -d'/' -f1,2)
+                if [[ ! " ${changed_dirs[@]} " =~ " ${dir} " ]]; then
+                  changed_dirs+=("$dir")
+                fi
+              fi
+            done
           done
-          
+          json_array=$(printf '"%s"\n' "${changed_dirs[@]}")
+          echo "Changed directories: $json_array"
+          echo "::set-output name=changed_directories::[$json_array]"
           
   build-and-deploy:
     runs-on: 'ubuntu-latest'
