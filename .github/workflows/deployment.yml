@@ -19,7 +19,7 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: 🔎 Determine modified directory
+      - name: 🔎 Determine modified directories
         id: determine_directories
         run: |   
           changed_files=$(git diff --name-only HEAD^ HEAD)
@@ -27,18 +27,16 @@ jobs:
             'emails'
             'subscriptions'
           )
-          declare -a changed_dirs=()
+          declare -A changed_dirs=()
           for file in $changed_files; do
             for path in "${paths[@]}"; do
               if [[ "$file" =~ ^$path/ ]]; then
-                dir=$(echo "$file" | cut -d'/' -f1,2)
-                if [[ ! " ${changed_dirs[@]} " =~ " ${dir} " ]]; then
-                  changed_dirs+=("$dir")
-                fi
+                dir=$(echo "$file" | cut -d'/' -f1)
+                changed_dirs["$dir"]=1
               fi
             done
           done
-          json_array=$(printf '"%s"\n' "${changed_dirs[@]}")
+          json_array=$(printf '"%s"\n' "${!changed_dirs[@]}")
           echo "Changed directories: $json_array"
           echo "::set-output name=changed_directories::$json_array"
 
