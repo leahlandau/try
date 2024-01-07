@@ -25,7 +25,7 @@ jobs:
           changed_files=$(git diff --name-only HEAD^ HEAD)
 
           paths=($(echo "$GITHUB_EVENT_PATHS" | jq -r '.[]'))
-          echo "$GITHUB_EVENT_PATHS
+          echo ${{ GITHUB_EVENT_PATHS }}
           declare -a changed_dirs=()
 
           for file in $changed_files; do
