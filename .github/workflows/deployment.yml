@@ -32,8 +32,7 @@ jobs:
       
         
           json_array=$(printf '"%s"\n' "${JSON_OUTPUT[@]}")
-          echo "Changed directories: $json_array"
-          echo "::set-output name=changed_directories::[$json_array]"
+          echo "::set-output name=changed_directories::$json_array"
 
 
 
