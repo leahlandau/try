@@ -1,4 +1,4 @@
-name: 🚀 Build and deploy container app to Azure Function App
+name: 🚀 Build and deploy container app to Azure Function App 
 
 on:
   push:
@@ -9,8 +9,8 @@ on:
       - 'subscriptions/**'
 
 jobs:
-  determine-changed-directories:
-    runs-on: ubuntu-latest
+  common-steps:
+    runs-on: 'ubuntu-latest'
     outputs:
       changed_directories: ${{ steps.determine_directories.outputs.changed_directories }}
     steps:
@@ -19,15 +19,15 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: 🔎 Determine modified directory
+      - name: 🔎 Determine modified directories
         id: determine_directories
         run: |
           changed_files=$(git diff --name-only HEAD^ HEAD)
           declare -a changed_dirs=()
-          for file in $changed_files; do
-            for path in "${{ matrix.paths }}"; do
-              if [[ "$file" == "$path"* ]]; then
-                dir=$(echo "$file" | awk -F'/' '{print $1"/"$2}')
+          for path in "${{ toJson(on.paths) }}"; do
+            for file in $changed_files; do
+              if [[ "$file" =~ ^$path ]]; then
+                dir=$(echo "$file" | cut -d'/' -f1,2)
                 if [[ ! " ${changed_dirs[@]} " =~ " ${dir} " ]]; then
                   changed_dirs+=("$dir")
                 fi
@@ -37,17 +37,20 @@ jobs:
           json_array=$(printf '"%s"\n' "${changed_dirs[@]}")
           echo "Changed directories: $json_array"
           echo "::set-output name=changed_directories::[$json_array]"
-
+          
   build-and-deploy:
-    runs-on: ubuntu-latest
-    needs: determine-changed-directories
+    runs-on: 'ubuntu-latest'
+    needs: common-steps
     strategy:
       matrix:
-        directory: ${{ fromJson(needs.determine-changed-directories.outputs.changed_directories) }}
+        directory: ${{fromJson(needs.common-steps.outputs.changed_directories)}}
     
     steps:
-      - name: Print directory name
-        run: echo ${{ matrix.directory }}
+      - name: print-name
+        run:
+          echo ${{matrix.directory}};
+          exit 0
+
 
 # name: 🚀 Build and deploy container app to Azure Function App 
 
