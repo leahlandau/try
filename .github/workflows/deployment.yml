@@ -23,18 +23,12 @@ jobs:
         id: determine_directories
         run: |   
           changed_files=$(git diff --name-only HEAD^ HEAD)
-          paths=(
-            'emails'
-            'subscriptions'
-          )
           declare -A changed_dirs=()
           for file in $changed_files; do
-            for path in "${paths[@]}"; do
-              if [[ "$file" =~ ^$path/ ]]; then
-                dir=$(echo "$file" | cut -d'/' -f1,2)
-                changed_dirs["$dir"]=1
-              fi
-            done
+            if [[ "$file" == emails/* || "$file" == subscriptions/* ]]; then
+              dir=$(echo "$file" | cut -d'/' -f1)
+              changed_dirs["$dir"]=1
+            fi
           done
           json_array=$(printf '"%s"\n' "${!changed_dirs[@]}")
           echo "Changed directories: $json_array"
