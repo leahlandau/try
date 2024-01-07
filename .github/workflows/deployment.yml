@@ -143,7 +143,9 @@ jobs:
       - name: 🔎 Determine modified directory
         id: determine_directory
         run: |
-          echo '["emails/func-emails"]'
+          echo '["emails/func-emails"]' > changed_directories.json
+          cat changed_directories.json # Debugging purpose, check the output format
+          echo "::set-output name=changed_directories::$(cat changed_directories.json)"
 
   build-and-deploy:
     runs-on: 'ubuntu-latest'
