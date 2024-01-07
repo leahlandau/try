@@ -30,10 +30,8 @@ jobs:
           declare -a changed_dirs=()
           for file in $changed_files; do
             for path in "${paths[@]}"; do
-              # Check if the file path matches the specified directories and extract the first level directory
-              if [[ "$file" =~ ^$path/[^/]+ ]]; then
+              if [[ "$file" =~ ^$path/ ]]; then
                 dir=$(echo "$file" | cut -d'/' -f1,2)
-                # Check if the directory is not already in the array
                 if [[ ! " ${changed_dirs[@]} " =~ " ${dir} " ]]; then
                   changed_dirs+=("$dir")
                 fi
@@ -42,8 +40,7 @@ jobs:
           done
           json_array=$(printf '"%s"\n' "${changed_dirs[@]}")
           echo "Changed directories: $json_array"
-          echo "::set-output name=changed_directories::[$json_array]"
-
+          echo "::set-output name=changed_directories::$json_array"
 
   build-and-deploy:
     runs-on: 'ubuntu-latest'
