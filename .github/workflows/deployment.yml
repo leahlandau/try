@@ -30,7 +30,9 @@ jobs:
               changed_dirs["$dir"]=1
             fi
           done
-          json_array=$(printf '%s\n' "${!changed_dirs[@]}" | jq -R -s 'split("\n") | map({directory: .})')
+          # Filter out empty directories
+          non_empty_dirs=$(printf '%s\n' "${!changed_dirs[@]}" | grep -v '^$')
+          json_array=$(echo "$non_empty_dirs" | jq -R -s '[inputs]' 2>/dev/null)
           echo "Changed directories: $json_array"
           echo "::set-output name=changed_directories::$json_array"
           
@@ -44,5 +46,5 @@ jobs:
     steps:
       - name: print-name
         run:
-          echo ${{matrix.directory.directory}};
+          echo ${{matrix.directory}};
           exit 0
