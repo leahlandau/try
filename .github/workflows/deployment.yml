@@ -1,48 +1,19 @@
-name: 🚀 Build and deploy container app to Azure Function App 
-
-on:
-  push:
-    branches:
-      - main
-    paths:
-      - 'emails/**'
-      - 'subscriptions/**'
-
+name: test
+  on: push
 jobs:
-  common-steps:
-    runs-on: 'ubuntu-latest'
+  job1:
+    runs-on: ubuntu-latest
     outputs:
-      changed_directories: ${{ steps.determine_directories.outputs.changed_directories }}
+    matrix: ${{ steps.set-matrix.outputs.matrix }}
     steps:
-      - name: 📂 Checkout repository
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
+      - id: set-matrix
+      run: echo "::set-output name=matrix::{"include":[{"project":"foo","config":"Debug"},{"project":"bar","config":"Release"}]}"
 
-      - name: 🔎 Determine modified directories
-        id: determine_directories
-        run: |   
-          changed_files=$(git diff --name-only HEAD^ HEAD)
-          declare -A changed_dirs=()
-          for file in $changed_files; do
-            if [[ "$file" == emails/* || "$file" == subscriptions/* ]]; then
-              dir=$(echo "$file" | cut -d'/' -f1,2)
-              changed_dirs["$dir"]=1
-            fi
-          done
-          json_array=$(printf '"%s"\n' "${!changed_dirs[@]}")
-          echo "Changed directories: $json_array"
-          echo "::set-output name=changed_directories::$json_array"
 
-  build-and-deploy:
-    runs-on: 'ubuntu-latest'
-    needs: common-steps
-    strategy:
-      matrix:
-        directory: ${{fromJson(needs.common-steps.outputs.changed_directories)}}
-  
-    steps:
-      - name: print-name
-        run: |
-          echo ${{matrix.directory}};
-          exit 0
+  job2:
+  needs: job1
+  runs-on: ubuntu-latest
+  strategy:
+  matrix: ${{fromJson(needs.job1.outputs.matrix)}}
+  steps:
+    - run: echo hello
