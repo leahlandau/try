@@ -97,10 +97,10 @@ jobs:
         with:
           fetch-depth: 0
 
-      -name: print-name
-       run:
-        echo ${{matrix.directory}}
-        exit 0
+      - name: print-name
+        run:
+         echo ${{matrix.directory}}
+         exit 0
 
     # - name: 🏗️ Build and push container image to registry
     #   uses: docker/build-push-action@v3
