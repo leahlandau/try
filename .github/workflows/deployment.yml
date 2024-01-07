@@ -286,19 +286,13 @@ jobs:
           # Convert array to JSON and set as output
           echo "::set-output name=changed_directories::$(echo "${changed_dirs[*]}" | jq -R . | jq -s .)"
 
-        # id: determine_directory
-        # run: |
-         
-        #   echo '["emails/func-emails","emails/function"]' > changed_directories.json
-        #   cat changed_directories.json # Debugging purpose, check the output format
-        #   echo "::set-output name=changed_directories::$(cat changed_directories.json)"
 
   build-and-deploy:
     runs-on: 'ubuntu-latest'
     needs: common-steps
     strategy:
       matrix:
-        directory: ${{ fromJson(needs.common-steps.outputs.changed_directories) }}
+        directory: ${{ needs.common-steps.outputs.changed_directories }}
     
     steps:
       - name: print-name
