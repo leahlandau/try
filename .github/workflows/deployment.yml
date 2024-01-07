@@ -32,9 +32,10 @@ jobs:
             changed_dirs["$dir"]=1
           done
 
-          json_array=$(printf '"%s"\n' "${!changed_dirs[@]}")
+          json_array=$(printf '"%s"\n' "${!changed_dirs[@]}" | jq -R . | jq -s .)
           echo "Changed directories: $json_array"
-          echo "::set-output name=changed_directories::[$json_array]"
+          echo "::set-output name=changed_directories::$json_array"
+
 
 
 
