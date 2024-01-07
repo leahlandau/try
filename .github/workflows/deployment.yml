@@ -52,5 +52,5 @@ jobs:
     steps:
       - name: print-name
         run:
-          echo ${{matrix.directory}};
+          echo ${{matrix.directory}}
           exit 0
