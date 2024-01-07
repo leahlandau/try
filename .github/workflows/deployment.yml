@@ -26,13 +26,22 @@ jobs:
           declare -A changed_dirs=()
           for file in $(git diff --name-only HEAD^ HEAD); do
             if [[ "$file" =~ ^emails/ || "$file" =~ ^subscriptions/ ]]; then
-              dir=$(echo "$file" | cut -d'/' -f1,2)
+              dir=$(echo "$file" | cut -d'/' -f1)
               changed_dirs["$dir"]=1
             fi
           done
-          json_array=$(printf '"%s" ' "${!changed_dirs[@]}")
+          json_array='['
+          first=true
+          for dir in "${!changed_dirs[@]}"; do
+            if [ "$first" = false ]; then
+              json_array+=', '
+            fi
+            json_array+='"'$dir'"'
+            first=false
+          done
+          json_array+=']'
           echo "Changed directories: $json_array"
-          echo "::set-output name=changed_directories::[$json_array]"
+          echo "::set-output name=changed_directories::$json_array"
           
   build-and-deploy:
     runs-on: 'ubuntu-latest'
