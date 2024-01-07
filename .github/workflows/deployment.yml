@@ -23,14 +23,16 @@ jobs:
         id: determine_directory
         run: |
           CHANGED_DIRS=$(git diff --name-only HEAD^ HEAD)
-
+      
           FILTERED_DIRS=$(echo "$CHANGED_DIRS" | grep -E '^emails/|^subscriptions/' | awk -F'/' '{print $1"/"$2}')
-
+      
           UNIQUE_DIRS=$(echo "$FILTERED_DIRS" | sort -u)
-
+      
           JSON_OUTPUT=$(echo "$UNIQUE_DIRS" | jq -R . | jq -s .)
-
-          echo "::set-output name=changed_directories::$JSON_OUTPUT"
+      
+          echo "$JSON_OUTPUT" > directories.json
+      
+          echo "::set-env name=CHANGED_DIRECTORIES::directories.json"
 
 
 
