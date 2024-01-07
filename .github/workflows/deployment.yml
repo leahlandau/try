@@ -264,7 +264,6 @@ jobs:
       - name: 🔎 Determine modified directory
         id: determine_directories
         run: |   
-        
           changed_files=$(git diff --name-only HEAD^ HEAD)
           
           # Initialize an array to store changed directories
@@ -284,8 +283,8 @@ jobs:
           done <<< "$changed_files"
           
           # Convert array to JSON and set as output
-          echo "::set-output name=changed_directories::$(echo "${changed_dirs[*]}" | jq -R . | jq -s .)"
-
+          json_array=$(printf '"%s"\n' "${changed_dirs[@]}")
+          echo "::set-output name=changed_directories::[$json_array]"
 
   build-and-deploy:
     runs-on: 'ubuntu-latest'
@@ -299,5 +298,6 @@ jobs:
         run:
           echo ${{matrix.directory}};
           exit 0
+
 
 
