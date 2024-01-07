@@ -139,10 +139,15 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
+      - name: github-event
+        id: print githubevent
+        run: |
+           echo ${{github.event}}
 
       - name: 🔎 Determine modified directory
         id: determine_directory
         run: |
+         
           echo '["emails/func-emails","emails/function"]' > changed_directories.json
           cat changed_directories.json # Debugging purpose, check the output format
           echo "::set-output name=changed_directories::$(cat changed_directories.json)"
