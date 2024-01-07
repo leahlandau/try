@@ -262,29 +262,35 @@ jobs:
           fetch-depth: 0
 
       - name: 🔎 Determine modified directory
-        id: determine_directories
-        run: |   
-          changed_files=$(git diff --name-only HEAD^ HEAD)
+  id: determine_directories
+  run: |   
+    changed_files=$(git diff --name-only HEAD^ HEAD)
+    
+  # Read paths from the workflow file
+    paths=($(echo "$GITHUB_EVENT_PATHS" | jq -r '.[]'))
+    
+    # Initialize an array to store changed directories
+    declare -a changed_dirs=()
+    
+    # Loop through each changed file
+    for file in $changed_files; do
+      for path in "${paths[@]}"; do
+        # Check if the file path matches the specified directories and extract the first level directory
+        if [[ "$file" =~ ^$path/[^/]+ ]]; then
+          dir=$(echo "$file" | cut -d'/' -f1,2)
           
-          # Initialize an array to store changed directories
-          declare -a changed_dirs=()
-          
-          # Loop through each changed file
-          while IFS= read -r file; do
-            # Check if the file path matches the specified directories and extract the first level directory
-            if [[ "$file" =~ ^emails/[^/]+ || "$file" =~ ^subscriptions/[^/]+ ]]; then
-              dir=$(echo "$file" | cut -d'/' -f1,2)
-              
-              # Check if the directory is not already in the array
-              if [[ ! " ${changed_dirs[@]} " =~ " ${dir} " ]]; then
-                changed_dirs+=("$dir")
-              fi
-            fi
-          done <<< "$changed_files"
-          
-          # Convert array to JSON and set as output
-          json_array=$(printf '"%s"\n' "${changed_dirs[@]}")
-          echo "::set-output name=changed_directories::[$json_array]"
+          # Check if the directory is not already in the array
+          if [[ ! " ${changed_dirs[@]} " =~ " ${dir} " ]]; then
+            changed_dirs+=("$dir")
+          fi
+        fi
+      done
+    done
+    
+    # Convert array to JSON and set as output
+    json_array=$(printf '"%s"\n' "${changed_dirs[@]}")
+    echo "::set-output name=changed_directories::[$json_array]"
+
 
   build-and-deploy:
     runs-on: 'ubuntu-latest'
