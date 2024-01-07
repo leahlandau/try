@@ -264,32 +264,32 @@ jobs:
       - name: 🔎 Determine modified directory
         id: determine_directories
         run: |   
-          changed_files=$(git diff --name-only HEAD^ HEAD)
+           changed_files=$(git diff --name-only HEAD^ HEAD)
           
-        # Read paths from the workflow file
-          paths=($(echo "$GITHUB_EVENT_PATHS" | jq -r '.[]'))
+           # Read paths from the workflow file
+           paths=($(echo "$GITHUB_EVENT_PATHS" | jq -r '.[]'))
           
-          # Initialize an array to store changed directories
-          declare -a changed_dirs=()
+           # Initialize an array to store changed directories
+           declare -a changed_dirs=()
           
-          # Loop through each changed file
-          for file in $changed_files; do
-            for path in "${paths[@]}"; do
-              # Check if the file path matches the specified directories and extract the first level directory
-              if [[ "$file" =~ ^$path/[^/]+ ]]; then
-                dir=$(echo "$file" | cut -d'/' -f1,2)
+           # Loop through each changed file
+           for file in $changed_files; do
+             for path in "${paths[@]}"; do
+               # Check if the file path matches the specified directories and extract the first level directory
+               if [[ "$file" =~ ^$path/[^/]+ ]]; then
+                 dir=$(echo "$file" | cut -d'/' -f1,2)
                 
-                # Check if the directory is not already in the array
-                if [[ ! " ${changed_dirs[@]} " =~ " ${dir} " ]]; then
-                  changed_dirs+=("$dir")
-                fi
-              fi
-            done
-          done
+                 # Check if the directory is not already in the array
+                 if [[ ! " ${changed_dirs[@]} " =~ " ${dir} " ]]; then
+                   changed_dirs+=("$dir")
+                 fi
+               fi
+             done
+           done
           
-    # Convert array to JSON and set as output
-    json_array=$(printf '"%s"\n' "${changed_dirs[@]}")
-    echo "::set-output name=changed_directories::[$json_array]"
+            # Convert array to JSON and set as output
+           json_array=$(printf '"%s"\n' "${changed_dirs[@]}")
+           echo "::set-output name=changed_directories::[$json_array]"
 
 
   build-and-deploy:
@@ -304,6 +304,3 @@ jobs:
         run:
           echo ${{matrix.directory}};
           exit 0
-
-
-
