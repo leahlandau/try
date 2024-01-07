@@ -19,6 +19,9 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Print GITHUB_EVENT_PATH
+        run: echo "$GITHUB_EVENT_PATH"
+
       - name: 🔍 Determine modified directory
         id: determine_directory
         run: |
