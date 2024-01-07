@@ -10,7 +10,7 @@ on:
       - 'subscriptions/**'
       # - 'subscriptions/func-subscriptions-list/**'
     
-
+# 
 jobs:
   common-steps:
     runs-on: 'ubuntu-latest'
