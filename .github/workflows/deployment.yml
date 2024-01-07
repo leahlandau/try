@@ -19,31 +19,18 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: 🔎 Determine modified directory
-        id: determine_directories
-        run: |   
-          changed_files=$(git diff --name-only HEAD^ HEAD)
+      - name: 🔍 Determine modified directory
+        id: determine_directory
+        run: |
+          CHANGED_DIRS=$(git diff --name-only HEAD^ HEAD)
 
-          paths=($(echo "$GITHUB_EVENT_PATHS" | jq -r '.[]'))
-          echo ${{ GITHUB_EVENT_PATHS }}
-          declare -a changed_dirs=()
+          FILTERED_DIRS=$(echo "$CHANGED_DIRS" | grep -E '^emails/|^subscriptions/' | awk -F'/' '{print $1"/"$2}')
 
-          for file in $changed_files; do
-            for path in "${paths[@]}"; do
-              if [[ "$file" =~ ^$path/[^/]+ ]]; then
-                dir=$(echo "$file" | cut -d'/' -f1,2)
+          UNIQUE_DIRS=$(echo "$FILTERED_DIRS" | sort -u)
 
-                if [[ ! " ${changed_dirs[@]} " =~ " ${dir} " ]]; then
-                  changed_dirs+=("$dir")
-                fi
-              fi
-            done
-          done
+          JSON_OUTPUT=$(echo "$UNIQUE_DIRS" | jq -R . | jq -s .)
 
-          json_array=$(printf '"%s"\n' "${changed_dirs[@]}" | jq -sR .)
-          echo "Changed directories: $json_array"
-          echo "::set-output name=changed_directories::$json_array"
-
+          echo "::set-output name=changed_directories::$JSON_OUTPUT"
 
 
 
