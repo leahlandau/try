@@ -1,245 +1,3 @@
-# name: 🚀 Build and deploy container app to Azure Function App 
-
-# on:
-#   push:
-#     branches:
-#       # - feature/ci-cd
-#       - main
-#     paths:
-#       - 'emails/**'
-#       - 'subscriptions/**'
-#       # - 'subscriptions/func-subscriptions-list/**'
-    
-# # 
-# jobs:
-#   common-steps:
-#     runs-on: 'ubuntu-latest'
-#     outputs:
-#       REPO: ${{ steps.downcase.outputs.lowercase }}
-#       TAG: ${{ steps.get_release.outputs.tag_name}}
-#       changed_directories: ${{ steps.determine_directory.outputs.changed_directories }}
-
-#     steps:
-#       - name: 📂 Checkout repository
-#         uses: actions/checkout@v4
-#         with:
-#           fetch-depth: 0
-
-#       - name: 🔎 Determine modified directory
-#         id: determine_directory
-#         run: |
-#             echo 'emails/func-emails'
-#             exit 0
-
-#           # changed_directories=$(git diff --name-only HEAD~1 ${{ github.sha }} | grep -E '^(emails|subscriptions)/[^/]?/')
-#           # if [ -n "$changed_directories" ]; then
-#           #   echo "::set-output name=changed_directories::$changed_directories"
-#           # else
-#           #   echo "No changes in the specified paths"
-#           #   exit 0
-#           # fi
-
-
-
-#   #     - name: 🛠️ Set up Docker Buildx
-#   #       uses: docker/setup-buildx-action@v2
-
-#   #     - name: 🔑 Log in to registry
-#   #       uses: docker/login-action@v2
-#   #       with:
-#   #         registry:  ghcr.io
-#   #         username: ${{ github.actor }}
-#   #         password: ${{ secrets.GITHUB_TOKEN }}
-
-#   #     - name: 🔖 Get release tag name
-#   #       id: get_release
-#   #       uses: cardinalby/git-get-release-action@v1
-#   #       env:
-#   #         GITHUB_TOKEN: ${{ github.token }}
-#   #       with:
-#   #         latest: true
-
-#   #     - name: 🔄 downcase REPO
-#   #       uses: ASzc/change-string-case-action@v1
-#   #       id: downcase
-#   #       with:
-#   #           string: ${{ github.repository }}
-
-#   #     - name: 🐳 Docker metadata
-#   #       id: docker_meta
-#   #       uses: docker/metadata-action@v5
-#   #       with:
-#   #         images: ghcr.io/${{ env.REPO }}-${{ matrix.directory }}
-#   #         tags: |
-#   #           type=semver,pattern={{major}}.{{minor}}.{{patch}},value=${{ env.TAG }}
-#   #           type=semver,pattern={{major}}.{{minor}},value=${{ env.TAG }}
-#   #           type=semver,pattern={{major}},value=${{ env.TAG }}
- 
-#   #     - name: 🔑 Login to Azure
-#   #         uses: azure/login@v1
-#   #         with:
-#   #           creds: ${{ secrets.AZURE_CREDENTIALS }}
- 
-
-#   build-and-deploy:
-#     runs-on: 'ubuntu-latest'
-#     needs: common-steps
-#     # env:
-#     #   REPO: ${{ needs.common-steps.downcase.outputs.lowercase }}
-#     #   TAG: ${{ needs.common-steps.get_release.outputs.tag_name }}
-#     strategy:
-#       matrix:
-#         directory: ${{ fromJson(needs.common-steps.outputs.changed_directories) }}
-    
-#     steps:
-#      - name: 📂 Checkout repository
-#        uses: actions/checkout@v4
-#        with:
-#          fetch-depth: 0
-
-#      - name: print-name
-#        run:
-#          echo ${{matrix.directory}}
-#          exit 0
-
-#     # - name: 🏗️ Build and push container image to registry
-#     #   uses: docker/build-push-action@v3
-#     #   with:
-#     #     context: ./${{ matrix.directory }}
-#     #     push: true
-#     #     tags: ghcr.io/${{ env.REPO }}-${{ matrix.directory }}:${{ steps.get_release.outputs.tag_name }}
-#     #     labels: ${{ steps.docker_meta.outputs.labels }}
-#     #     file: ./${{ matrix.directory }}/Dockerfile
-
-#     # - name: 🚀 Deploy to Azure Functions
-#     #   id: deploy-to-functions
-#     #   uses: Azure/functions-container-action@v1
-#     #   with:
-#     #     app-name: func-${{ matrix.directory }}
-#     #     image: 'ghcr.io/${{ env.REPO }}-${{ matrix.directory }}:${{ steps.get_release.outputs.tag_name }}'
-
-
-# name: 🚀 Build and deploy container app to Azure Function App 
-
-# on:
-#   push:
-#     branches:
-#       # - feature/ci-cd
-#       - main
-#     paths:
-#       - 'emails/**'
-#       - 'subscriptions/**'
-#       # - 'subscriptions/func-subscriptions-list/**'
-    
-# # 
-# jobs:
-#   common-steps:
-#     runs-on: 'ubuntu-latest'
-#     outputs:
-#       REPO: ${{ steps.downcase.outputs.lowercase }}
-#       TAG: ${{ steps.get_release.outputs.tag_name}}
-#       changed_directories: ${{ steps.determine_directory.outputs.changed_directories }}
-
-#     steps:
-#       - name: 📂 Checkout repository
-#         uses: actions/checkout@v4
-#         with:
-#           fetch-depth: 0
-
-#       - name: 🔎 Determine modified directory
-#         id: determine_directory
-#         run: |
-#             echo 'emails/func-emails'
-#             exit 0
-
-#           # changed_directories=$(git diff --name-only HEAD~1 ${{ github.sha }} | grep -E '^(emails|subscriptions)/[^/]?/')
-#           # if [ -n "$changed_directories" ]; then
-#           #   echo "::set-output name=changed_directories::$changed_directories"
-#           # else
-#           #   echo "No changes in the specified paths"
-#           #   exit 0
-#           # fi
-
-
-
-#   #     - name: 🛠️ Set up Docker Buildx
-#   #       uses: docker/setup-buildx-action@v2
-
-#   #     - name: 🔑 Log in to registry
-#   #       uses: docker/login-action@v2
-#   #       with:
-#   #         registry:  ghcr.io
-#   #         username: ${{ github.actor }}
-#   #         password: ${{ secrets.GITHUB_TOKEN }}
-
-#   #     - name: 🔖 Get release tag name
-#   #       id: get_release
-#   #       uses: cardinalby/git-get-release-action@v1
-#   #       env:
-#   #         GITHUB_TOKEN: ${{ github.token }}
-#   #       with:
-#   #         latest: true
-
-#   #     - name: 🔄 downcase REPO
-#   #       uses: ASzc/change-string-case-action@v1
-#   #       id: downcase
-#   #       with:
-#   #           string: ${{ github.repository }}
-
-#   #     - name: 🐳 Docker metadata
-#   #       id: docker_meta
-#   #       uses: docker/metadata-action@v5
-#   #       with:
-#   #         images: ghcr.io/${{ env.REPO }}-${{ matrix.directory }}
-#   #         tags: |
-#   #           type=semver,pattern={{major}}.{{minor}}.{{patch}},value=${{ env.TAG }}
-#   #           type=semver,pattern={{major}}.{{minor}},value=${{ env.TAG }}
-#   #           type=semver,pattern={{major}},value=${{ env.TAG }}
- 
-#   #     - name: 🔑 Login to Azure
-#   #         uses: azure/login@v1
-#   #         with:
-#   #           creds: ${{ secrets.AZURE_CREDENTIALS }}
- 
-
-#   build-and-deploy:
-#     runs-on: 'ubuntu-latest'
-#     needs: common-steps
-#     # env:
-#     #   REPO: ${{ needs.common-steps.downcase.outputs.lowercase }}
-#     #   TAG: ${{ needs.common-steps.get_release.outputs.tag_name }}
-#     strategy:
-#       matrix:
-#         directory: ${{ fromJson(needs.common-steps.outputs.changed_directories) }}
-    
-#     steps:
-#      - name: 📂 Checkout repository
-#        uses: actions/checkout@v4
-#        with:
-#          fetch-depth: 0
-
-#      - name: print-name
-#        run:
-#          echo ${{matrix.directory}}
-#          exit 0
-
-#     # - name: 🏗️ Build and push container image to registry
-#     #   uses: docker/build-push-action@v3
-#     #   with:
-#     #     context: ./${{ matrix.directory }}
-#     #     push: true
-#     #     tags: ghcr.io/${{ env.REPO }}-${{ matrix.directory }}:${{ steps.get_release.outputs.tag_name }}
-#     #     labels: ${{ steps.docker_meta.outputs.labels }}
-#     #     file: ./${{ matrix.directory }}/Dockerfile
-
-#     # - name: 🚀 Deploy to Azure Functions
-#     #   id: deploy-to-functions
-#     #   uses: Azure/functions-container-action@v1
-#     #   with:
-#     #     app-name: func-${{ matrix.directory }}
-#     #     image: 'ghcr.io/${{ env.REPO }}-${{ matrix.directory }}:${{ steps.get_release.outputs.tag_name }}'
-
-
 name: 🚀 Build and deploy container app to Azure Function App 
 
 on:
@@ -262,32 +20,32 @@ jobs:
           fetch-depth: 0
 
       - name: 🔎 Determine modified directory
-  id: determine_directories
-  run: |   
-    echo "Event paths: $GITHUB_EVENT_PATHS"
-    
-    changed_files=$(git diff --name-only HEAD^ HEAD)
-    
-    paths=($(echo "$GITHUB_EVENT_PATHS" | jq -r '.[]'))
-    echo "Specified paths: ${paths[@]}"
-    
-    declare -a changed_dirs=()
-    
-    for file in $changed_files; do
-      for path in "${paths[@]}"; do
-        if [[ "$file" =~ ^$path/[^/]+ ]]; then
-          dir=$(echo "$file" | cut -d'/' -f1,2)
-          
-          if [[ ! " ${changed_dirs[@]} " =~ " ${dir} " ]]; then
-            changed_dirs+=("$dir")
-          fi
-        fi
-      done
-    done
-    
-    json_array=$(printf '"%s"\n' "${changed_dirs[@]}")
-    echo "Changed directories: $json_array"
-    echo "::set-output name=changed_directories::[$json_array]"
+        id: determine_directories
+        run: |   
+            echo "Event paths: $GITHUB_EVENT_PATHS"
+            
+            changed_files=$(git diff --name-only HEAD^ HEAD)
+            
+            paths=($(echo "$GITHUB_EVENT_PATHS" | jq -r '.[]'))
+            echo "Specified paths: ${paths[@]}"
+            
+            declare -a changed_dirs=()
+            
+            for file in $changed_files; do
+              for path in "${paths[@]}"; do
+                if [[ "$file" =~ ^$path/[^/]+ ]]; then
+                  dir=$(echo "$file" | cut -d'/' -f1,2)
+                  
+                  if [[ ! " ${changed_dirs[@]} " =~ " ${dir} " ]]; then
+                    changed_dirs+=("$dir")
+                  fi
+                fi
+              done
+            done
+            
+            json_array=$(printf '"%s"\n' "${changed_dirs[@]}")
+            echo "Changed directories: $json_array"
+            echo "::set-output name=changed_directories::[$json_array]"
 
 
 
@@ -303,3 +61,246 @@ jobs:
         run:
           echo ${{matrix.directory}};
           exit 0
+
+
+# name: 🚀 Build and deploy container app to Azure Function App 
+
+# on:
+#   push:
+#     branches:
+#       # - feature/ci-cd
+#       - main
+#     paths:
+#       - 'emails/**'
+#       - 'subscriptions/**'
+#       # - 'subscriptions/func-subscriptions-list/**'
+    
+# # 
+# jobs:
+#   common-steps:
+#     runs-on: 'ubuntu-latest'
+#     outputs:
+#       REPO: ${{ steps.downcase.outputs.lowercase }}
+#       TAG: ${{ steps.get_release.outputs.tag_name}}
+#       changed_directories: ${{ steps.determine_directory.outputs.changed_directories }}
+
+#     steps:
+#       - name: 📂 Checkout repository
+#         uses: actions/checkout@v4
+#         with:
+#           fetch-depth: 0
+
+#       - name: 🔎 Determine modified directory
+#         id: determine_directory
+#         run: |
+#             echo 'emails/func-emails'
+#             exit 0
+
+#           # changed_directories=$(git diff --name-only HEAD~1 ${{ github.sha }} | grep -E '^(emails|subscriptions)/[^/]?/')
+#           # if [ -n "$changed_directories" ]; then
+#           #   echo "::set-output name=changed_directories::$changed_directories"
+#           # else
+#           #   echo "No changes in the specified paths"
+#           #   exit 0
+#           # fi
+
+
+
+#   #     - name: 🛠️ Set up Docker Buildx
+#   #       uses: docker/setup-buildx-action@v2
+
+#   #     - name: 🔑 Log in to registry
+#   #       uses: docker/login-action@v2
+#   #       with:
+#   #         registry:  ghcr.io
+#   #         username: ${{ github.actor }}
+#   #         password: ${{ secrets.GITHUB_TOKEN }}
+
+#   #     - name: 🔖 Get release tag name
+#   #       id: get_release
+#   #       uses: cardinalby/git-get-release-action@v1
+#   #       env:
+#   #         GITHUB_TOKEN: ${{ github.token }}
+#   #       with:
+#   #         latest: true
+
+#   #     - name: 🔄 downcase REPO
+#   #       uses: ASzc/change-string-case-action@v1
+#   #       id: downcase
+#   #       with:
+#   #           string: ${{ github.repository }}
+
+#   #     - name: 🐳 Docker metadata
+#   #       id: docker_meta
+#   #       uses: docker/metadata-action@v5
+#   #       with:
+#   #         images: ghcr.io/${{ env.REPO }}-${{ matrix.directory }}
+#   #         tags: |
+#   #           type=semver,pattern={{major}}.{{minor}}.{{patch}},value=${{ env.TAG }}
+#   #           type=semver,pattern={{major}}.{{minor}},value=${{ env.TAG }}
+#   #           type=semver,pattern={{major}},value=${{ env.TAG }}
+ 
+#   #     - name: 🔑 Login to Azure
+#   #         uses: azure/login@v1
+#   #         with:
+#   #           creds: ${{ secrets.AZURE_CREDENTIALS }}
+ 
+
+#   build-and-deploy:
+#     runs-on: 'ubuntu-latest'
+#     needs: common-steps
+#     # env:
+#     #   REPO: ${{ needs.common-steps.downcase.outputs.lowercase }}
+#     #   TAG: ${{ needs.common-steps.get_release.outputs.tag_name }}
+#     strategy:
+#       matrix:
+#         directory: ${{ fromJson(needs.common-steps.outputs.changed_directories) }}
+    
+#     steps:
+#      - name: 📂 Checkout repository
+#        uses: actions/checkout@v4
+#        with:
+#          fetch-depth: 0
+
+#      - name: print-name
+#        run:
+#          echo ${{matrix.directory}}
+#          exit 0
+
+#     # - name: 🏗️ Build and push container image to registry
+#     #   uses: docker/build-push-action@v3
+#     #   with:
+#     #     context: ./${{ matrix.directory }}
+#     #     push: true
+#     #     tags: ghcr.io/${{ env.REPO }}-${{ matrix.directory }}:${{ steps.get_release.outputs.tag_name }}
+#     #     labels: ${{ steps.docker_meta.outputs.labels }}
+#     #     file: ./${{ matrix.directory }}/Dockerfile
+
+#     # - name: 🚀 Deploy to Azure Functions
+#     #   id: deploy-to-functions
+#     #   uses: Azure/functions-container-action@v1
+#     #   with:
+#     #     app-name: func-${{ matrix.directory }}
+#     #     image: 'ghcr.io/${{ env.REPO }}-${{ matrix.directory }}:${{ steps.get_release.outputs.tag_name }}'
+
+
+# name: 🚀 Build and deploy container app to Azure Function App 
+
+# on:
+#   push:
+#     branches:
+#       # - feature/ci-cd
+#       - main
+#     paths:
+#       - 'emails/**'
+#       - 'subscriptions/**'
+#       # - 'subscriptions/func-subscriptions-list/**'
+    
+# # 
+# jobs:
+#   common-steps:
+#     runs-on: 'ubuntu-latest'
+#     outputs:
+#       REPO: ${{ steps.downcase.outputs.lowercase }}
+#       TAG: ${{ steps.get_release.outputs.tag_name}}
+#       changed_directories: ${{ steps.determine_directory.outputs.changed_directories }}
+
+#     steps:
+#       - name: 📂 Checkout repository
+#         uses: actions/checkout@v4
+#         with:
+#           fetch-depth: 0
+
+#       - name: 🔎 Determine modified directory
+#         id: determine_directory
+#         run: |
+#             echo 'emails/func-emails'
+#             exit 0
+
+#           # changed_directories=$(git diff --name-only HEAD~1 ${{ github.sha }} | grep -E '^(emails|subscriptions)/[^/]?/')
+#           # if [ -n "$changed_directories" ]; then
+#           #   echo "::set-output name=changed_directories::$changed_directories"
+#           # else
+#           #   echo "No changes in the specified paths"
+#           #   exit 0
+#           # fi
+
+
+
+#   #     - name: 🛠️ Set up Docker Buildx
+#   #       uses: docker/setup-buildx-action@v2
+
+#   #     - name: 🔑 Log in to registry
+#   #       uses: docker/login-action@v2
+#   #       with:
+#   #         registry:  ghcr.io
+#   #         username: ${{ github.actor }}
+#   #         password: ${{ secrets.GITHUB_TOKEN }}
+
+#   #     - name: 🔖 Get release tag name
+#   #       id: get_release
+#   #       uses: cardinalby/git-get-release-action@v1
+#   #       env:
+#   #         GITHUB_TOKEN: ${{ github.token }}
+#   #       with:
+#   #         latest: true
+
+#   #     - name: 🔄 downcase REPO
+#   #       uses: ASzc/change-string-case-action@v1
+#   #       id: downcase
+#   #       with:
+#   #           string: ${{ github.repository }}
+
+#   #     - name: 🐳 Docker metadata
+#   #       id: docker_meta
+#   #       uses: docker/metadata-action@v5
+#   #       with:
+#   #         images: ghcr.io/${{ env.REPO }}-${{ matrix.directory }}
+#   #         tags: |
+#   #           type=semver,pattern={{major}}.{{minor}}.{{patch}},value=${{ env.TAG }}
+#   #           type=semver,pattern={{major}}.{{minor}},value=${{ env.TAG }}
+#   #           type=semver,pattern={{major}},value=${{ env.TAG }}
+ 
+#   #     - name: 🔑 Login to Azure
+#   #         uses: azure/login@v1
+#   #         with:
+#   #           creds: ${{ secrets.AZURE_CREDENTIALS }}
+ 
+
+#   build-and-deploy:
+#     runs-on: 'ubuntu-latest'
+#     needs: common-steps
+#     # env:
+#     #   REPO: ${{ needs.common-steps.downcase.outputs.lowercase }}
+#     #   TAG: ${{ needs.common-steps.get_release.outputs.tag_name }}
+#     strategy:
+#       matrix:
+#         directory: ${{ fromJson(needs.common-steps.outputs.changed_directories) }}
+    
+#     steps:
+#      - name: 📂 Checkout repository
+#        uses: actions/checkout@v4
+#        with:
+#          fetch-depth: 0
+
+#      - name: print-name
+#        run:
+#          echo ${{matrix.directory}}
+#          exit 0
+
+#     # - name: 🏗️ Build and push container image to registry
+#     #   uses: docker/build-push-action@v3
+#     #   with:
+#     #     context: ./${{ matrix.directory }}
+#     #     push: true
+#     #     tags: ghcr.io/${{ env.REPO }}-${{ matrix.directory }}:${{ steps.get_release.outputs.tag_name }}
+#     #     labels: ${{ steps.docker_meta.outputs.labels }}
+#     #     file: ./${{ matrix.directory }}/Dockerfile
+
+#     # - name: 🚀 Deploy to Azure Functions
+#     #   id: deploy-to-functions
+#     #   uses: Azure/functions-container-action@v1
+#     #   with:
+#     #     app-name: func-${{ matrix.directory }}
+#     #     image: 'ghcr.io/${{ env.REPO }}-${{ matrix.directory }}:${{ steps.get_release.outputs.tag_name }}'
+
