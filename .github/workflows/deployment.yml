@@ -22,9 +22,10 @@ jobs:
       - name: 🔎 Determine modified directories
         id: determine_directories
         run: |
+          declare -a paths=('emails''subscriptions')
           changed_files=$(git diff --name-only HEAD^ HEAD)
           declare -a changed_dirs=()
-          for path in "${{ github.event.paths}}"; do
+          for path in "${paths[@]}"; do
             for file in $changed_files; do
               if [[ "$file" =~ ^$path ]]; then
                 dir=$(echo "$file" | cut -d'/' -f1,2)
