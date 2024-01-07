@@ -146,12 +146,38 @@ jobs:
           echo '${{ toJson(github.event) }}'
 
       - name: 🔎 Determine modified directory
-        id: determine_directory
-        run: |
+        - name: Determine Changed Directories
+  id: determine_directories
+  run: |
+
+    # Get list of changed files
+    changed_files=$(git diff --name-only HEAD^ HEAD)
+    
+    # Initialize an array to store changed directories
+    declare -a changed_dirs=()
+    
+    # Loop through each changed file
+    while IFS= read -r file; do
+      # Check if the file path matches the specified directories and extract the first level directory
+      if [[ "$file" =~ ^emails/[^/]+ || "$file" =~ ^subscriptions/[^/]+ ]]; then
+        dir=$(echo "$file" | cut -d'/' -f1,2)
+        
+        # Check if the directory is not already in the array
+        if [[ ! " ${changed_dirs[@]} " =~ " ${dir} " ]]; then
+          changed_dirs+=("$dir")
+        fi
+      fi
+    done <<< "$changed_files"
+    
+    # Convert array to JSON and set as output
+    echo "::set-output name=changed_directories::$(echo "${changed_dirs[*]}" | jq -R . | jq -s .)"
+
+        # id: determine_directory
+        # run: |
          
-          echo '["emails/func-emails","emails/function"]' > changed_directories.json
-          cat changed_directories.json # Debugging purpose, check the output format
-          echo "::set-output name=changed_directories::$(cat changed_directories.json)"
+        #   echo '["emails/func-emails","emails/function"]' > changed_directories.json
+        #   cat changed_directories.json # Debugging purpose, check the output format
+        #   echo "::set-output name=changed_directories::$(cat changed_directories.json)"
 
   build-and-deploy:
     runs-on: 'ubuntu-latest'
