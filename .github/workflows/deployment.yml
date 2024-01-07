@@ -48,6 +48,6 @@ jobs:
     
     steps:
       - name: print-name
-        run:
+        run: |
           echo ${{matrix.directory}};
           exit 0
