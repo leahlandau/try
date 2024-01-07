@@ -22,30 +22,32 @@ jobs:
       - name: 🔎 Determine modified directory
         id: determine_directories
         run: |   
-            echo "Event paths: $GITHUB_EVENT_PATHS"
-            
-            changed_files=$(git diff --name-only HEAD^ HEAD)
-            
-            paths=($(echo "$GITHUB_EVENT_PATHS" | jq -r '.[]'))
-            echo "Specified paths: ${paths[@]}"
-            
-            declare -a changed_dirs=()
-            
-            for file in $changed_files; do
-              for path in "${paths[@]}"; do
-                if [[ "$file" =~ ^$path/[^/]+ ]]; then
-                  dir=$(echo "$file" | cut -d'/' -f1,2)
-                  
-                  if [[ ! " ${changed_dirs[@]} " =~ " ${dir} " ]]; then
-                    changed_dirs+=("$dir")
-                  fi
+          changed_files=$(git diff --name-only HEAD^ HEAD)
+
+          paths=(
+            'emails'
+            'subscriptions'
+          )
+
+          declare -a changed_dirs=()
+
+          for file in $changed_files; do
+            for path in "${paths[@]}"; do
+              # Check if the file path matches the specified directories and extract the first level directory
+              if [[ "$file" =~ ^$path/[^/]+ ]]; then
+                dir=$(echo "$file" | cut -d'/' -f1,2)
+
+                # Check if the directory is not already in the array
+                if [[ ! " ${changed_dirs[@]} " =~ " ${dir} " ]]; then
+                  changed_dirs+=("$dir")
                 fi
-              done
+              fi
             done
-            
-            json_array=$(printf '"%s"\n' "${changed_dirs[@]}")
-            echo "Changed directories: $json_array"
-            echo "::set-output name=changed_directories::[$json_array]"
+          done
+
+          json_array=$(printf '"%s"\n' "${changed_dirs[@]}")
+          echo "Changed directories: $json_array"
+          echo "::set-output name=changed_directories::[$json_array]"
 
 
 
