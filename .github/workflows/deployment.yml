@@ -28,13 +28,16 @@ jobs:
       - name: 🔎 Determine modified directory
         id: determine_directory
         run: |
-          changed_directories=$(git diff --name-only HEAD~1 ${{ github.sha }} | grep -E '^(emails|subscriptions)/[^/]?/')
-          if [ -n "$changed_directories" ]; then
-            echo "::set-output name=changed_directories::$changed_directories"
-          else
-            echo "No changes in the specified paths"
+            echo "emails/func-emails"
             exit 0
-          fi
+
+          # changed_directories=$(git diff --name-only HEAD~1 ${{ github.sha }} | grep -E '^(emails|subscriptions)/[^/]?/')
+          # if [ -n "$changed_directories" ]; then
+          #   echo "::set-output name=changed_directories::$changed_directories"
+          # else
+          #   echo "No changes in the specified paths"
+          #   exit 0
+          # fi
 
 
 
