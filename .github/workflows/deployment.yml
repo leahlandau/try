@@ -97,7 +97,8 @@ jobs:
       LABELS: ${{ needs.common-steps.outputs.LABELS }}
     strategy:
       matrix:
-        directory: ${{ fromJson(env.MATRIX) }}
+        # directory: ${{ fromJson(env.MATRIX) }}
+        directory: ${{fromJson(needs.common-steps.outputs.MATRIX)}}
     steps:
 
       - name: 🏗️ Build and push container image to registry
