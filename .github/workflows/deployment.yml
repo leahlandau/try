@@ -27,12 +27,13 @@ jobs:
             'emails'
             'subscriptions'
           )
-          declare -A changed_dirs=() 
+          declare -A changed_dirs=() # שימוש במערך אסוציאטיבי
           for file in $changed_files; do
             for path in "${paths[@]}"; do
+              # Check if the file path matches the specified directories and extract the first level directory
               if [[ "$file" =~ ^$path/[^/]+ ]]; then
                 dir=$(echo "$file" | cut -d'/' -f1,2)
-                changed_dirs["$dir"]=1 
+                changed_dirs["$dir"]=1 # הגדרת מפתח במערך אסוציאטיבי
               fi
             done
           done
@@ -40,9 +41,9 @@ jobs:
           for dir in "${!changed_dirs[@]}"; do
             json_array+="\"$dir\","
           done
-          json_array="[${json_array%,}]" 
+          json_array="[${json_array%,}]" # הפיכת המחרוזת למערך JSON
           echo "Changed directories: $json_array"
-          echo "::set-output name=changed_directories::$json_array" 
+          echo "::set-output name=changed_directories::$json_array" # החזרת מערך JSON
 
   build-and-deploy:
     runs-on: 'ubuntu-latest'
