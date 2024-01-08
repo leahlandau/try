@@ -81,18 +81,10 @@ jobs:
       - name: 🔎 Determine modified directories
         id: determine_directories
         run: |   
-          # Find changed directories using git and store them in an array
-          changed_dirs=()
-          while IFS= read -r line; do
-            dir=$(dirname "$line")
-            changed_dirs+=("$dir")
-          done < <(git diff --name-only HEAD^ HEAD 'services/email/' 'services/subscriptions/' | grep -E '^services/(email|subscriptions)/[^/]+')
-          
-          unique_dirs=($(echo "${changed_dirs[@]}" | tr ' ' '\n' | sort -u | tr '\n' ' '))
-          json_array=$(printf '"%s"\n' "${unique_dirs[@]}")
+          json_array=$(git diff --name-only HEAD^ HEAD 'services/email/' 'services/subscriptions/' | awk -F'/' '{print "services/"$2"/"$3}' | sort -u | jq -R . | jq -s .)
           
           echo "Changed directories: $json_array"
-          echo "::set-output name=changed_directories::[$json_array]"
+          echo "::set-output name=changed_directories::$json_array"
 
   build-and-deploy:
     runs-on: 'ubuntu-latest'
