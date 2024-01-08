@@ -5,7 +5,7 @@ on:
     branches:
       - y
     paths:
-      - 'services/email/**' 
+      - 'services/emails/**' 
       - 'services/subscriptions/**' 
 
 jobs:
