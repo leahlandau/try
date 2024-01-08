@@ -101,23 +101,23 @@ jobs:
         directory: ${{ env.MATRIX }}
     steps:
 
-    - name: 🏗️ Build and push container image to registry
-      uses: docker/build-push-action@v3
-      with:
-        context: ./${{ matrix.directory }}
-        push: true
-        tags: ghcr.io/${{ env.REPO }}-${{ matrix.directory }}:${{ env.TAG }}
-        labels: ${{ env.LABELS }}
-        file: ./${{ matrix.directory }}/Dockerfile
-
-    - name: 🔄 Extract last directory level
-      id: get-last-level
-      run: |
-        LAST_LEVEL=$(basename ${{ matrix.directory }})
-     
-    - name: 🚀 Deploy to Azure Functions
-      id: deploy-to-functions
-      uses: Azure/functions-container-action@v1
-      with:
-        app-name: ${{ steps.get-last-level.outputs.last_level }}
-        image: 'ghcr.io/${{ env.REPO }}-${{ matrix.directory }}:${{ env.TAG }}'
+      - name: 🏗️ Build and push container image to registry
+        uses: docker/build-push-action@v3
+        with:
+          context: ./${{ matrix.directory }}
+          push: true
+          tags: ghcr.io/${{ env.REPO }}-${{ matrix.directory }}:${{ env.TAG }}
+          labels: ${{ env.LABELS }}
+          file: ./${{ matrix.directory }}/Dockerfile
+  
+      - name: 🔄 Extract last directory level
+        id: get-last-level
+        run: |
+          LAST_LEVEL=$(basename ${{ matrix.directory }})
+       
+      - name: 🚀 Deploy to Azure Functions
+        id: deploy-to-functions
+        uses: Azure/functions-container-action@v1
+        with:
+          app-name: ${{ steps.get-last-level.outputs.last_level }}
+          image: 'ghcr.io/${{ env.REPO }}-${{ matrix.directory }}:${{ env.TAG }}'
