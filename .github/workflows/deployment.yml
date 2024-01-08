@@ -1,63 +1,3 @@
-# name: 🚀 Build and deploy container app to Azure Function App 
-
-# on:
-#   push:
-#     branches:
-#       - y
-#     paths:
-#       - 'emails/**'
-#       - 'subscriptions/**'
-
-# jobs:
-#   common-steps:
-#     runs-on: 'ubuntu-latest'
-#     outputs:
-#       changed_directories: ${{ steps.determine_directories.outputs.changed_directories }}
-#     steps:
-#       - name: 📂 Checkout repository
-#         uses: actions/checkout@v4
-#         with:
-#           fetch-depth: 0
-
-#       - name: 🔎 Determine modified directories
-#         id: determine_directories
-#         run: |   
-#           changed_files=$(git diff --name-only HEAD^ HEAD)
-#           paths=(
-#             'emails'
-#             'subscriptions'
-#           )
-#           declare -A changed_dirs=() # שימוש במערך אסוציאטיבי
-#           for file in $changed_files; do
-#             for path in "${paths[@]}"; do
-#               # Check if the file path matches the specified directories and extract the first level directory
-#               if [[ "$file" =~ ^$path/[^/]+ ]]; then
-#                 dir=$(echo "$file" | cut -d'/' -f1,2)
-#                 changed_dirs["$dir"]=1 # הגדרת מפתח במערך אסוציאטיבי
-#               fi
-#             done
-#           done
-#           json_array=""
-#           for dir in "${!changed_dirs[@]}"; do
-#             json_array+="\"$dir\","
-#           done
-#           json_array="[${json_array%,}]" # הפיכת המחרוזת למערך JSON
-#           echo "Changed directories: $json_array"
-#           echo "::set-output name=changed_directories::$json_array" # החזרת מערך JSON
-
-#   build-and-deploy:
-#     runs-on: 'ubuntu-latest'
-#     needs: common-steps
-#     strategy:
-#       matrix:
-#         directory: ${{fromJson(needs.common-steps.outputs.changed_directories)}}
-    
-#     steps:
-#       - name: print-name
-#         run:
-#           echo ${{matrix.directory}};
-#           exit 0
-
 name: 🚀 Build and deploy container app to Azure Function App 
 
 on:
@@ -65,7 +5,8 @@ on:
     branches:
       - y
     paths:
-      - 'services/**' # שינוי ב-path לתיקית services
+      - 'services/email/**' 
+      - 'services/subscriptions/**' 
 
 jobs:
   common-steps:
