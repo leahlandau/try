@@ -86,20 +86,20 @@ jobs:
         uses: azure/login@v1
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
- 
+
   build-and-deploy:
     runs-on: 'ubuntu-latest'
     needs: common-steps
     env:
       REPO: ${{ needs.common-steps.outputs.REPO }}
       TAG: ${{ needs.common-steps.outputs.TAG }}
+      MATRIX: ${{ fromJson(needs.common-steps.outputs.MATRIX) }}
       LABELS: ${{ needs.common-steps.outputs.LABELS }}
-      CHANGED_DIRS: ${{ toJson(needs.common-steps.outputs.changed_directories) }}
     strategy:
       matrix:
-        directory: ${{ fromJson(env.CHANGED_DIRS) }}
-        
+        directory: ${{ env.MATRIX }}
     steps:
+
       - name: 🏗️ Build and push container image to registry
         uses: docker/build-push-action@v3
         with:
@@ -120,19 +120,20 @@ jobs:
         with:
           app-name: ${{ steps.get-last-level.outputs.last_level }}
           image: 'ghcr.io/${{ env.REPO }}-${{ matrix.directory }}:${{ env.TAG }}'
+
   # build-and-deploy:
   #   runs-on: 'ubuntu-latest'
   #   needs: common-steps
   #   env:
   #     REPO: ${{ needs.common-steps.outputs.REPO }}
   #     TAG: ${{ needs.common-steps.outputs.TAG }}
-  #     MATRIX: ${{ fromJson(needs.common-steps.outputs.MATRIX) }}
   #     LABELS: ${{ needs.common-steps.outputs.LABELS }}
+  #     CHANGED_DIRS: ${{ toJson(needs.common-steps.outputs.changed_directories) }}
   #   strategy:
   #     matrix:
-  #       directory: ${{ env.MATRIX }}
-  #   steps:
+  #       directory: ${{ fromJson(env.CHANGED_DIRS) }}
 
+  #   steps:
   #     - name: 🏗️ Build and push container image to registry
   #       uses: docker/build-push-action@v3
   #       with:
