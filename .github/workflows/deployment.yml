@@ -45,56 +45,63 @@
 #       - name: print-directory
 #         run: |
 #           echo "Directory: ${{ matrix.directory }}"
-name: 🚀 Build and deploy container app to Azure Function App 
 
-on:
-  push:
-    branches:
-      - y
-    paths:
-      - 'emails/**'
-      - 'subscriptions/**'
+# דכגגגגגגגגגגגגגגגגגגגגגגגגגגגגגגגגגגגגגגגגגגגגגגגגגגגגגג
 
-jobs:
-  common-steps:
-    runs-on: 'ubuntu-latest'
-    outputs:
-      changed_directories: ${{ steps.determine_directories.outputs.changed_directories }}
-    steps:
-      - name: 📂 Checkout repository
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
 
-      - name: 🔎 Determine modified directories
-        id: determine_directories
-        run: |
-          declare -A changed_dirs=()
-          for file in $(git diff --name-only HEAD^ HEAD); do
-            if [[ "$file" =~ ^emails/ || "$file" =~ ^subscriptions/ ]]; then
-              dir=$(dirname "$file")
-              changed_dirs["$dir"]=1
-            fi
-          done
-          # Filter out empty directories
-          non_empty_dirs=$(printf '%s\n' "${!changed_dirs[@]}" | grep -v '^$')
-          echo "Changed directories: $non_empty_dirs"
-          echo "::set-output name=changed_directories::$non_empty_dirs"
+# name: 🚀 Build and deploy container app to Azure Function App 
+
+# on:
+#   push:
+#     branches:
+#       - y
+#     paths:
+#       - 'emails/**'
+#       - 'subscriptions/**'
+
+# jobs:
+#   common-steps:
+#     runs-on: 'ubuntu-latest'
+#     outputs:
+#       changed_directories: ${{ steps.determine_directories.outputs.changed_directories }}
+#     steps:
+#       - name: 📂 Checkout repository
+#         uses: actions/checkout@v4
+#         with:
+#           fetch-depth: 0
+
+#       - name: 🔎 Determine modified directories
+#         id: determine_directories
+#         run: |
+#           declare -A changed_dirs=()
+#           for file in $(git diff --name-only HEAD^ HEAD); do
+#             if [[ "$file" =~ ^emails/ || "$file" =~ ^subscriptions/ ]]; then
+#               dir=$(dirname "$file")
+#               changed_dirs["$dir"]=1
+#             fi
+#           done
+#           # Filter out empty directories
+#           non_empty_dirs=$(printf '%s\n' "${!changed_dirs[@]}" | grep -v '^$')
+#           echo "Changed directories: $non_empty_dirs"
+#           echo "::set-output name=changed_directories::$non_empty_dirs"
       
-      - name: Debug changed directories
-        run: |
-          echo "Changed directories: ${{ steps.determine_directories.outputs.changed_directories }}"
+#       - name: Debug changed directories
+#         run: |
+#           echo "Changed directories: ${{ steps.determine_directories.outputs.changed_directories }}"
 
-  build-and-deploy:
-    runs-on: 'ubuntu-latest'
-    needs: common-steps
-    strategy:
-      matrix:
-        directory: ${{fromJson(needs.common-steps.outputs.changed_directories)}}
-    steps:
-      - name: print-directory
-        run: |
-          echo "Directory: ${{ matrix.directory }}"
+#   build-and-deploy:
+#     runs-on: 'ubuntu-latest'
+#     needs: common-steps
+#     strategy:
+#       matrix:
+#         directory: ${{fromJson(needs.common-steps.outputs.changed_directories)}}
+#     steps:
+#       - name: print-directory
+#         run: |
+#           echo "Directory: ${{ matrix.directory }}"
+
+# גכככככככככככככככככככככככככככככככככככככככככככככככככככככככככככככככככככככככ
+
   # build-and-deploy:
   #   runs-on: 'ubuntu-latest'
   #   needs: common-steps
@@ -182,3 +189,62 @@ jobs:
     #     - name: Deploy if directories changed
     #       run: |
     #         # Add here the desired actions if directories have changed
+
+
+name: 🚀 Build and deploy container app to Azure Function App 
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'emails/**'
+      - 'subscriptions/**'
+
+jobs:
+  common-steps:
+    runs-on: 'ubuntu-latest'
+    outputs:
+      changed_directories: ${{ steps.determine_directories.outputs.changed_directories }}
+    steps:
+      - name: 📂 Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: 🔎 Determine modified directory
+        id: determine_directories
+        run: |   
+          changed_files=$(git diff --name-only HEAD^ HEAD)
+          paths=(
+            'emails'
+            'subscriptions'
+          )
+          declare -a changed_dirs=()
+          for file in $changed_files; do
+            for path in "${paths[@]}"; do
+              # Check if the file path matches the specified directories and extract the first level directory
+              if [[ "$file" =~ ^$path/[^/]+ ]]; then
+                dir=$(echo "$file" | cut -d'/' -f1,2)
+                # Check if the directory is not already in the array
+                if [[ ! " ${changed_dirs[@]} " =~ " ${dir} " ]]; then
+                  changed_dirs+=("$dir")
+                fi
+              fi
+            done
+          done
+          json_array=$(printf '"%s"\n' "${changed_dirs[@]}")
+          echo "Changed directories: $json_array"
+          echo "::set-output name=changed_directories::[$json_array]"
+  build-and-deploy:
+    runs-on: 'ubuntu-latest'
+    needs: common-steps
+    strategy:
+      matrix:
+        directory: ${{fromJson(needs.common-steps.outputs.changed_directories)}}
+    
+    steps:
+      - name: print-name
+        run:
+          echo ${{matrix.directory}};
+          exit 0
