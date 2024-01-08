@@ -83,6 +83,11 @@ jobs:
         run: |   
           json_array=$(git diff --name-only HEAD^ HEAD 'services/email/' 'services/subscriptions/' | awk -F'/' '{print "services/"$2"/"$3}' | sort -u | jq -R . | jq -s .)
           
+          if [[ -z $json_array ]]; then
+            echo "No changes detected in the specified directories"
+            exit 1
+          fi
+
           echo "Changed directories: $json_array"
           echo "::set-output name=changed_directories::$json_array"
 
