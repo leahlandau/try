@@ -93,11 +93,11 @@ jobs:
     env:
       REPO: ${{ needs.common-steps.outputs.REPO }}
       TAG: ${{ needs.common-steps.outputs.TAG }}
-      MATRIX: ${{ fromJson(needs.common-steps.outputs.MATRIX) }}
+      MATRIX: ${{ needs.common-steps.outputs.MATRIX }}
       LABELS: ${{ needs.common-steps.outputs.LABELS }}
     strategy:
       matrix:
-        directory: ${{ env.MATRIX }}
+        directory: ${{ fromJson(env.MATRIX) }}
     steps:
 
       - name: 🏗️ Build and push container image to registry
