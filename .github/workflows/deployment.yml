@@ -1,62 +1,3 @@
-# name: 🚀 Build and deploy container app to Azure Function App 
-
-# on:
-#   push:
-#     branches:
-#       - y
-#     paths:
-#       - 'services/email/**' 
-#       - 'services/subscriptions/**' 
-
-# jobs:
-#   common-steps:
-#     runs-on: 'ubuntu-latest'
-#     outputs:
-#       changed_directories: ${{ steps.determine_directories.outputs.changed_directories }}
-#     steps:
-#       - name: 📂 Checkout repository
-#         uses: actions/checkout@v4
-#         with:
-#           fetch-depth: 0
-
-#       - name: 🔎 Determine modified directories
-#         id: determine_directories
-#         run: |   
-#           changed_files=$(git diff --name-only HEAD^ HEAD)
-#           paths=(
-#             'services/emails' 
-#             'services/subscriptions' 
-#           )
-#           declare -A changed_dirs=() 
-#           for file in $changed_files; do
-#             for path in "${paths[@]}"; do
-#               if [[ "$file" =~ ^$path/[^/]+ ]]; then
-#                 dir=$(echo "$file" | cut -d'/' -f1,3) 
-#                 changed_dirs["$dir"]=1 
-#               fi
-#             done
-#           done
-#           json_array=""
-#           for dir in "${!changed_dirs[@]}"; do
-#             json_array+="\"$dir\","
-#           done
-#           json_array="[${json_array%,}]" 
-#           echo "Changed directories: $json_array"
-#           echo "::set-output name=changed_directories::$json_array" 
-
-#   build-and-deploy:
-#     runs-on: 'ubuntu-latest'
-#     needs: common-steps
-#     strategy:
-#       matrix:
-#         directory: ${{fromJson(needs.common-steps.outputs.changed_directories)}}
-    
-#     steps:
-#       - name: print-name
-#         run:
-#           echo ${{matrix.directory}};
-#           exit 0
-
 name: 🚀 Build and deploy container app to Azure Function App 
 
 on:
@@ -64,8 +5,8 @@ on:
     branches:
       - y
     paths:
-      - 'services/email/**'
-      - 'services/subscriptions/**'
+      - 'services/email/**' 
+      - 'services/subscriptions/**' 
 
 jobs:
   common-steps:
@@ -81,18 +22,27 @@ jobs:
       - name: 🔎 Determine modified directories
         id: determine_directories
         run: |   
-          # Store the changed directories in an array
-          changed_dirs=($(git diff --name-only HEAD^ HEAD 'services/email/' 'services/subscriptions/' | awk -F'/' '{print $1"/"$2}' | sort -u))
-          
-          json_array=$(printf '"%s"\n' "${changed_dirs[@]}")
-          
-          if [ -z "$json_array" ]; then
-            echo "No changes detected in the specified directories"
-            exit 1
-          fi
-
+          changed_files=$(git diff --name-only HEAD^ HEAD)
+          paths=(
+            'services/emails' 
+            'services/subscriptions' 
+          )
+          declare -A changed_dirs=() 
+          for file in $changed_files; do
+            for path in "${paths[@]}"; do
+              if [[ "$file" =~ ^$path/[^/]+ ]]; then
+                dir=$(echo "$file" | cut -d'/' -f1,3) 
+                changed_dirs["$dir"]=1 
+              fi
+            done
+          done
+          json_array=""
+          for dir in "${!changed_dirs[@]}"; do
+            json_array+="\"$dir\","
+          done
+          json_array="[${json_array%,}]" 
           echo "Changed directories: $json_array"
-          echo "::set-output name=changed_directories::[$json_array]"
+          echo "::set-output name=changed_directories::$json_array" 
 
   build-and-deploy:
     runs-on: 'ubuntu-latest'
@@ -106,3 +56,4 @@ jobs:
         run:
           echo ${{matrix.directory}};
           exit 0
+
