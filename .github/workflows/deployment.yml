@@ -83,9 +83,9 @@ jobs:
             type=semver,pattern={{major}},value=${{ steps.get_release.outputs.tag_name }}
  
       - name: 🔑 Login to Azure
-          uses: azure/login@v1
-          with:
-            creds: ${{ secrets.AZURE_CREDENTIALS }}
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
  
 
   build-and-deploy:
