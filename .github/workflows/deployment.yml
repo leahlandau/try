@@ -80,12 +80,10 @@ jobs:
           non_empty_dirs=$(printf '%s\n' "${!changed_dirs[@]}" | grep -v '^$')
           echo "Changed directories: $non_empty_dirs"
           echo "::set-output name=changed_directories::$non_empty_dirs"
-
-      - name: Save JSON output
+      
+      - name: Debug changed directories
         run: |
-          echo "{\"changed_directories\":$([[ -z ${non_empty_dirs} ]] && echo '[]' || echo "[\"${non_empty_dirs}\"]")}" > directories.json
-        env:
-          non_empty_dirs: ${{ steps.determine_directories.outputs.changed_directories }}
+          echo "Changed directories: ${{ steps.determine_directories.outputs.changed_directories }}"
 
   build-and-deploy:
     runs-on: 'ubuntu-latest'
