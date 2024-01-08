@@ -20,29 +20,29 @@ jobs:
           fetch-depth: 0
 
       - name: 🔎 Determine modified directory
-         id: determine_directories
-         run: |   
-           changed_files=$(git diff --name-only HEAD^ HEAD)
-           paths=(
-             'emails'
-             'subscriptions'
-           )
-           declare -a changed_dirs=()
-           for file in $changed_files; do
-             for path in "${paths[@]}"; do
-               # Check if the file path matches the specified directories and extract the first level directory
-               if [[ "$file" =~ ^$path/[^/]+ ]]; then
-                 dir=$(echo "$file" | cut -d'/' -f1,2)
-                 # Check if the directory is not already in the array
-                 if [[ ! " ${changed_dirs[@]} " =~ " ${dir} " ]]; then
-                   changed_dirs+=("$dir")
-                 fi
-               fi
-             done
-           done
-           json_array=$(printf '["%s"]\n' "${changed_dirs[@]}") # הוסף סוגריים מרובעים לסביבת המחרוזת
-           echo "Changed directories: $json_array"
-           echo "::set-output name=changed_directories::$json_array" # החזר מערך JSON
+        id: determine_directories
+        run: |   
+          changed_files=$(git diff --name-only HEAD^ HEAD)
+          paths=(
+            'emails'
+            'subscriptions'
+          )
+          declare -a changed_dirs=()
+          for file in $changed_files; do
+            for path in "${paths[@]}"; do
+              # Check if the file path matches the specified directories and extract the first level directory
+              if [[ "$file" =~ ^$path/[^/]+ ]]; then
+                dir=$(echo "$file" | cut -d'/' -f1,2)
+                # Check if the directory is not already in the array
+                if [[ ! " ${changed_dirs[@]} " =~ " ${dir} " ]]; then
+                  changed_dirs+=("$dir")
+                fi
+              fi
+            done
+          done
+          json_array=$(printf '["%s"]\n' "${changed_dirs[@]}") # הוסף סוגריים מרובעים לסביבת המחרוזת
+          echo "Changed directories: $json_array"
+          echo "::set-output name=changed_directories::$json_array" # החזר מערך JSON
 
   build-and-deploy:
     runs-on: 'ubuntu-latest'
