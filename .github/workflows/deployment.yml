@@ -31,7 +31,7 @@ jobs:
           for file in $changed_files; do
             for path in "${paths[@]}"; do
               if [[ "$file" =~ ^$path/[^/]+ ]]; then
-                dir=$(echo "$file" | cut -d'/' -f1,2,3)
+                dir=$(echo "$file" | cut -d'/' -f1,2)
                 changed_dirs["$dir"]=1 
               fi
             done
