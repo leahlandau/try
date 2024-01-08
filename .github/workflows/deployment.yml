@@ -1,63 +1,3 @@
-name: 🚀 Build and deploy container app to Azure Function App 
-
-on:
-  push:
-    branches:
-      - y
-    paths:
-      - 'emails/**'
-      - 'subscriptions/**'
-
-jobs:
-  common-steps:
-    runs-on: 'ubuntu-latest'
-    outputs:
-      changed_directories: ${{ steps.determine_directories.outputs.changed_directories }}
-    steps:
-      - name: 📂 Checkout repository
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
-      - name: 🔎 Determine modified directories
-        id: determine_directories
-        run: |
-          declare -A changed_dirs=()
-          for file in $(git diff --name-only HEAD^ HEAD); do
-            if [[ "$file" =~ ^emails/ || "$file" =~ ^subscriptions/ ]]; then
-              dir=$(dirname "$file")
-              changed_dirs["$dir"]=1
-            fi
-          done
-          # Filter out empty directories
-          non_empty_dirs=$(printf '%s\n' "${!changed_dirs[@]}" | grep -v '^$')
-          json_array=$(echo "$non_empty_dirs" | jq -R -s '[inputs]' 2>/dev/null)
-          echo "Changed directories: $json_array"
-          echo "::set-output name=changed_directories::$json_array"
-
-  build-and-deploy:
-    runs-on: 'ubuntu-latest'
-    needs: common-steps
-    strategy:
-      matrix:
-        directory: ${{fromJson(needs.common-steps.outputs.changed_directories)}}
-    steps:
-      - name: print-directory
-        run: |
-          echo "Directory: ${{ matrix.directory }}"
-  # build-and-deploy:
-  #   runs-on: 'ubuntu-latest'
-  #   needs: common-steps
-  #   strategy:
-  #     matrix:
-  #       directory: ${{fromJson(needs.common-steps.outputs.changed_directories)}}
-  #   steps:
-  #     - name: print-name
-  #       run: |
-  #         echo ${{matrix.directory}};
-  #         exit 0
-
-
 # name: 🚀 Build and deploy container app to Azure Function App 
 
 # on:
@@ -79,44 +19,21 @@ jobs:
 #         with:
 #           fetch-depth: 0
 
-#       - name: Get changed directories
-#         id: changed_dirs
+#       - name: 🔎 Determine modified directories
+#         id: determine_directories
 #         run: |
-#           git diff-tree --no-commit-id --name-only -r ${{ github.sha }} > changed_files.txt
-#           # השתמש בפקודה git diff-tree כדי לקבל את שמות הקבצים ששונו ב-commit האחרון
-#           # הפלט יורד לקובץ changed_files.txt
-
-#       - name: Filter directories
-#         id: filter_dirs
-#         run: |
-#           echo "::set-output name=directories::$(awk -F'/' '{print $1}' changed_files.txt | sort -u)"
-#           # פקודה זו תפרק את הנתיבים לתיקיות ותסנן אותן כך שכל תיקייה תופיע רק פעם אחת
-
-#       - name: Display JSON output
-#         run: |
-#           echo '{"directories":['${{ steps.filter_dirs.outputs.directories }}']}' > directories.json
-#           # ייצור קובץ JSON בפורמט המבוקש
-
-#       - name: Save JSON output
-#         uses: actions/upload-artifact@v2
-#         with:
-#           name: changed_directories
-#           path: directories.json
-#       # - name: 🔎 Determine modified directories
-#       #   id: determine_directories
-#       #   run: |
-#       #     declare -A changed_dirs=()
-#       #     for file in $(git diff --name-only HEAD^ HEAD); do
-#       #       if [[ "$file" =~ ^emails/ || "$file" =~ ^subscriptions/ ]]; then
-#       #         dir=$(dirname "$file")
-#       #         changed_dirs["$dir"]=1
-#       #       fi
-#       #     done
-#       #     # Filter out empty directories
-#       #     non_empty_dirs=$(printf '%s\n' "${!changed_dirs[@]}" | grep -v '^$')
-#       #     json_array=$(echo "$non_empty_dirs" | jq -R -s '[inputs]' 2>/dev/null)
-#       #     echo "Changed directories: $json_array"
-#       #     echo "::set-output name=changed_directories::$json_array"
+#           declare -A changed_dirs=()
+#           for file in $(git diff --name-only HEAD^ HEAD); do
+#             if [[ "$file" =~ ^emails/ || "$file" =~ ^subscriptions/ ]]; then
+#               dir=$(dirname "$file")
+#               changed_dirs["$dir"]=1
+#             fi
+#           done
+#           # Filter out empty directories
+#           non_empty_dirs=$(printf '%s\n' "${!changed_dirs[@]}" | grep -v '^$')
+#           json_array=$(echo "$non_empty_dirs" | jq -R -s '[inputs]' 2>/dev/null)
+#           echo "Changed directories: $json_array"
+#           echo "::set-output name=changed_directories::$json_array"
 
 #   build-and-deploy:
 #     runs-on: 'ubuntu-latest'
@@ -128,3 +45,86 @@ jobs:
 #       - name: print-directory
 #         run: |
 #           echo "Directory: ${{ matrix.directory }}"
+  # build-and-deploy:
+  #   runs-on: 'ubuntu-latest'
+  #   needs: common-steps
+  #   strategy:
+  #     matrix:
+  #       directory: ${{fromJson(needs.common-steps.outputs.changed_directories)}}
+  #   steps:
+  #     - name: print-name
+  #       run: |
+  #         echo ${{matrix.directory}};
+  #         exit 0
+
+
+name: 🚀 Build and deploy container app to Azure Function App 
+
+on:
+  push:
+    branches:
+      - y
+    paths:
+      - 'emails/**'
+      - 'subscriptions/**'
+
+jobs:
+  common-steps:
+    runs-on: 'ubuntu-latest'
+    outputs:
+      changed_directories: ${{ steps.determine_directories.outputs.changed_directories }}
+    steps:
+      - name: 📂 Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Get changed directories
+        id: changed_dirs
+        run: |
+          git diff-tree --no-commit-id --name-only -r ${{ github.sha }} > changed_files.txt
+          # השתמש בפקודה git diff-tree כדי לקבל את שמות הקבצים ששונו ב-commit האחרון
+          # הפלט יורד לקובץ changed_files.txt
+
+      - name: Filter directories
+        id: filter_dirs
+        run: |
+          echo "::set-output name=directories::$(awk -F'/' '{print $1}' changed_files.txt | sort -u)"
+          # פקודה זו תפרק את הנתיבים לתיקיות ותסנן אותן כך שכל תיקייה תופיע רק פעם אחת
+
+      - name: Display JSON output
+        run: |
+          echo '{"directories":['${{ steps.filter_dirs.outputs.directories }}']}' > directories.json
+          # ייצור קובץ JSON בפורמט המבוקש
+
+      - name: Save JSON output
+        uses: actions/upload-artifact@v2
+        with:
+          name: changed_directories
+          path: directories.json
+      # - name: 🔎 Determine modified directories
+      #   id: determine_directories
+      #   run: |
+      #     declare -A changed_dirs=()
+      #     for file in $(git diff --name-only HEAD^ HEAD); do
+      #       if [[ "$file" =~ ^emails/ || "$file" =~ ^subscriptions/ ]]; then
+      #         dir=$(dirname "$file")
+      #         changed_dirs["$dir"]=1
+      #       fi
+      #     done
+      #     # Filter out empty directories
+      #     non_empty_dirs=$(printf '%s\n' "${!changed_dirs[@]}" | grep -v '^$')
+      #     json_array=$(echo "$non_empty_dirs" | jq -R -s '[inputs]' 2>/dev/null)
+      #     echo "Changed directories: $json_array"
+      #     echo "::set-output name=changed_directories::$json_array"
+
+  build-and-deploy:
+    runs-on: 'ubuntu-latest'
+    needs: common-steps
+    strategy:
+      matrix:
+        directory: ${{fromJson(needs.common-steps.outputs.changed_directories)}}
+    steps:
+      - name: print-directory
+        run: |
+          echo "Directory: ${{ matrix.directory }}"
