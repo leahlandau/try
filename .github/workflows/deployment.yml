@@ -3,7 +3,7 @@ name: 🚀 Build and deploy container app to Azure Function App
 on:
   push:
     branches:
-      - main
+      - y
     paths:
       - 'services/emails/**' 
       - 'services/subscriptions/**' 
@@ -109,12 +109,12 @@ jobs:
           tags: ghcr.io/${{ env.REPO }}-${{ matrix.directory }}:${{ env.TAG }}
           labels: ${{ env.LABELS }}
           file: ./${{ matrix.directory }}/Dockerfile
-  
+
       - name: 🔄 Extract last directory level
         id: get-last-level
         run: |
           LAST_LEVEL=$(basename ${{ matrix.directory }})
-       
+
       - name: 🚀 Deploy to Azure Functions
         id: deploy-to-functions
         uses: Azure/functions-container-action@v1
