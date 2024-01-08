@@ -3,11 +3,10 @@ name: 🚀 Build and deploy container app to Azure Function App
 on:
   push:
     branches:
-      - main
+      - y
     paths:
       - 'emails/**'
       - 'subscriptions/**'
-      # Add more directories here if needed
 
 jobs:
   common-steps:
