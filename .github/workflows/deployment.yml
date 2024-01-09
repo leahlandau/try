@@ -16,7 +16,7 @@ jobs:
       TAG: ${{ steps.get_release.outputs.tag_name }}
       MATRIX: ${{ steps.determine_directories.outputs.changed_directories }}
       LABELS: ${{ steps.docker_meta.outputs.labels }}
-      ROOT_DIRECTORY: ${{ steps.root_dir.outputs.ROOT_DIRECTORY }}
+      ROOT_DIRECTORY: ${{ steps.root_dir.outputs.root_directory }}
 
     steps:
       - name: 📂 Checkout repository
@@ -91,9 +91,9 @@ jobs:
       - name: 🗂️ Define root directory
         id: root_dir  
         run:
-          ROOT_DIRECTORY=$(pwd)
+          root_directory=$(pwd)
           # FILES_PATH="$ROOT_DIRECTORY/${{ matrix.directory }}"
-          echo "$ROOT_DIRECTORY";
+          echo $root_directory;
           # echo "$FILES_PATH";
 
   build-and-deploy:
