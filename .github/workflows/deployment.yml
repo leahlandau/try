@@ -99,14 +99,16 @@ jobs:
       matrix:
         # directory: ${{ fromJson(env.MATRIX) }}
         directory: ${{fromJson(needs.common-steps.outputs.MATRIX)}}
+
     steps:
+      - name: 🖨️ print-name
+        run:
+          echo ${{matrix.directory}};
+          echo ${{matrix}};
 
       - name: 🏗️ Build and push container image to registry
         uses: docker/build-push-action@v3
         with:
-          # ecoh "${{ matrix.directory }}"
-          echo ${{matrix.directory}};
-          echo ${{matrix}};
           context: ./${{ matrix.directory }}
           push: true
           tags: ghcr.io/${{ needs.common-steps.outputs.REPO }}-${{ matrix.directory }}:${{ needs.common-steps.outputs.TAG }}
