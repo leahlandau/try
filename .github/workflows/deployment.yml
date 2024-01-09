@@ -110,6 +110,7 @@ jobs:
       - name: 🖨️ print-name
         run:
           echo ${{matrix.directory}};
+          echo ${{ needs.common-steps.outputs.ROOT_DIRECTORY }};
 
       - name: 🏗️ Build and push container image to registry
         uses: docker/build-push-action@v3
