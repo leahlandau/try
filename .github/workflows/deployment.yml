@@ -16,7 +16,7 @@ jobs:
       TAG: ${{ steps.get_release.outputs.tag_name }}
       MATRIX: ${{ steps.determine_directories.outputs.changed_directories }}
       LABELS: ${{ steps.docker_meta.outputs.labels }}
-      ROOT_DIRECTORY: ${{ steps.root_dir.outputs.root_directory }}
+      ROOT_DIRECTORY: ${{ steps.root_dir.outputs.ROOT_DIR }}
 
     steps:
       - name: 📂 Checkout repository
@@ -91,9 +91,9 @@ jobs:
       - name: 🗂️ Define root directory
         id: root_dir  
         run:
-          root_directory=$(pwd)
+          ROOT_DIR=$(pwd)
           # FILES_PATH="$ROOT_DIRECTORY/${{ matrix.directory }}"
-          echo root_directory;
+          echo "$ROOT_DIR";
           # echo "$FILES_PATH";
 
   build-and-deploy:
@@ -118,7 +118,7 @@ jobs:
       - name: 🏗️ Build and push container image to registry
         uses: docker/build-push-action@v3
         with:
-          context: ${{ needs.common-steps.outputs.ROOT_DIRECTORY }}/${{ matrix.directory }}
+          context: ${{ needs.common-steps.outputs.ROOT_DIRECTORY }}/${{ matrix.directory }}""
           # context: $ROOT_DIRECTORY/${{ matrix.directory }}
           # context: ${{ github.workspace }}/${{ matrix.directory }}
           # context: ./${{ matrix.directory }}
