@@ -104,7 +104,7 @@ jobs:
       - name: 🖨️ print-name
         run:
           echo ${{matrix.directory}};
-          echo ${{ needs.common-steps.outputs.REPO }}
+          echo ./${{ matrix.directory }};
 
       - name: 🏗️ Build and push container image to registry
         uses: docker/build-push-action@v3
