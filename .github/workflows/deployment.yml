@@ -110,7 +110,8 @@ jobs:
         with:
           # context: ./${{ matrix.directory }}
           push: true
-          tags: ghcr.io/${{ needs.common-steps.outputs.REPO }}-${{ matrix.directory }}:${{ needs.common-steps.outputs.TAG }}
+          tags: ghcr.io/${{ needs.common-steps.outputs.REPO }}/${{ matrix.directory }}:${{ needs.common-steps.outputs.TAG }}
+          # tags: ghcr.io/${{ needs.common-steps.outputs.REPO }}-${{ matrix.directory }}:${{ needs.common-steps.outputs.TAG }}
           labels: ${{ needs.common-steps.outputs.LABELS }}
           file: ./${{ matrix.directory }}/Dockerfile
           # tags: ghcr.io/${{ env.REPO }}-${{ matrix.directory }}:${{ env.TAG }}
