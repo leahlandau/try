@@ -91,7 +91,7 @@ jobs:
       - name: 🗂️ define root directory
         id: root_dir  
         run:
-          string: $(pwd)
+          root_directory=$(pwd)
 
   build-and-deploy:
     runs-on: 'ubuntu-latest'
