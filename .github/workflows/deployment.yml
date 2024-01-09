@@ -107,8 +107,9 @@ jobs:
 
       - name: 🏗️ Build and push container image to registry
         uses: docker/build-push-action@v3
-        with:
+        run:
           ROOT_DIRECTORY=$(pwd)
+        with:
           # FILES_PATH="$ROOT_DIRECTORY/services"
           context: $ROOT_DIRECTORY/${{ matrix.directory }}
           # context: ${{ github.workspace }}/${{ matrix.directory }}
