@@ -93,7 +93,7 @@ jobs:
         run:
           root_directory=$(pwd)
           # FILES_PATH="$ROOT_DIRECTORY/${{ matrix.directory }}"
-          echo $root_directory;
+          echo "$root_directory";
           # echo "$FILES_PATH";
 
   build-and-deploy:
