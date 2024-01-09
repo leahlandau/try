@@ -88,10 +88,11 @@ jobs:
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-      - name: 🗂️ define root directory
+      - name: 🗂️ Define root directory
         id: root_dir  
         run:
           root_directory=$(pwd)
+          echo $root_directory;
 
   build-and-deploy:
     runs-on: 'ubuntu-latest'
