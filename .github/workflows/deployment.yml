@@ -7,6 +7,8 @@ on:
     paths:
       - 'services/emails/**' 
       - 'services/subscriptions/**' 
+      - 'services/emails/func-minus/**'
+      - 'services/emails/func-plus/**'
 
 jobs:
   common-steps:
@@ -117,10 +119,7 @@ jobs:
       - name: 🏗️ Build and push container image to registry
         uses: docker/build-push-action@v3
         with:
-          context: ${{ matrix.directory }}
-          # context: $ROOT_DIRECTORY/${{ matrix.directory }}
-          # context: ${{ github.workspace }}/${{ matrix.directory }}
-          # context: ./${{ matrix.directory }}
+          context: ./${{ matrix.directory }}
           push: true
           tags: ghcr.io/${{ needs.common-steps.outputs.REPO }}-${{ matrix.directory }}:${{ needs.common-steps.outputs.TAG }}
           labels: ${{ needs.common-steps.outputs.LABELS }}
