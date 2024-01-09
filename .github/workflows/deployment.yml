@@ -111,12 +111,12 @@ jobs:
       - name: 🏗️ Build and push container image to registry
         uses: docker/build-push-action@v3
         with:
-          context: .
-          # context: ./${{ matrix.directory }}
+          # context: .
+          context: ../${{ matrix.directory }}
           push: true
           tags: ghcr.io/${{ needs.common-steps.outputs.REPO }}-${{ matrix.directory }}:${{ needs.common-steps.outputs.TAG }}
           labels: ${{ needs.common-steps.outputs.LABELS }}
-          file: ./${{ matrix.directory }}/Dockerfile
+          file: ../${{ matrix.directory }}/Dockerfile
           # tags: ghcr.io/${{ env.REPO }}-${{ matrix.directory }}:${{ env.TAG }}
           # labels: ${{ env.LABELS }}
           # file: ./${{ matrix.directory }}/Dockerfile
