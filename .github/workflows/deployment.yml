@@ -285,8 +285,7 @@ jobs:
       - name: 🔎 Determine modified directories
         id: determine_directories
         run: |
-          head_revision=$(git log -1 --format=format:%h)
-          changed_files=$(git diff --name-only HEAD^ $head_revision)
+          changed_files=$(git diff --name-only HEAD^ HEAD)
           paths=(
             'services/emails' 
             'services/subscriptions' 
