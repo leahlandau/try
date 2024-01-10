@@ -238,21 +238,23 @@ jobs:
     steps:
       - name: 🖨️ print-name
         run:
-          echo ${{matrix.directory}}
-
-      - name: 🗳️ Check Dockerfile location 2
-        run: |
-          echo "Dockerfile location: $(pwd)/${{ matrix.directory }}/Dockerfile"
+          echo ${{ matrix.directory }}
 
       - name: 🗳️ Check Dockerfile location
         run: |
-          ls -l ./${{ matrix.directory }}/Dockerfile
+          echo "Dockerfile location: $(pwd)/${{ matrix.directory }}"
+          echo "Dockerfile location 111111: $(pwd)/${{ matrix.directory }}/Dockerfile"
 
-      - name: Build and Push Docker image
+      - name: 📋 Check Dockerfile location 2
+        run: |
+          ls -l ./${{ matrix.directory }}
+          # ls -l ./${{ matrix.directory }}/Dockerfile
+
+      - name: 🏗️ Build and Push Docker image
         uses: docker/build-push-action@v2
         with:
           context: .
-          file: ./services/emails/func-minus/Dockerfile
+          file:  /home/runner/work/try/try/services/emails/func-minus/Dockerfile
           push: true
           tags: ghcr.io/${{ env.REPO }}/${{ matrix.directory }}:latest 
 
