@@ -240,13 +240,13 @@ jobs:
           echo ${{matrix.directory}}
 
       - name: 🏗️ Build and push container image to registry
-        uses: docker/build-push-action@v3
-        with:
-          context: ./services/${{ matrix.directory }}
-          push: true
-          tags: ghcr.io/${{ env.REPO }}/${{ matrix.directory }}:latest 
-          labels: ${{ steps.docker_meta.outputs.labels }}
-          file: ./services/${{ matrix.directory }}/Dockerfile
+       uses: docker/build-push-action@v3
+       with:
+         context: .
+         dockerfile: ./${{ matrix.directory }}/Dockerfile
+         push: true
+         tags: ghcr.io/${{ env.REPO }}/${{ matrix.directory }}:latest 
+         labels: ${{ steps.docker_meta.outputs.labels }}
 
 
     #   - name: 🏗️ Build and push container image to registry
