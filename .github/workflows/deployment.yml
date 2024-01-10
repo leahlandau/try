@@ -243,18 +243,25 @@ jobs:
       - name: 🗳️ Check Dockerfile location
         run: |
           echo "Dockerfile location: $(pwd)/${{ matrix.directory }}"
-          echo "Dockerfile location 111111: $(pwd)/${{ matrix.directory }}/Dockerfile"
 
       # - name: 📋 Check Dockerfile location 2
       #   run: |
-      #     ls -l ./${{ matrix.directory }}
-      #     # ls -l ./${{ matrix.directory }}/Dockerfile
+      #     ls -l $(pwd)/${{ matrix.directory }}"
+
+      - name: Print working directory
+        run: pwd
+
+      - name: List files in directory
+        run: ls -la ./${{ matrix.directory }}
+
+      - name: Check Dockerfile permissions
+        run: stat ./${{ matrix.directory }}/Dockerfile
 
       - name: 🏗️ Build and Push Docker image
         uses: docker/build-push-action@v2
         with:
           context: .
-          file:  /home/runner/work/try/try/services/emails/func-minus/Dockerfile
+          file:  ./${{ matrix.directory }}/Dockerfile
           push: true
           tags: ghcr.io/${{ env.REPO }}/${{ matrix.directory }}:latest 
 
