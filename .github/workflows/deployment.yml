@@ -235,43 +235,41 @@ jobs:
       matrix:
         directory: ${{fromJson(needs.common-steps.outputs.MATRIX)}}
 
+    defaults:
+      run:
+        working-directory: ./${{ matrix.directory }}
+
     steps:
-      - name: 🖨️ print-name
-        run:
-          echo ${{ matrix.directory }}
+      # - name: 🖨️ print-name
+      #   run:
+      #     echo ${{ matrix.directory }}
 
-      - name: 🗳️ Check Dockerfile location
-        run: |
-          echo "Dockerfile location: $(pwd)/${{ matrix.directory }}"
+      # - name: 🗳️ Check Dockerfile location
+      #   run: |
+      #     echo "Dockerfile location: $(pwd)/${{ matrix.directory }}"
 
-      - name: Print directory content
-        run: ls -alR
+      # - name: Print directory content
+      #   run: ls -alR
       # - name: 📋 Check Dockerfile location 2
       #   run: |
       #     ls -l $(pwd)/${{ matrix.directory }}"
+      # - name: Check Dockerfile permissions
+      #   run: stat ./${{ matrix.directory }}/Dockerfile
 
-      - name: List files in directory
-        run: ls -la ./${{ matrix.directory }}
+      # - name: List files in directory
+      #   run: ls -la ./${{ matrix.directory }}
 
-      - name: Check Dockerfile permissions
-        run: stat ./${{ matrix.directory }}/Dockerfile
+      - name: Change directory to project
+        run: cd ./${{ matrix.directory }}
 
-      - name: 🏗️ Build and Push Docker image
+      - name: 🏗️ Build and push container image to registry
         uses: docker/build-push-action@v2
         with:
           context: .
-          file:  ./${{ matrix.directory }}/Dockerfile
+          file: ./${{ matrix.directory }}/Dockerfile
           push: true
           tags: ghcr.io/${{ env.REPO }}/${{ matrix.directory }}:latest 
-
-      # - name: 🏗️ Build and push container image to registry
-      #   uses: docker/build-push-action@v2
-      #   with:
-      #     context: .
-      #     file: ./${{ matrix.directory }}/Dockerfile
-      #     push: true
-      #     tags: ghcr.io/${{ env.REPO }}/${{ matrix.directory }}:latest 
-      #     labels: ${{ steps.docker_meta.outputs.labels }}
+          labels: ${{ steps.docker_meta.outputs.labels }}
 
     #   - name: 🏗️ Build and push container image to registry
     #     uses: docker/build-push-action@v3
