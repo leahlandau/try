@@ -287,9 +287,11 @@ jobs:
 
     steps:
       - name: 📂 Checkout repository
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
+        uses: actions/checkout@v2
+      # - name: 📂 Checkout repository
+      #   uses: actions/checkout@v4
+      #   with:
+      #     fetch-depth: 0
 
       - name: 🔎 Determine modified directories
         id: determine_directories
@@ -371,7 +373,9 @@ jobs:
 
     steps:
       - name: 📂 Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v2
+      # - name: 📂 Checkout repository
+      #   uses: actions/checkout@v4
 
       - name: 🏗️ Build and push container image to registry
         uses: docker/build-push-action@v2
