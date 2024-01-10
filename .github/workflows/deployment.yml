@@ -111,6 +111,7 @@ jobs:
           context: ./${{ matrix.directory }}
           push: true
           tags: ghcr.io/${{ env.REPO }}/${{ matrix.directory }}:${{ steps.get_release.outputs.tag_name }}
+          # tags: ghcr.io/${{ env.REPO }}/${{ matrix.directory }}:${{ steps.get_release.outputs.tag_name }}
           labels: ${{ steps.docker_meta.outputs.labels }}
           file: ./${{ matrix.directory }}/Dockerfile
         # if: env.DIRECTORY == matrix.directory
@@ -132,13 +133,16 @@ jobs:
         id: get-last-level
         run: |
           LAST_LEVEL=$(basename ${{ matrix.directory }})
+          echo "::set-output name=last_level::$LAST_LEVEL"
 
       - name: 🚀 Deploy to Azure Functions
         id: deploy-to-functions
         uses: Azure/functions-container-action@v1
         with:
           app-name: ${{ steps.get-last-level.outputs.last_level }}
-          image: 'ghcr.io/${{ env.REPO }}/${{ matrix.directory }}:${{ env.TAG }}'
+          image: 'ghcr.io/${{ env.REPO }}/${{ steps.get-last-level.outputs.last_level }}:${{ env.TAG }}'
+
+          # image: 'ghcr.io/${{ env.REPO }}/${{ matrix.directory }}:${{ env.TAG }}'
 
 
 # name: 🚀 Build and deploy container app to Azure Function App 
