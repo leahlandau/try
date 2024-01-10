@@ -141,6 +141,7 @@ on:
       - y
     paths:
       - 'services/emails/**' 
+      - 'services/emails/func-minus/**' 
       - 'services/subscriptions/**' 
 
 jobs:
@@ -243,8 +244,7 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           context: .
-          # file: ./${{ matrix.directory }}/Dockerfile
-          file: ././services/emails/func-minus/Dockerfile
+          file: ./${{ matrix.directory }}/Dockerfile
           push: true
           tags: ghcr.io/${{ env.REPO }}/${{ matrix.directory }}:latest 
 
