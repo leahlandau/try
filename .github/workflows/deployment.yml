@@ -370,33 +370,53 @@ jobs:
         directory: ${{fromJson(needs.common-steps.outputs.MATRIX)}}
 
     steps:
-      # - name: 📂 Checkout repository
-      #   uses: actions/checkout@v4
-      - name: 📂 Checkout repository
-        uses: actions/checkout@v4
-
       - name: 🏗️ Build and push container image to registry
-        uses: docker/build-push-action@v2
+        uses: docker/build-push-action@v3
         with:
           context: ./${{ matrix.directory }}
-          file: ./Dockerfile
           push: true
-          tags: ghcr.io/${{ env.REPO }}/${{ matrix.directory }}:latest
-          labels: ${{ steps.docker_meta.outputs.labels }}
+          tags: ghcr.io/${{ env.REPO }}-${{ matrix.directory }}:${{ env.TAG }}
+          labels: ${{ env.LABELS }}
+          file: ./${{ matrix.directory }}/Dockerfile
 
       - name: 🔄 Extract last directory level
         id: get-last-level
         run: |
           LAST_LEVEL=$(basename ${{ matrix.directory }})
-          echo "::set-output name=last_level::$LAST_LEVEL"
-          
+
       - name: 🚀 Deploy to Azure Functions
         id: deploy-to-functions
         uses: Azure/functions-container-action@v1
         with:
           app-name: ${{ steps.get-last-level.outputs.last_level }}
-          image: 'ghcr.io/${{ env.REPO }}/${{ matrix.directory }}:${{ steps.get_release.outputs.tag_name }}'
-          changed-directories: ${{ matrix.directory }}
+          image: 'ghcr.io/${{ env.REPO }}-${{ matrix.directory }}:${{ env.TAG }}'
+          
+    # steps:
+    #   - name: 📂 Checkout repository
+    #     uses: actions/checkout@v4
+
+    #   - name: 🏗️ Build and push container image to registry
+    #     uses: docker/build-push-action@v2
+    #     with:
+    #       context: ./${{ matrix.directory }}
+    #       file: ./Dockerfile
+    #       push: true
+    #       tags: ghcr.io/${{ env.REPO }}/${{ matrix.directory }}:latest
+    #       labels: ${{ steps.docker_meta.outputs.labels }}
+
+    #   - name: 🔄 Extract last directory level
+    #     id: get-last-level
+    #     run: |
+    #       LAST_LEVEL=$(basename ${{ matrix.directory }})
+    #       echo "::set-output name=last_level::$LAST_LEVEL"
+          
+    #   - name: 🚀 Deploy to Azure Functions
+    #     id: deploy-to-functions
+    #     uses: Azure/functions-container-action@v1
+    #     with:
+    #       app-name: ${{ steps.get-last-level.outputs.last_level }}
+    #       image: 'ghcr.io/${{ env.REPO }}/${{ matrix.directory }}:${{ steps.get_release.outputs.tag_name }}'
+    #       changed-directories: ${{ matrix.directory }}
 
 
 
