@@ -358,8 +358,7 @@ jobs:
       MATRIX: ${{ needs.common-steps.outputs.MATRIX }}
       LABELS: ${{ needs.common-steps.outputs.LABELS }}
     strategy:
-      matrix:
-        directory: ${{fromJson(needs.common-steps.outputs.MATRIX)}}
+      matrix: ${{fromJson(needs.common-steps.outputs.MATRIX)}}
 
     steps:
       - name: 📂 Checkout repository
