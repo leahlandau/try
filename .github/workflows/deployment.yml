@@ -370,15 +370,15 @@ jobs:
         directory: ${{fromJson(needs.common-steps.outputs.MATRIX)}}
 
     steps:
-    - name: 🏗️ Build and push container image to registry
-      uses: docker/build-push-action@v3
-      with:
-        context: ${{ matrix.directory }}
-        push: true
-        tags: ghcr.io/${{ env.REPO }}-${{ matrix.directory }}:${{ env.TAG }}
-        labels: ${{ env.LABELS }}
-        file: ./${{ matrix.directory }}/Dockerfile
-      # - name: 🏗️ Build and push container image to registry
+      - name: 🏗️ Build and push container image to registry
+        uses: docker/build-push-action@v3
+        with:
+          context: ${{ matrix.directory }}
+          push: true
+          tags: ghcr.io/${{ env.REPO }}-${{ matrix.directory }}:${{ env.TAG }}
+          labels: ${{ env.LABELS }}
+          file: ./${{ matrix.directory }}/Dockerfile
+        # - name: 🏗️ Build and push container image to registry
       #   uses: docker/build-push-action@v3
       #   with:
       #     context: ./${{ matrix.directory }}
