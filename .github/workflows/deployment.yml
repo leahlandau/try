@@ -243,7 +243,7 @@ jobs:
         uses: docker/build-push-action@v3
         with:
           context: .
-          dockerfile: ./${{ matrix.directory }}/Dockerfile
+          dockerfile: ./services/${{ matrix.directory }}/Dockerfile
           push: true
           tags: ghcr.io/${{ env.REPO }}/${{ matrix.directory }}:latest 
           labels: ${{ steps.docker_meta.outputs.labels }}
