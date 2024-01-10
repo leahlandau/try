@@ -133,6 +133,8 @@
 #           image: 'ghcr.io/${{ env.REPO }}/${{ steps.get-last-level.outputs.last_level }}:${{ env.TAG }}'
 #           # image: 'ghcr.io/${{ env.REPO }}/${{ matrix.directory }}:${{ env.TAG }}'
 
+# .................................................................................................................
+
 name: 🚀 Build and deploy container app to Azure Function App 
 
 on:
@@ -141,7 +143,7 @@ on:
       - y
     paths:
       - 'services/emails/**' 
-      - 'services/emails/func-minus/**' 
+      # - 'services/emails/func-minus/**' 
       - 'services/subscriptions/**' 
 
 jobs:
@@ -235,9 +237,9 @@ jobs:
       matrix:
         directory: ${{fromJson(needs.common-steps.outputs.MATRIX)}}
 
-    defaults:
-      run:
-        working-directory: ./${{ matrix.directory }}
+    # defaults:
+    #   run:
+    #     working-directory: ./${{ matrix.directory }}
 
     steps:
       # - name: 🖨️ print-name
@@ -259,14 +261,23 @@ jobs:
       # - name: List files in directory
       #   run: ls -la ./${{ matrix.directory }}
 
+
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
       - name: Change directory to project
         run: cd ./${{ matrix.directory }}
+
+      # - name: List files in directory
+      #   run: ls -alR
 
       - name: 🏗️ Build and push container image to registry
         uses: docker/build-push-action@v2
         with:
           context: .
-          file: ./${{ matrix.directory }}/Dockerfile
+          file: ./Dockerfile
           push: true
           tags: ghcr.io/${{ env.REPO }}/${{ matrix.directory }}:latest 
           labels: ${{ steps.docker_meta.outputs.labels }}
