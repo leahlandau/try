@@ -247,8 +247,8 @@ jobs:
       - name: Print Dockerfile location
         run: echo "Dockerfile location: $(pwd)/${{ matrix.directory }}"
 
-        - name: Print directory content
-          run: ls -alR
+      - name: Print directory content
+        run: ls -alR
       # - name: 📋 Check Dockerfile location 2
       #   run: |
       #     ls -l $(pwd)/${{ matrix.directory }}"
