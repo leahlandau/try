@@ -254,7 +254,7 @@ jobs:
         with:
           context: ./${{ matrix.directory }}
           push: true
-          tags: ghcr.io/${{ env.REPO }}/${{ matrix.directory }}:${{ steps.get_release.outputs.tag_name }}
+          tags: ghcr.io/${{ env.REPO }}/${{ steps.get-last-level.outputs.last_level }}:${{ steps.get_release.outputs.tag_name }}
           labels: ${{ steps.docker_meta.outputs.labels }}
           file: ./${{ matrix.directory }}/Dockerfile
      
@@ -269,7 +269,7 @@ jobs:
         uses: Azure/functions-container-action@v1
         with:
           app-name: ${{ steps.get-last-level.outputs.last_level }}
-          image: 'ghcr.io/${{ env.REPO }}/${{ steps.get-last-level.outputs.last_level }}:${{ env.TAG }}'
+          image: 'ghcr.io/${{ env.REPO }}/${{ steps.get-last-level.outputs.last_level }}:${{ steps.get_release.outputs.tag_name }}'
 
 # .........................................................................................................................
 # name: 🚀 Build and deploy container app to Azure Function App 
