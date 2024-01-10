@@ -281,7 +281,7 @@ jobs:
     steps:
       - name: 📂 Checkout repository
         uses: actions/checkout@v4
-      
+
       - name: 🔎 Determine modified directories
         id: determine_directories
         run: |   
@@ -303,11 +303,10 @@ jobs:
           for dir in "${!changed_dirs[@]}"; do
             json_array+="\"$dir\","
           done
-          json_array="[${json_array%,}]" 
+          json_array="[${json_array%,}]"
           echo "Changed directories: $json_array"
           echo "::set-output name=changed_directories::$json_array"
-          echo "MATRIX: ${{ steps.determine_directories.outputs.changed_directories }}"  # הוסף שורה זו
-      
+
       - name: 🛠️ Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
 
@@ -351,13 +350,14 @@ jobs:
   build-and-deploy:
     runs-on: 'ubuntu-latest'
     needs: common-steps
-    env:
+     env:
       REPO: ${{ needs.common-steps.outputs.REPO }}
       TAG: ${{ needs.common-steps.outputs.TAG }}
       MATRIX: ${{ needs.common-steps.outputs.MATRIX }}
       LABELS: ${{ needs.common-steps.outputs.LABELS }}
+      CHANGED_DIRECTORIES: ${{ needs.common-steps.outputs.changed_directories }}
     strategy:
-      matrix: ${{fromJson(needs.common-steps.outputs.MATRIX)}}
+      matrix: ${{ fromJson(needs.common-steps.outputs.MATRIX) }}
 
     steps:
       - name: 📂 Checkout repository
@@ -384,6 +384,7 @@ jobs:
         with:
           app-name: ${{ steps.get-last-level.outputs.last_level }}
           image: 'ghcr.io/${{ env.REPO }}/${{ matrix.directory }}:${{ steps.get_release.outputs.tag_name }}'
+          changed-directories: ${{ env.CHANGED_DIRECTORIES }}
 
 
 
