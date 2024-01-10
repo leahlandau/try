@@ -137,7 +137,7 @@ name: 🚀 Build and deploy container app to Azure Function App
 on:
   push:
     branches:
-      - feature/ci-cd
+      - y
 
 
 jobs:
