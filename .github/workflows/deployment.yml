@@ -252,7 +252,7 @@ jobs:
       - name: 🏗️ Build and push container image to registry
         uses: docker/build-push-action@v3
         with:
-          context: ./${{ matrix.directory }}
+          # context: ./${{ matrix.directory }}
           push: true
           tags: ghcr.io/${{ env.REPO }}/${{ matrix.directory }}:latest # כאן צריך להשתמש בתג תקין כגון latest או v1.0 או כל תג רלוונטי
           labels: ${{ steps.docker_meta.outputs.labels }}
