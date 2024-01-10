@@ -199,7 +199,7 @@ jobs:
       - name: 🔑 Log in to registry
         uses: docker/login-action@v2
         with:
-          registry:  ghcr.io
+          registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
@@ -215,7 +215,7 @@ jobs:
         uses: ASzc/change-string-case-action@v1
         id: downcase
         with:
-            string: ${{ github.repository }}
+          string: ${{ github.repository }}
 
       - name: 🐳 Docker metadata
         id: docker_meta
@@ -226,7 +226,7 @@ jobs:
             type=semver,pattern={{major}}.{{minor}}.{{patch}},value=${{ steps.get_release.outputs.tag_name }}
             type=semver,pattern={{major}}.{{minor}},value=${{ steps.get_release.outputs.tag_name }}
             type=semver,pattern={{major}},value=${{ steps.get_release.outputs.tag_name }}
- 
+
       - name: 🔑 Login to Azure
         uses: azure/login@v1
         with:
@@ -247,7 +247,7 @@ jobs:
     steps:
       - name: 🖨️ print-name
         run:
-          echo ${{matrix.directory}};
+          echo ${{matrix.directory}}
 
       - name: 🏗️ Build and push container image to registry
         uses: docker/build-push-action@v3
@@ -264,13 +264,12 @@ jobs:
           LAST_LEVEL=$(basename ${{ matrix.directory }})
           echo "::set-output name=last_level::$LAST_LEVEL"
 
-
       - name: 🚀 Deploy to Azure Functions
         id: deploy-to-functions
         uses: Azure/functions-container-action@v1
         with:
           app-name: ${{ steps.get-last-level.outputs.last_level }}
-          image: 'ghcr.io/${{ env.REPO }}/${{ steps.get-last-level.outputs.last_level }}:${{ steps.get_release.outputs.tag_name }}'
+          image: 'ghcr.io/${{ env.REPO }}/${{ matrix.directory }}:${{ steps.get_release.outputs.tag_name }}'
 
 # .........................................................................................................................
 # name: 🚀 Build and deploy container app to Azure Function App 
