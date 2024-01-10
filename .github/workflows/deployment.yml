@@ -250,7 +250,8 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           context: .
-          file: ./${{ matrix.directory }}/Dockerfile
+          # file: ./${{ matrix.directory }}/Dockerfile
+          file: ./services/emails/func-minus/Dockerfile
           push: true
           tags: ghcr.io/${{ env.REPO }}/${{ matrix.directory }}:latest 
 
