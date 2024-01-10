@@ -278,12 +278,6 @@ on:
 jobs:
   common-steps:
     runs-on: 'ubuntu-latest'
-    outputs:
-      REPO: ${{ steps.downcase.outputs.lowercase }}
-      TAG: ${{ steps.get_release.outputs.tag_name }}
-      MATRIX: ${{ steps.determine_directories.outputs.changed_directories }}
-      LABELS: ${{ steps.docker_meta.outputs.labels }}
-
     steps:
       - name: 📂 Checkout repository
         uses: actions/checkout@v4
@@ -356,12 +350,12 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           context: ./${{ matrix.directory }}
-          file: Dockerfile
+          file: ../Dockerfile
           push: true
           tags: ghcr.io/${{ env.REPO }}/${{ matrix.directory }}:latest
           labels: ${{ steps.docker_meta.outputs.labels }}
 
-          
+
           # .........................................................................
   # build-and-deploy:
   #   runs-on: 'ubuntu-latest'
