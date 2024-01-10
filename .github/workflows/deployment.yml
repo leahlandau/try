@@ -262,13 +262,13 @@ jobs:
       #   run: ls -la ./${{ matrix.directory }}
 
 
-      - name: Checkout repository
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
+      # - name: Checkout repository
+      #   uses: actions/checkout@v4
+      #   with:
+      #     fetch-depth: 0
 
-      - name: Change directory to project
-        run: cd ./${{ matrix.directory }}
+      # - name: Change directory to project
+      #   run: cd ./${{ matrix.directory }}
 
       # - name: List files in directory
       #   run: ls -alR
