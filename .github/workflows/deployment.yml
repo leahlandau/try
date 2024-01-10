@@ -240,13 +240,13 @@ jobs:
         run:
           echo ${{matrix.directory}}
 
+      - name: 🗳️ Check Dockerfile location 2
+        run: |
+          echo "Dockerfile location: $(pwd)/${{ matrix.directory }}/Dockerfile"
+
       - name: 🗳️ Check Dockerfile location
         run: |
           ls -l ./${{ matrix.directory }}/Dockerfile
-
-      - name: Check Dockerfile location 2
-        run: |
-          echo "Dockerfile location: $(pwd)/${{ matrix.directory }}/Dockerfile"
 
       - name: Build and Push Docker image
         uses: docker/build-push-action@v2
