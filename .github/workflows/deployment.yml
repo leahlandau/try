@@ -240,23 +240,30 @@ jobs:
         run:
           echo ${{matrix.directory}}
 
+      - name: 🗳️ Check Dockerfile location
+        run: |
+          ls -l ./${{ matrix.directory }}/Dockerfile
+
+      - name: Check Dockerfile location 2
+        run: |
+          echo "Dockerfile location: $(pwd)/${{ matrix.directory }}/Dockerfile"
+
       - name: Build and Push Docker image
         uses: docker/build-push-action@v2
         with:
           context: .
-          file: ./${{ matrix.directory }}/Dockerfile
+          file: ./services/emails/func-minus/Dockerfile
           push: true
           tags: ghcr.io/${{ env.REPO }}/${{ matrix.directory }}:latest 
 
       # - name: 🏗️ Build and push container image to registry
-      #   uses: docker/build-push-action@v3
+      #   uses: docker/build-push-action@v2
       #   with:
       #     context: .
-      #     dockerfile: ./${{ matrix.directory }}/Dockerfile
+      #     file: ./${{ matrix.directory }}/Dockerfile
       #     push: true
       #     tags: ghcr.io/${{ env.REPO }}/${{ matrix.directory }}:latest 
       #     labels: ${{ steps.docker_meta.outputs.labels }}
-
 
     #   - name: 🏗️ Build and push container image to registry
     #     uses: docker/build-push-action@v3
