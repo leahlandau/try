@@ -76,8 +76,6 @@ jobs:
             type=semver,pattern={{major}}.{{minor}},value=${{ steps.get_release.outputs.tag_name }}
             type=semver,pattern={{major}},value=${{ steps.get_release.outputs.tag_name }}
 
-     
-
   build-and-deploy:
     runs-on: 'ubuntu-latest'
     needs: common-steps
@@ -116,26 +114,15 @@ jobs:
           labels: ${{ env.LABELS }}
           file: ./${{ matrix.directory }}/Dockerfile
 
-      # - name: 🔄 Extract last directory level
-      #   id: get-last-level
-      #   run: |
-      #     LAST_LEVEL=$(basename ${{ matrix.directory }})
-      - name: Extract Last Directory Level
+      - name: 🔄 Extract Last Directory Level
         id: get-last-level
         run: |
           LAST_LEVEL=$(echo ${{ matrix.directory }} | xargs -n 1 basename)
           echo "::set-output name=last_level::$LAST_LEVEL"
 
-      - name: 🖨️ print
-        run:
-          echo ${{ steps.get-last-level.outputs.LAST_LEVEL }};
-          echo ${{ steps.get-last-level.outputs.last_level }};
-
       - name: 🚀 Deploy to Azure Functions
         id: deploy-to-functions
         uses: Azure/functions-container-action@v1
         with:
-          app-name: func-minus
-          # app-name: ${{ steps.get-last-level.outputs.last_level }}
+          app-name: ${{ steps.get-last-level.outputs.last_level }}
           image: 'ghcr.io/${{ env.REPO }}-${{ steps.get-last-level.outputs.last_level }}:latest'
-          # image: 'ghcr.io/${{ env.REPO }}-${{ matrix.directory }}:${{ env.TAG }}'
