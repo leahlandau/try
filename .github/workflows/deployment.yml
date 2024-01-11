@@ -129,6 +129,7 @@ jobs:
       - name: 🖨️ print
         run:
           echo ${{ steps.get-last-level.outputs.LAST_LEVEL }};
+          echo ${{ steps.get-last-level.outputs.last_level }};
 
       - name: 🚀 Deploy to Azure Functions
         id: deploy-to-functions
