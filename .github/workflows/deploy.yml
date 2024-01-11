@@ -117,9 +117,9 @@ jobs:
           push: true
           tags: ghcr.io/${{ env.REPO }}/${{ matrix.directory }}:${{ env.TAG }}
           labels: ${{ env.LABELS }}
-          file: ./services/Dockerfile
-          build-args: |
-            REQUIREMENTS_PATH=./${{ matrix.directory }}/requirements.txt
+          file: ./${{ matrix.directory }}/Dockerfile
+          # build-args: |
+          #   REQUIREMENTS_PATH=./${{ matrix.directory }}/requirements.txt
 
       - name: 🔄 Extract last directory level
         id: get-last-level
