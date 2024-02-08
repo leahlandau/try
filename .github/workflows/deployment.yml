@@ -116,7 +116,7 @@ jobs:
         with:
           context: ./${{ matrix.directory }}
           push: true
-          tags: ghcr.io/${{ env.REPO }}-${{ steps.get-last-level.outputs.last_level }}:${{ env.TAG }}
+          tags: ghcr.io/${{ env.REPO }}/${{ steps.get-last-level.outputs.last_level }}:${{ env.TAG }}
           labels: ${{ env.LABELS }}
           file: ./${{ matrix.directory }}/Dockerfile
 
@@ -125,4 +125,4 @@ jobs:
         uses: Azure/functions-container-action@v1
         with:
           app-name: ${{ steps.get-last-level.outputs.last_level }}
-          image: 'ghcr.io/${{ env.REPO }}-${{ steps.get-last-level.outputs.last_level }}:${{ env.TAG }}'
+          image: 'ghcr.io/${{ env.REPO }}/${{ steps.get-last-level.outputs.last_level }}:${{ env.TAG }}'
