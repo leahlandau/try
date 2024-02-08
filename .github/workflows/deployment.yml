@@ -106,10 +106,10 @@ jobs:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
       - name: 🔄 Extract Last Directory Level
-         id: get-last-level
-         run: |
-           LAST_LEVEL=$(echo ${{ matrix.directory }} | xargs -n 1 basename)
-           echo "::set-output name=last_level::$LAST_LEVEL"
+        id: get-last-level
+        run: |
+          LAST_LEVEL=$(echo ${{ matrix.directory }} | xargs -n 1 basename)
+          echo "::set-output name=last_level::$LAST_LEVEL"
 
       - name: 🏗️ Build and push container image to registry
         uses: docker/build-push-action@v3
