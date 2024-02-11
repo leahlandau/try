@@ -105,7 +105,7 @@ jobs:
           ROOT_DIRECTORY=$(pwd)
           FILES_PATH="$ROOT_DIRECTORY/services"
           for file in "${REQUIRED_FILES[@]}"; do
-            if [ ! -f "${FILES_PATH}/${{ matrix.directory }}/${file}" ]; then
+            if [ ! -f "${ROOT_DIRECTORY}/${DIRECTORY}/" ]; then
               if [ ! -f "${FILES_PATH}/${file}" ]; then
                 echo "${file} not found in ${FILES_PATH}, cannot copy"
               else 
@@ -122,36 +122,36 @@ jobs:
             fi
           done
 
-      - name: 🔑 Log in to registry
-        uses: docker/login-action@v3
-        with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
+      # - name: 🔑 Log in to registry
+      #   uses: docker/login-action@v3
+      #   with:
+      #     registry: ghcr.io
+      #     username: ${{ github.actor }}
+      #     password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: 🔑 Login to Azure
-        uses: azure/login@v1
-        with:
-          creds: ${{ secrets.AZURE_CREDENTIALS }}
+      # - name: 🔑 Login to Azure
+      #   uses: azure/login@v1
+      #   with:
+      #     creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-      - name: 🔄 Extract Last Directory Level
-        id: get-last-level
-        run: |
-          LAST_LEVEL=$(echo ${{ matrix.directory }} | xargs -n 1 basename)
-          echo "::set-output name=last_level::$LAST_LEVEL"
+      # - name: 🔄 Extract Last Directory Level
+      #   id: get-last-level
+      #   run: |
+      #     LAST_LEVEL=$(echo ${{ matrix.directory }} | xargs -n 1 basename)
+      #     echo "::set-output name=last_level::$LAST_LEVEL"
 
-      - name: 🏗️ Build and push container image to registry
-        uses: docker/build-push-action@v5
-        with:
-          context: ./${{ matrix.directory }}
-          push: true
-          tags: ghcr.io/${{ env.REPO }}/${{ steps.get-last-level.outputs.last_level }}:${{ env.TAG }}
-          labels: ${{ env.LABELS }}
-          file: ./${{ matrix.directory }}/Dockerfile
+      # - name: 🏗️ Build and push container image to registry
+      #   uses: docker/build-push-action@v5
+      #   with:
+      #     context: ./${{ matrix.directory }}
+      #     push: true
+      #     tags: ghcr.io/${{ env.REPO }}/${{ steps.get-last-level.outputs.last_level }}:${{ env.TAG }}
+      #     labels: ${{ env.LABELS }}
+      #     file: ./${{ matrix.directory }}/Dockerfile
 
-      - name: 🚀 Deploy to Azure Functions
-        id: deploy-to-functions
-        uses: Azure/functions-container-action@v1
-        with:
-          app-name: ${{ steps.get-last-level.outputs.last_level }}
-          image: "ghcr.io/${{ env.REPO }}/${{ steps.get-last-level.outputs.last_level }}:${{ env.TAG }}"
+      # - name: 🚀 Deploy to Azure Functions
+      #   id: deploy-to-functions
+      #   uses: Azure/functions-container-action@v1
+      #   with:
+      #     app-name: ${{ steps.get-last-level.outputs.last_level }}
+      #     image: "ghcr.io/${{ env.REPO }}/${{ steps.get-last-level.outputs.last_level }}:${{ env.TAG }}"
