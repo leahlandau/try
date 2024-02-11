@@ -100,11 +100,13 @@ jobs:
           ROOT_DIRECTORY=$(pwd)
           FILES_PATH="$ROOT_DIRECTORY/services"
           for file in "${REQUIRED_FILES[@]}"; do
-            if [ ! -f "${FILES_PATH}/${file}" ]; then
-              echo "${file} not found in ${FILES_PATH}, cannot copy"
-            else
-              echo "${file} found in ${FILES_PATH}, copying from there"
-              cp "${FILES_PATH}/${file}" "${ROOT_DIRECTORY}/${DIRECTORY}/"
+            if [ ! -f "${FILES_PATH}/${{ matrix.directory }}/${file}" ]; then
+              if [ ! -f "${FILES_PATH}/${file}" ]; then
+                echo "${file} not found in ${FILES_PATH}, cannot copy"
+              else
+                echo "${file} found in ${FILES_PATH}, copying from there"
+                cp "${FILES_PATH}/${file}" "${ROOT_DIRECTORY}/${DIRECTORY}/"
+              fi
             fi
           done
 
