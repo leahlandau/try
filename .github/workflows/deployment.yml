@@ -78,6 +78,11 @@ jobs:
 
   build-and-deploy:
     runs-on: "ubuntu-latest"
+    
+    permissions:
+      contents: read
+      packages: write
+
     needs: common-steps
     env:
       REPO: ${{ needs.common-steps.outputs.REPO }}
@@ -103,10 +108,16 @@ jobs:
             if [ ! -f "${FILES_PATH}/${{ matrix.directory }}/${file}" ]; then
               if [ ! -f "${FILES_PATH}/${file}" ]; then
                 echo "${file} not found in ${FILES_PATH}, cannot copy"
-              else
+              else 
                 echo "${file} found in ${FILES_PATH}, copying from there"
                 cp "${FILES_PATH}/${file}" "${ROOT_DIRECTORY}/${DIRECTORY}/"
               fi
+            else
+              if [[ "${file}" == "requirements.txt" ]]; then
+                if [ -f "${FILES_PATH}/${file}" ]; then
+                  cat ${FILES_PATH}/${{ matrix.directory }}/${file} ${FILES_PATH}/${file} >> ${FILES_PATH}/${{ matrix.directory }}/${file}
+                fi
+              fi  
             fi
           done
 
