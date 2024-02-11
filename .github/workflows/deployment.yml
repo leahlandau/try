@@ -105,7 +105,7 @@ jobs:
           ROOT_DIRECTORY=$(pwd)
           FILES_PATH="$ROOT_DIRECTORY/services"
           for file in "${REQUIRED_FILES[@]}"; do
-            if [ ! -f "${ROOT_DIRECTORY}/${DIRECTORY}/" ]; then
+            if [ ! -f "${ROOT_DIRECTORY}/${DIRECTORY}/${file}" ]; then
               if [ ! -f "${FILES_PATH}/${file}" ]; then
                 echo "${file} not found in ${FILES_PATH}, cannot copy"
               else 
