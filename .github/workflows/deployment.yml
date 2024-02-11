@@ -116,7 +116,8 @@ jobs:
               echo "this ${file} found in ${ROOT_DIRECTORY}/${DIRECTORY} merge it!"
               if [[ "${file}" == "requirements.txt" ]]; then
                 if [ -f "${FILES_PATH}/${file}" ]; then
-                  echo "${{ cat ${ROOT_DIRECTORY}/${DIRECTORY}/${file} ${FILES_PATH}/${file} }}" >> ${ROOT_DIRECTORY}/${DIRECTORY}/${file}
+                  cat ${ROOT_DIRECTORY}/${DIRECTORY}/${file} ${FILES_PATH}/${file} >> mergedrequirements.txt
+                  mv mergedrequirements.txt ${ROOT_DIRECTORY}/${DIRECTORY}/${file}
                 fi
               fi  
             fi
