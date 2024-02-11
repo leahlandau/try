@@ -98,26 +98,32 @@ jobs:
       - name: 📂 Checkout repository
         uses: actions/checkout@v4
 
+      - name: 🔄 Extract First Directory Level
+        id: get-first-level
+        run: |
+           FIRST_LEVEL=$(echo ${{ matrix.directory }} | cut -d'/' -f1)
+           echo "::set-output name=first_level::$FIRST_LEVEL"
+
       - name: 🧰 Check and copy necessary files
         run: |
-          DIRECTORY=${{ matrix.directory }}
           REQUIRED_FILES=(".funcignore" ".gitignore" "host.json" "requirements.txt" "Dockerfile")
           ROOT_DIRECTORY=$(pwd)
-          FILES_PATH="$ROOT_DIRECTORY/services"
+          CURRENT_DIRECTORY="$ROOT_DIRECTORY/${{ matrix.directory }}"
+          COMMON_FILES_PATH="$ROOT_DIRECTORY/${{ steps.get-first-level.outputs.first_level }}"
           for file in "${REQUIRED_FILES[@]}"; do
-            if [ ! -f "${ROOT_DIRECTORY}/${DIRECTORY}/${file}" ]; then
-              if [ ! -f "${FILES_PATH}/${file}" ]; then
-                echo "${file} not found in ${FILES_PATH}, cannot copy"
+            if [ ! -f "${CURRENT_DIRECTORY}/${file}" ]; then
+              if [ ! -f "${COMMON_FILES_PATH}/${file}" ]; then
+                echo "${file} not found in ${COMMON_FILES_PATH}, cannot copy"
               else 
-                echo "${file} found in ${FILES_PATH}, copying from there"
-                cp "${FILES_PATH}/${file}" "${ROOT_DIRECTORY}/${DIRECTORY}/"
+                echo "${file} found in ${COMMON_FILES_PATH}, copying from there"
+                cp "${COMMON_FILES_PATH}/${file}" "${CURRENT_DIRECTORY}/"
               fi
             else
-              echo "this ${file} found in ${ROOT_DIRECTORY}/${DIRECTORY} merge it!"
+              echo "this ${file} found in ${CURRENT_DIRECTORY} merge it!"
               if [[ "${file}" == "requirements.txt" ]]; then
-                if [ -f "${FILES_PATH}/${file}" ]; then
-                  cat ${ROOT_DIRECTORY}/${DIRECTORY}/${file} ${FILES_PATH}/${file} | sort -u >> mergedrequirements.txt
-                  mv mergedrequirements.txt ${ROOT_DIRECTORY}/${DIRECTORY}/${file}
+                if [ -f "${COMMON_FILES_PATH}/${file}" ]; then
+                  cat ${CURRENT_DIRECTORY}/${file} ${COMMON_FILES_PATH}/${file} | sort -u >> merge.txt
+                  mv merge.txt ${CURRENT_DIRECTORY}/${file}
                 fi
               fi  
             fi
