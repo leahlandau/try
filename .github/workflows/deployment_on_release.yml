@@ -43,12 +43,14 @@ jobs:
          files: |
             services/emails/**
             services/subscriptions/**
+
+        
         # {dir1,dir2}/**
 
-      # - name: print previous_commit
-      #   id: previous_commit
-      #   run: |
-      #      echo $(git rev-list -n 1 v0.0.1)
+      - name: print 
+        id: print
+        run: |
+           echo ${{ steps.changed-files.outputs.all_changed_files }}
       # - name: 🔎 Determine modified directories
       #   id: determine_directories
       #   run: |
