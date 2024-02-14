@@ -32,15 +32,20 @@ jobs:
         with:
           latest: true
 
-      - name: print previous_commit
-        id: previous_commit
+      - name: ♻️ Set correct environment
         run: |
-           echo $(git rev-list -n 1 v0.0.1)
+          TAG=${{ steps.get_release.outputs.tag_name }}
+          echo "TAG=$TAG" >> "$GITHUB_ENV"
+
+      # - name: print previous_commit
+      #   id: previous_commit
+      #   run: |
+      #      echo $(git rev-list -n 1 v0.0.1)
       - name: 🔎 Determine modified directories
         id: determine_directories
         run: |
-          # previous_commit=$(git rev-list -n 1 v0.0.1) 
-          echo $(git rev-list -n 1 v0.0.1)
+          previous_commit=$(git rev-list -n 1 ${{ env.TAG}}) 
+          echo $(git rev-list -n 1 ${{ env.TAG}})
           changed_files=$(git diff --name-only HEAD^ HEAD)
           paths=(
             'services/emails' 
