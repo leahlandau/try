@@ -43,6 +43,7 @@ jobs:
          files: |
             services/emails/**
             services/subscriptions/**
+         dir_names: true
 
         
         # {dir1,dir2}/**
