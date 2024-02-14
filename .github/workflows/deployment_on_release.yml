@@ -9,9 +9,6 @@ on:
 jobs:
   common-steps:
     runs-on: "ubuntu-latest"
-    defaults:
-      run:
-        working-directory: services
     outputs:
     #   REPO: ${{ steps.downcase.outputs.lowercase }}
     #   TAG: ${{ steps.get_release.outputs.tag_name }}
@@ -43,9 +40,9 @@ jobs:
         with:
          json: true
          files: |
-            {emails,subscriptions}/**
+            {services/emails,services/subscriptions}/**
          dir_names: true
-        #  dir_names_max_depth: 1
+         dir_names_max_depth: 3
          escape_json: false
 
         
@@ -109,9 +106,6 @@ jobs:
 
   build-and-deploy:
     runs-on: "ubuntu-latest"
-    defaults:
-      run:
-        working-directory: services
     # permissions:
     #   contents: read
     #   packages: write
@@ -139,7 +133,7 @@ jobs:
       - name: copy file via ssh key
         uses: appleboy/scp-action@v0.1.7
         with:
-          source: ".funcignore , .gitignore,host.json ,requirements.txt ,Dockerfile"
+          source: "services/.funcignore , services/.gitignore,services/host.json ,services/requirements.txt ,services/Dockerfile"
           target: ${{ matrix.directory }}
 
       # - name: 🔄 Extract First Directory Level
