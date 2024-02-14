@@ -130,8 +130,8 @@ jobs:
         run: |
            echo ${{ matrix.directory }} 
 
-      - name: copy file via ssh key
-        uses: appleboy/scp-action@v0.1.7
+      - name: copy file
+        uses: canastro/copy-file-action@master
         with:
           source: "services/.funcignore , services/.gitignore,services/host.json ,services/requirements.txt ,services/Dockerfile"
           target: ${{ matrix.directory }}
