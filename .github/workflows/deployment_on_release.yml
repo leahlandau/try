@@ -9,7 +9,9 @@ on:
 jobs:
   common-steps:
     runs-on: "ubuntu-latest"
-
+    defaults:
+      run:
+        working-directory: services
     outputs:
     #   REPO: ${{ steps.downcase.outputs.lowercase }}
     #   TAG: ${{ steps.get_release.outputs.tag_name }}
@@ -107,7 +109,9 @@ jobs:
 
   build-and-deploy:
     runs-on: "ubuntu-latest"
-
+    defaults:
+      run:
+        working-directory: services
     # permissions:
     #   contents: read
     #   packages: write
@@ -131,6 +135,12 @@ jobs:
         id: print
         run: |
            echo ${{ matrix.directory }} 
+
+      - name: copy file via ssh key
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          source: ".funcignore , .gitignore,host.json ,requirements.txt ,Dockerfile"
+          target: ${{ matrix.directory }}
 
       # - name: 🔄 Extract First Directory Level
       #   id: get-first-level
