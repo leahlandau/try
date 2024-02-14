@@ -46,7 +46,8 @@ jobs:
         run: |
           previous_commit=$(git rev-list -n 1 ${{ env.TAG}}) 
           echo $(git rev-list -n 1 ${{ env.TAG}})
-          changed_files=$(git diff --name-only HEAD^ HEAD)
+          changed_files=$(git diff --name-only 2da09a85d9d3f1ed6dfa49185092753e6dad810a HEAD)
+          echo $(git diff --name-only 2da09a85d9d3f1ed6dfa49185092753e6dad810a HEAD)
           paths=(
             'services/emails' 
             'services/subscriptions' 
