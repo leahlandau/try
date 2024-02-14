@@ -106,6 +106,7 @@ jobs:
 
   build-and-deploy:
     runs-on: "ubuntu-latest"
+
     # permissions:
     #   contents: read
     #   packages: write
@@ -113,7 +114,7 @@ jobs:
     needs: common-steps
     env:
     #   REPO: ${{ needs.common-steps.outputs.REPO }}
-    #   TAG: ${{ needs.common-steps.outputs.TAG }}
+      # TAG: ${{ needs.common-steps.outputs.TAG }}
       MATRIX: ${{ needs.common-steps.outputs.MATRIX }}
     #   LABELS: ${{ needs.common-steps.outputs.LABELS }}
 
@@ -130,11 +131,16 @@ jobs:
         run: |
            echo ${{ matrix.directory }} 
 
-      - name: copy file
-        uses: canastro/copy-file-action@master
-        with:
-          source: "./services/Dockerfile"
-          target: ./${{ matrix.directory }}
+      - name: 🧰 Check and copy necessary files and merge the requirements.txt files
+        run: |
+          REQUIRED_FILES=(".funcignore" ".gitignore" "host.json" "requirements.txt" "Dockerfile")
+          CURRENT_DIRECTORY="$ROOT_DIRECTORY/${{ matrix.directory }}"
+          COMMON_FILES_PATH="$ROOT_DIRECTORY/${{ steps.get-first-level.outputs.first_level }}"
+          for file in "${REQUIRED_FILES[@]}"; do
+            echo "${file} found in ${COMMON_FILES_PATH}, copying from there"
+            cp "./services/${file}" "${{ matrix.directory }}/"
+          done
+
 
       - name: 🏗️ Build and push container image to registry
         uses: docker/build-push-action@v5
