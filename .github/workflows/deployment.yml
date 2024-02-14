@@ -1,16 +1,16 @@
-name: 🚀 Build and deploy container app to Azure Function App
+name: 🚀 Build and deploy to Azure Function App
 
 on:
   push:
     branches:
-      - main
+      - changed-directories
     paths:
-      - 'services/emails/**'
-      - 'services/subscriptions/**'
+      - "services/emails/**"
+      - "services/subscriptions/**"
 
 jobs:
   common-steps:
-    runs-on: 'ubuntu-latest'
+    runs-on: "ubuntu-latest"
 
     outputs:
       REPO: ${{ steps.downcase.outputs.lowercase }}
@@ -26,7 +26,7 @@ jobs:
 
       - name: 🔎 Determine modified directories
         id: determine_directories
-        run: |   
+        run: |
           changed_files=$(git diff --name-only HEAD^ HEAD)
           paths=(
             'services/emails' 
@@ -50,14 +50,7 @@ jobs:
           echo "::set-output name=changed_directories::$json_array"
 
       - name: 🛠️ Set up Docker Buildx
-        uses: docker/setup-buildx-action@v2
-
-      - name: 🔑 Log in to registry
-        uses: docker/login-action@v2
-        with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
+        uses: docker/setup-buildx-action@v3
 
       - name: 🔖 Get release tag name
         id: get_release
@@ -83,10 +76,13 @@ jobs:
             type=semver,pattern={{major}}.{{minor}},value=${{ steps.get_release.outputs.tag_name }}
             type=semver,pattern={{major}},value=${{ steps.get_release.outputs.tag_name }}
 
-     
-
   build-and-deploy:
-    runs-on: 'ubuntu-latest'
+    runs-on: "ubuntu-latest"
+
+    permissions:
+      contents: read
+      packages: write
+
     needs: common-steps
     env:
       REPO: ${{ needs.common-steps.outputs.REPO }}
@@ -102,12 +98,41 @@ jobs:
       - name: 📂 Checkout repository
         uses: actions/checkout@v4
 
-      - name: 🖨️ print changed directory name
-        run:
-          echo ${{ matrix.directory }};
+      - name: 🔄 Extract First Directory Level
+        id: get-first-level
+        run: |
+           FIRST_LEVEL=$(echo ${{ matrix.directory }} | cut -d'/' -f1)
+           echo "::set-output name=first_level::$FIRST_LEVEL"
+
+      - name: 🧰 Check and copy necessary files and merge the requirements.txt files
+        run: |
+          REQUIRED_FILES=(".funcignore" ".gitignore" "host.json" "requirements.txt" "Dockerfile")
+          ROOT_DIRECTORY=$(pwd)
+          CURRENT_DIRECTORY="$ROOT_DIRECTORY/${{ matrix.directory }}"
+          COMMON_FILES_PATH="$ROOT_DIRECTORY/${{ steps.get-first-level.outputs.first_level }}"
+          for file in "${REQUIRED_FILES[@]}"; do
+            if [ ! -f "${CURRENT_DIRECTORY}/${file}" ]; then
+              if [ ! -f "${COMMON_FILES_PATH}/${file}" ]; then
+                echo "${file} not found in ${COMMON_FILES_PATH}, cannot copy"
+              else 
+                echo "${file} found in ${COMMON_FILES_PATH}, copying from there"
+                cp "${COMMON_FILES_PATH}/${file}" "${CURRENT_DIRECTORY}/"
+              fi
+            else
+              echo "this ${file} found in ${CURRENT_DIRECTORY} merge it!"
+              if [[ "${file}" == "requirements.txt" ]]; then
+                if [ -f "${COMMON_FILES_PATH}/${file}" ]; then
+                  cat ${CURRENT_DIRECTORY}/${file} ${COMMON_FILES_PATH}/${file} | sort -u >> merge.txt
+                  mv merge.txt ${CURRENT_DIRECTORY}/${file}
+                fi
+              fi  
+            fi
+          done
+
+        
 
       - name: 🔑 Log in to registry
-        uses: docker/login-action@v2
+        uses: docker/login-action@v3
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
@@ -118,26 +143,24 @@ jobs:
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
+      - name: 🔄 Extract Last Directory Level
+        id: get-last-level
+        run: |
+          LAST_LEVEL=$(echo ${{ matrix.directory }} | xargs -n 1 basename)
+          echo "::set-output name=last_level::$LAST_LEVEL"
 
       - name: 🏗️ Build and push container image to registry
-        uses: docker/build-push-action@v3
+        uses: docker/build-push-action@v5
         with:
           context: ./${{ matrix.directory }}
           push: true
-          tags: ghcr.io/${{ env.REPO }}-${{ matrix.directory }}:${{ env.TAG }}
+          tags: ghcr.io/${{ env.REPO }}/${{ steps.get-last-level.outputs.last_level }}:${{ env.TAG }}
           labels: ${{ env.LABELS }}
           file: ./${{ matrix.directory }}/Dockerfile
-          # build-args: |
-          #   REQUIREMENTS_PATH=./${{ matrix.directory }}/requirements.txt
-
-      - name: 🔄 Extract last directory level
-        id: get-last-level
-        run: |
-          LAST_LEVEL=$(basename ${{ matrix.directory }})
 
       - name: 🚀 Deploy to Azure Functions
         id: deploy-to-functions
         uses: Azure/functions-container-action@v1
         with:
           app-name: ${{ steps.get-last-level.outputs.last_level }}
-          image: 'ghcr.io/${{ env.REPO }}-${{ matrix.directory }}:${{ env.TAG }}'
+          image: "ghcr.io/${{ env.REPO }}/${{ steps.get-last-level.outputs.last_level }}:${{ env.TAG }}"
