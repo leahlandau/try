@@ -133,8 +133,17 @@ jobs:
       - name: copy file
         uses: canastro/copy-file-action@master
         with:
-          source: "./services/.funcignore"
+          source: "./services/Dockerfile"
           target: ./${{ matrix.directory }}
+
+      - name: 🏗️ Build and push container image to registry
+        uses: docker/build-push-action@v5
+        with:
+          context: ./${{ matrix.directory }}
+          push: true
+          tags: ghcr.io/${{ github.repository }}/${{ matrix.directory }}
+          labels: ${{ env.LABELS }}
+          file: ./${{ matrix.directory }}/Dockerfile
 
       # - name: 🔄 Extract First Directory Level
       #   id: get-first-level
