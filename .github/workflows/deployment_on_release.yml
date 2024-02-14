@@ -45,6 +45,7 @@ jobs:
             services/subscriptions/**
          dir_names: true
          dir_names_max_depth: 3
+         escape_json: false
 
         
         # {dir1,dir2}/**
