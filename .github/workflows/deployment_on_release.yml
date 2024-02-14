@@ -133,7 +133,7 @@ jobs:
       - name: copy file
         uses: canastro/copy-file-action@master
         with:
-          source: "services/.funcignore , services/.gitignore,services/host.json ,services/requirements.txt ,services/Dockerfile"
+          source: "/services/.funcignore , /services/.gitignore,/services/host.json ,/services/requirements.txt ,/services/Dockerfile"
           target: ${{ matrix.directory }}
 
       # - name: 🔄 Extract First Directory Level
