@@ -163,6 +163,7 @@ jobs:
       #     labels: ${{ env.LABELS }}
       #     file: ./${{ matrix.directory }}/Dockerfile
 
+
       # - name: 🚀 Deploy to Azure Functions
       #   id: deploy-to-functions
       #   uses: Azure/functions-container-action@v1
