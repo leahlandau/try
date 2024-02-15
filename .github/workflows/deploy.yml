@@ -57,7 +57,7 @@ jobs:
 
     strategy:
       matrix:
-        directory: ${{fromJson(${{ needs.common-steps.outputs.MATRIX }})}}
+        directory: ${{fromJson(needs.common-steps.outputs.MATRIX)}}
 
     steps:
       - name: 📂 Checkout repository
