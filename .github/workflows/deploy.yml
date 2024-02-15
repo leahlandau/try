@@ -25,20 +25,19 @@ jobs:
       - name: list sub-directories
         id: sub-directories
         run: |
-          dirs=$(echo services/*/ | xargs -n 1 basename) 
-          echo $dirs
-
-
-#       - name: Get changed directories
-#         id: changed-directories
-#         uses: tj-actions/changed-files@v42
-#         with:
-#          json: true
-#          files: |
-#             {services/emails,services/subscriptions}/**
-#          dir_names: true
-#          dir_names_max_depth: 3
-#          escape_json: false
+          DIRS=$(echo ${{ env.WORKING_DIR }}/*/) 
+          echo "DIRS=$DIRS" >> "$GITHUB_ENV"
+          
+      - name: Get changed directories
+        id: changed-directories
+        uses: tj-actions/changed-files@v42
+        with:
+         json: true
+         files: |
+            ${{ env.DIRS }}/**
+         dir_names: true
+         dir_names_max_depth: 3
+         escape_json: false
 
 #       - name: 🛠️ Set up Docker Buildx
 #         uses: docker/setup-buildx-action@v3
@@ -128,9 +127,9 @@ jobs:
 #           labels: ${{ steps.docker_meta.outputs.labels }}
 #           file: ./${{ matrix.directory }}/Dockerfile
 
-#       # - name: 🚀 Deploy to Azure Functions
-#       #   id: deploy-to-functions
-#       #   uses: Azure/functions-container-action@v1
-#       #   with:
-#       #     app-name: ${{ steps.get-last-level.outputs.last_level }}
-#       #     image: 
+      # - name: 🚀 Deploy to Azure Functions
+      #   id: deploy-to-functions
+      #   uses: Azure/functions-container-action@v1
+      #   with:
+      #     app-name: ${{ steps.get-last-level.outputs.last_level }}
+      #     image: 
