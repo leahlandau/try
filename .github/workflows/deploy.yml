@@ -22,15 +22,12 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Get sub-directories
+      - name: list sub-directories
         id: sub-directories
-        uses: philips-labs/list-folders-action@v1
-        with:
-          path: ./${{ env.WORKING_DIR }}
-
-      - name: print
         run: |
-          echo ${{ steps.sub-directories.outputs.folders }}   
+          dirs=$(echo */) 
+          echo $dirs
+
 
 #       - name: Get changed directories
 #         id: changed-directories
@@ -74,6 +71,18 @@ jobs:
 #     steps:
 #       - name: 📂 Checkout repository
 #         uses: actions/checkout@v4
+      
+#       - name: 🔑 Log in to registry
+#         uses: docker/login-action@v3
+#         with:
+#           registry: ghcr.io
+#           username: ${{ github.actor }}
+#           password: ${{ secrets.GITHUB_TOKEN }}
+
+#       - name: 🔑 Login to Azure
+#         uses: azure/login@v3
+#         with:
+#           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
 #       - name: 🧰 Check and copy necessary files 
 #         run: |
@@ -91,18 +100,6 @@ jobs:
 #           else
 #             cp "./services/requirements.txt" "${{ matrix.directory }}/"
 #           fi
-
-#       - name: 🔑 Log in to registry
-#         uses: docker/login-action@v3
-#         with:
-#           registry: ghcr.io
-#           username: ${{ github.actor }}
-#           password: ${{ secrets.GITHUB_TOKEN }}
-
-#       - name: 🔑 Login to Azure
-#         uses: azure/login@v1
-#         with:
-#           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
 #       - name: 🔄 Extract Last Directory Level
 #         id: get-last-level
@@ -131,12 +128,9 @@ jobs:
 #           labels: ${{ steps.docker_meta.outputs.labels }}
 #           file: ./${{ matrix.directory }}/Dockerfile
 
-#       - name: print
-#         run: |
-#          echo ${{ steps.build-and-push.outputs.json }}
 #       # - name: 🚀 Deploy to Azure Functions
 #       #   id: deploy-to-functions
 #       #   uses: Azure/functions-container-action@v1
 #       #   with:
 #       #     app-name: ${{ steps.get-last-level.outputs.last_level }}
-#       #     image: ${{ steps.docker_meta.outputs.tags }}
+#       #     image: 
