@@ -49,15 +49,15 @@ jobs:
       contents: read
       packages: write
 
-    needs: common-steps
+    needs: setup
 
     env:
-      # MATRIX: ${{ needs.common-steps.outputs.MATRIX }}
-      TAG: ${{ needs.common-steps.outputs.TAG }}
+      # MATRIX: ${{ needs.setup.outputs.MATRIX }}
+      TAG: ${{ needs.setup.outputs.TAG }}
 
     strategy:
       matrix:
-        directory: ${{fromJson(needs.common-steps.outputs.MATRIX)}}
+        directory: ${{fromJson(needs.setup.outputs.MATRIX)}}
 
     steps:
       - name: 📂 Checkout repository
