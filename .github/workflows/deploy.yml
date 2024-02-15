@@ -97,22 +97,22 @@ jobs:
 #             cp "./services/${file}" "${{ matrix.directory }}/"
 #           done
 
-      - name: 🔄 Extract Last Directory Level
-        id: get-last-level
-        run: |
-          LAST_LEVEL=$(echo ${{ matrix.directory }} | xargs -n 1 basename)
-          echo "LAST_LEVEL=$LAST_LEVEL" >> "$GITHUB_ENV"
+      # - name: 🔄 Extract Last Directory Level
+      #   id: get-last-level
+      #   run: |
+      #     LAST_LEVEL=$(echo ${{ matrix.directory }} | xargs -n 1 basename)
+      #     echo "LAST_LEVEL=$LAST_LEVEL" >> "$GITHUB_ENV"
 
-      - name: 🐳 Docker metadata
-        id: docker_meta
-        uses: docker/metadata-action@v5
-        with:
-          images: ghcr.io/${{ github.repository }}/${{ env.LAST_LEVEL }}
-          tags: |
-            type=raw,value=latest,enable={{is_default_branch}}
-            type=semver,pattern={{major}}.{{minor}}.{{patch}},value=${{ env.TAG }}
-            type=semver,pattern={{major}}.{{minor}},value=${{ env.TAG }}
-            type=semver,pattern={{major}},value=${{ env.TAG }}
+      # - name: 🐳 Docker metadata
+      #   id: docker_meta
+      #   uses: docker/metadata-action@v5
+      #   with:
+      #     images: ghcr.io/${{ github.repository }}/${{ env.LAST_LEVEL }}
+      #     tags: |
+      #       type=raw,value=latest,enable={{is_default_branch}}
+      #       type=semver,pattern={{major}}.{{minor}}.{{patch}},value=${{ env.TAG }}
+      #       type=semver,pattern={{major}}.{{minor}},value=${{ env.TAG }}
+      #       type=semver,pattern={{major}},value=${{ env.TAG }}
 
       # - name: 🏗️ Build and push container image to registry
       #   id: build-and-push
