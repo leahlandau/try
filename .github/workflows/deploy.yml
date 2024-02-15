@@ -25,7 +25,8 @@ jobs:
       - name: list sub-directories
         id: sub-directories
         run: |
-          DIRS=$(echo ${{ env.WORKING_DIR }}/*/) 
+          # DIRS=$(echo ${{ env.WORKING_DIR }}/*/) 
+          DIRS=$(ls -m -d ${{ env.WORKING_DIR }}/*/)
           echo "DIRS=$DIRS" >> "$GITHUB_ENV"
           
       - name: Get changed directories
@@ -38,11 +39,7 @@ jobs:
          dir_names: true
          dir_names_max_depth: 3
          escape_json: false
-
-      - name: print 
-        id: print
-        run: |
-           echo ${{ steps.changed-files.outputs.all_changed_files }}
+         
 
 #       - name: 🛠️ Set up Docker Buildx
 #         uses: docker/setup-buildx-action@v3
