@@ -22,28 +22,17 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: list sub-directories
-        id: sub-directories
-        run: |
-          DIRS=$(ls -m -d  ${{ env.WORKING_DIR }}/*/)
-          echo "DIRS=$DIRS" >> "$GITHUB_ENV"
-
       - name: Get changed directories
         id: changed-directories
         uses: tj-actions/changed-files@v42
         with:
          json: true
          files: |
-           {${{ env.DIRS }}}**
+           ${{ env.WORKING_DIR }}/**
          dir_names: true
          dir_names_max_depth: 3
          escape_json: false
          
-      - name: print 
-        id: print
-        run: |
-           echo ${{ steps.changed-files.outputs.all_changed_files }}
-
       - name: 🛠️ Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
@@ -93,7 +82,7 @@ jobs:
           REQUIRED_FILES=(".funcignore" "host.json" "Dockerfile" ".dockerignore")
           for file in "${REQUIRED_FILES[@]}"; do
             echo "${file} found in ${COMMON_FILES_PATH}, copying from there"
-            cp "./services/${file}" "${{ matrix.directory }}/"
+            cp "./${{ env.WORKING_DIR }}/${file}" "${{ matrix.directory }}/"
           done
 
       - name: 🔄 Extract Last Directory Level
