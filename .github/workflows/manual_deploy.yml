@@ -34,16 +34,15 @@ jobs:
     runs-on: "ubuntu-latest"
     outputs:
       TAG: ${{ steps.get_release.outputs.tag_name }}
-      MATRIX: ${{ env.DIRS }}
+      MATRIX: ${{ steps.sub-directories.outputs.dirs }}
     steps:
       - name: 📂 Checkout repository
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-
       - name: list sub-directories
         id: sub-directories
-        run: echo "DIRS=$(ls -d services/*/*/ | jq --raw-input --slurp --compact-output 'split("\n")[:-1]')" >> ${GITHUB_ENV}
+        run: echo "dirs=$(ls -d services/*/*/ | jq --raw-input --slurp --compact-output 'split("\n")[:-1]')" >> ${GITHUB_OUTPUT}
 
       - name: 🛠️ Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
