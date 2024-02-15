@@ -25,7 +25,7 @@ jobs:
       - name: list sub-directories
         id: sub-directories
         run: |
-          dirs=$(echo */) 
+          dirs=$(echo services/*/) 
           echo $dirs
 
 
