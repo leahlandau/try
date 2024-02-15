@@ -2,19 +2,45 @@ name: 🚀 Build and deploy to Azure Function App
 
 on: push
 
-jobs:
-  setup:
-    runs-on: "ubuntu-latest"
+# jobs:
+#   setup:
+#     runs-on: "ubuntu-latest"
     
+#     strategy:
+#       matrix:
+#         directory:
+#           - 
+
+#     steps:
+#       - name: print
+#         run: |
+#           echo ${{ matrix.directory}}
+jobs:
+  find-jobs:
+    runs-on: "ubuntu-latest"
+    outputs:
+      folders: ${{ steps.jobs.outputs.folders }}
+    steps:
+      - uses: actions/checkout@v1
+
+      - id: jobs
+        uses: philips-labs/list-folders-action@v1
+        with:
+          path: ./services/
+
+  matrix:
+    name: Matrix Jobs
+    needs: [find-jobs]
+    runs-on: "ubuntu-latest"
+    defaults:
+      run:
+        working-directory: ${{ matrix.folder }}
     strategy:
       matrix:
-        directory:
-          - [services/**]
-
+        folder: ${{ fromJson(needs.find-jobs.outputs.folders )}}
     steps:
-      - name: print
-        run: |
-          echo ${{ matrix.directory}}
+      - name: do something
+        run: echo ${{ matrix.folder }}
 
 
 
