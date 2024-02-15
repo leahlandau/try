@@ -57,7 +57,7 @@ jobs:
 
     strategy:
       matrix:
-        directory: ${{fromJson(env.MATRIX)}}
+        directory: ${{fromJson(${{ env.MATRIX }})}}
 
     steps:
       - name: 📂 Checkout repository
