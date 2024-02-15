@@ -25,7 +25,7 @@ jobs:
       - name: list sub-directories
         id: sub-directories
         run: |
-          dirs=$(echo services/*/) 
+          dirs=$(echo services/*/ | xargs -n 1 basename) 
           echo $dirs
 
 
