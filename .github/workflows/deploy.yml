@@ -34,7 +34,7 @@ jobs:
         with:
          json: true
          files: |
-           ${{ env.DIRS }}**
+           {${{ env.DIRS }}}**
          dir_names: true
          dir_names_max_depth: 3
          escape_json: false
