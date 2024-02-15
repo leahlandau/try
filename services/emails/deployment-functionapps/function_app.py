@@ -10,6 +10,7 @@ import sys
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
 app = func.FunctionApp()
+# app = func.FunctionApp()
 
 @app.function_name(name = "HttpTrigger1")
 @app.route(route = "")
@@ -36,6 +37,7 @@ def send_email_function(req: func.HttpRequest) -> func.HttpResponse:
         "This HTTP triggered function executed successfully.",
         status_code = 200
     )
+
 
 
 
