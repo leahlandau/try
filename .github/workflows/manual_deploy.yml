@@ -34,15 +34,18 @@ jobs:
     runs-on: "ubuntu-latest"
     outputs:
       TAG: ${{ steps.get_release.outputs.tag_name }}
-      MATRIX: ${{ steps.sub-directories.outputs.dirs }}
+      MATRIX: ${{ env.DIRS }}
     steps:
       - name: 📂 Checkout repository
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
+
       - name: list sub-directories
         id: sub-directories
-        run: echo "dirs=$(ls -d services/*/*/ | jq --raw-input --slurp --compact-output 'split("\n")[:-1]')" >> ${GITHUB_OUTPUT}
+        run: echo "DIRS=$(ls -d services/*/*/ | jq --raw-input --slurp --compact-output 'split("\n")[:-1]')" >> ${GITHUB_ENV}
+        if:  ${{ github.event_name }}  == workflow_dispatch
+
 
       - name: 🛠️ Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
@@ -114,9 +117,9 @@ jobs:
           labels: ${{ steps.docker_meta.outputs.labels }}
           file: ./${{ matrix.directory }}/Dockerfile
 
-      - name: 🚀 Deploy to Azure Functions
-        id: deploy-to-functions
-        uses: Azure/functions-container-action@v1
-        with:
-          app-name: ${{ steps.get-last-level.outputs.last_level }}
-          image: ghcr.io/${{ github.repository }}/${{ env.LAST_LEVEL }}:${{ env.TAG }}
+      # - name: 🚀 Deploy to Azure Functions
+      #   id: deploy-to-functions
+      #   uses: Azure/functions-container-action@v1
+      #   with:
+      #     app-name: ${{ steps.get-last-level.outputs.last_level }}
+      #     image: ghcr.io/${{ github.repository }}/${{ env.LAST_LEVEL }}:${{ env.TAG }}
