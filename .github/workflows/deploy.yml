@@ -22,12 +22,12 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: list sub-directories
-        id: sub-directories
-        run: |
-          DIRS=$(ls -d ${{ env.WORKING_DIR }}/*/)
-          echo "DIRS=$DIRS" >> "$GITHUB_ENV"
-          echo "::set-output name=DIRS::$DIRS"
+      # - name: list sub-directories
+      #   id: sub-directories
+      #   run: |
+      #     DIRS=$(ls -d -m ${{ env.WORKING_DIR }}/*/)
+      #     echo "DIRS=$DIRS" >> "$GITHUB_ENV"
+      #     echo "::set-output name=DIRS::$DIRS"
 
       - name: Get changed directories
         id: changed-directories
@@ -35,7 +35,7 @@ jobs:
         with:
          json: true
          files: |
-           ${{fromJson(steps.sub-directories.outputs.DIRS)}}/**
+           {services/emails,services/subscriptions}/**
          dir_names: true
          dir_names_max_depth: 3
          escape_json: false
