@@ -25,17 +25,16 @@ jobs:
       - name: list sub-directories
         id: sub-directories
         run: |
-          # DIRS=$(echo ${{ env.WORKING_DIR }}/*/) 
           DIRS=$(ls -m -d ${{ env.WORKING_DIR }}/*/)
           echo "DIRS=$DIRS" >> "$GITHUB_ENV"
-          
+      
       - name: Get changed directories
         id: changed-directories
         uses: tj-actions/changed-files@v42
         with:
          json: true
          files: |
-            ${{ env.DIRS }}/**
+            ${{ env.DIRS }}**
          dir_names: true
          dir_names_max_depth: 3
          escape_json: false
@@ -97,41 +96,32 @@ jobs:
 #             cp "./services/${file}" "${{ matrix.directory }}/"
 #           done
 
-#       - name: 📄 copy or merge requirements.txt file
-#         run: |
-#           if [ -f "./${{ matrix.directory }}/requirements.txt"]; then
-#             cat ${{ matrix.directory }}/requirements.txt ./services/requirements.txt | sort -u >> merge.txt
-#             mv merge.txt ${{ matrix.directory }}/requirements.txt
-#           else
-#             cp "./services/requirements.txt" "${{ matrix.directory }}/"
-#           fi
+      - name: 🔄 Extract Last Directory Level
+        id: get-last-level
+        run: |
+          LAST_LEVEL=$(echo ${{ matrix.directory }} | xargs -n 1 basename)
+          echo "LAST_LEVEL=$LAST_LEVEL" >> "$GITHUB_ENV"
 
-#       - name: 🔄 Extract Last Directory Level
-#         id: get-last-level
-#         run: |
-#           LAST_LEVEL=$(echo ${{ matrix.directory }} | xargs -n 1 basename)
-#           echo "LAST_LEVEL=$LAST_LEVEL" >> "$GITHUB_ENV"
+      - name: 🐳 Docker metadata
+        id: docker_meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ghcr.io/${{ github.repository }}/${{ env.LAST_LEVEL }}
+          tags: |
+            type=raw,value=latest,enable={{is_default_branch}}
+            type=semver,pattern={{major}}.{{minor}}.{{patch}},value=${{ env.TAG }}
+            type=semver,pattern={{major}}.{{minor}},value=${{ env.TAG }}
+            type=semver,pattern={{major}},value=${{ env.TAG }}
 
-#       - name: 🐳 Docker metadata
-#         id: docker_meta
-#         uses: docker/metadata-action@v5
-#         with:
-#           images: ghcr.io/${{ github.repository }}/${{ env.LAST_LEVEL }}
-#           tags: |
-#             type=raw,value=latest,enable={{is_default_branch}}
-#             type=semver,pattern={{major}}.{{minor}}.{{patch}},value=${{ env.TAG }}
-#             type=semver,pattern={{major}}.{{minor}},value=${{ env.TAG }}
-#             type=semver,pattern={{major}},value=${{ env.TAG }}
-
-#       - name: 🏗️ Build and push container image to registry
-#         id: build-and-push
-#         uses: docker/build-push-action@v5
-#         with:
-#           context: ./${{ matrix.directory }}
-#           push: true
-#           tags: ${{ steps.docker_meta.outputs.tags }}
-#           labels: ${{ steps.docker_meta.outputs.labels }}
-#           file: ./${{ matrix.directory }}/Dockerfile
+      # - name: 🏗️ Build and push container image to registry
+      #   id: build-and-push
+      #   uses: docker/build-push-action@v5
+      #   with:
+      #     context: ./${{ matrix.directory }}
+      #     push: true
+      #     tags: ${{ steps.docker_meta.outputs.tags }}
+      #     labels: ${{ steps.docker_meta.outputs.labels }}
+      #     file: ./${{ matrix.directory }}/Dockerfile
 
       # - name: 🚀 Deploy to Azure Functions
       #   id: deploy-to-functions
