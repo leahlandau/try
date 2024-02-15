@@ -10,7 +10,7 @@ on: push
 env:
   WORKING_DIR: services
 
-# jobs:
+jobs:
 #   collect_dirs:
 #     runs-on: ubuntu-latest
 #     outputs:
