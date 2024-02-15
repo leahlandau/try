@@ -1,11 +1,11 @@
 name: 🚀 Build and deploy to Azure Function App
 
-on:
-  workflow_dispatch:
-    inputs:
-      branchName:
-        description: 'branch name'
-        required: true 
+on: push
+  # workflow_dispatch:
+  #   inputs:
+  #     branchName:
+  #       description: 'branch name'
+  #       required: true 
 
 env:
   WORKING_DIR: services
@@ -26,8 +26,6 @@ jobs:
       - name: print
         id: print
         run: |
-          # DIRS=$(ls -r -m services/*/)
-          # echo $DIRS
           echo $(ls ./services/*/| jq -R -s -c 'split("\n")[:-1]')
 
   #     - name: 🛠️ Set up Docker Buildx
