@@ -11,22 +11,39 @@ env:
   WORKING_DIR: services
 
 jobs:
-  setup:
-    runs-on: "ubuntu-latest"
+  collect_dirs:
+  runs-on: ubuntu-latest
+  outputs:
+    dirs: ${{ steps.dirs.outputs.dirs }}
+  steps:
+    - uses: actions/checkout@v2
+    - id: dirs
+      run: echo "dirs=$(ls -d tests/*/ | jq --raw-input --slurp --compact-output 'split("\n")[:-1]')" >> ${GITHUB_OUTPUT}
 
-    outputs:
-      TAG: ${{ steps.get_release.outputs.tag_name }}
-
+  run_tests:
+    needs: collect_dirs
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        dir: ${{ fromJson(needs.collect_dirs.outputs.dirs) }}
     steps:
-      - name: 📂 Checkout repository
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
+      - run: echo ${{ matrix.dir }}
+  # setup:
+  #   runs-on: "ubuntu-latest"
 
-      - name: print
-        id: print
-        run: |
-          echo $(ls ./services/*/| jq -R -s -c 'split("\n")[:-1]')
+  #   outputs:
+  #     TAG: ${{ steps.get_release.outputs.tag_name }}
+
+  #   steps:
+  #     - name: 📂 Checkout repository
+  #       uses: actions/checkout@v4
+  #       with:
+  #         fetch-depth: 0
+
+  #     - name: print
+  #       id: print
+  #       run: |
+  #         echo $(ls ./services/*/| jq -R -s -c 'split("\n")[:-1]')
 
   #     - name: 🛠️ Set up Docker Buildx
   #       uses: docker/setup-buildx-action@v3
