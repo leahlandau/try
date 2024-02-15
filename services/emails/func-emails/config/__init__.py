@@ -2,4 +2,4 @@
 # 
 # ythgtrygfhghtyfghjtyrgfhjtyr6tyfgtru6kvjmnbcx,klvbinkj,vbmgck.kljbnmgfg,kjmnf,kjlgnmhn,jkntmg,fghklbn
 # jhjnbmdhjfghfxkdhjgbndmjhkfmn 
-# bvhvfghbhgvhfjhknbnvhjkjmn bnhjknmbhjujkmnm
+# bvhvfghbhgvhfjhknbnvhjkjmn bnhjknmbhjujkmnmmn, cv mn,bjc,d.lf;kogbljknm dm,klvbjnm

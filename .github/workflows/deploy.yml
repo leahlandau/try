@@ -65,7 +65,7 @@ jobs:
 
       - name: 🧰 Check and copy necessary files 
         run: |
-          REQUIRED_FILES=(".funcignore" "host.json" "Dockerfile",".dockerignore")
+          REQUIRED_FILES=(".funcignore" "host.json" "Dockerfile" ".dockerignore")
           for file in "${REQUIRED_FILES[@]}"; do
             echo "${file} found in ${COMMON_FILES_PATH}, copying from there"
             cp "./services/${file}" "${{ matrix.directory }}/"
