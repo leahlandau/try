@@ -52,12 +52,12 @@ jobs:
     needs: common-steps
 
     env:
-      MATRIX: ${{ needs.common-steps.outputs.MATRIX }}
+      # MATRIX: ${{ needs.common-steps.outputs.MATRIX }}
       TAG: ${{ needs.common-steps.outputs.TAG }}
 
     strategy:
       matrix:
-        directory: ${{fromJson(${{ env.MATRIX }})}}
+        directory: ${{fromJson(${{ needs.common-steps.outputs.MATRIX }})}}
 
     steps:
       - name: 📂 Checkout repository
