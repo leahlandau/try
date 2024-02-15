@@ -123,7 +123,7 @@ jobs:
       # - name: 🔄 Extract First Directory Level
       #   id: get-first-level
       #   run: |
-      #      FIRST_LEVEL=$(echo ${{ matrix.directory }} | cut -d'/' -f1)
+      #      FIRST_LEVEL=$(echo ${{ matrix.directory }} | cut -d'/' -f2)
       #      echo "::set-output name=first_level::$FIRST_LEVEL"
 
       # - name: 🧰 Check and copy necessary files and merge the requirements.txt files
