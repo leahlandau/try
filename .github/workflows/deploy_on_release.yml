@@ -41,6 +41,8 @@ jobs:
         uses: cardinalby/git-get-release-action@v1
         env:
           GITHUB_TOKEN: ${{ github.token }}
+        with:
+          latest: true
 
   build-and-deploy:
     runs-on: "ubuntu-latest"
