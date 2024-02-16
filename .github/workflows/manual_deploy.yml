@@ -1,12 +1,12 @@
 name: 🚀 Build and deploy to Azure Function App
 
 on:
-  push
-  # workflow_dispatch:
-  #   inputs:
-  #     branchName:
-  #       description: 'branch name'
-  #       required: true
+#   push
+  workflow_dispatch:
+    inputs:
+      branchName:
+        description: 'branch name'
+        required: true
 
 env:
   WORKING_DIR: services
