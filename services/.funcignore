@@ -7,5 +7,4 @@ local.settings.json
 test
 /testing
 .env
-**/Dockerfile*
-Dockerfile
+
