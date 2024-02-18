@@ -75,7 +75,7 @@ jobs:
 
       - name: print
         run: |
-          echo $(cat ${{ matrix.directory }}host.json)
+          echo $(cat ${{ matrix.directory }}/////host.json)
 
       - name: 🔄 Extract Last Directory Level
         id: get-last-level
