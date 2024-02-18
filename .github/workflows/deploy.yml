@@ -48,7 +48,9 @@ jobs:
       TAG: ${{ needs.setup.outputs.TAG }}
     strategy:
       matrix:
-        directory: ${{ fromJson(needs.setup.outputs.MATRIX) }}
+        directory: 
+          - services/emails/deployment-functionapps
+        # ${{ fromJson(needs.setup.outputs.MATRIX) }}
     steps:
       - name: 📂 Checkout repository
         uses: actions/checkout@v4
@@ -63,12 +65,12 @@ jobs:
         uses: azure/login@v1
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
-      # - name: 🧰 Check and copy necessary files
-      #   run: |
-      #     REQUIRED_FILES=(".funcignore" "host.json" "Dockerfile" ".dockerignore" )
-      #     for file in "${REQUIRED_FILES[@]}"; do
-      #       cp "./${{ env.WORKING_DIR }}/${file}" "${{ matrix.directory }}"
-      #     done
+      - name: 🧰 Check and copy necessary files
+        run: |
+          REQUIRED_FILES=(".funcignore" "host.json" "Dockerfile" ".dockerignore" )
+          for file in "${REQUIRED_FILES[@]}"; do
+            cp "./${{ env.WORKING_DIR }}/${file}" "${{ matrix.directory }}/"
+          done
 
       - name: 🔄 Extract Last Directory Level
         id: get-last-level
@@ -95,7 +97,7 @@ jobs:
           push: true
           tags: ${{ steps.docker_meta.outputs.tags }}
           labels: ${{ steps.docker_meta.outputs.labels }}
-          file: ./${{ matrix.directory }}Dockerfile
+          file: ./${{ matrix.directory }}/Dockerfile
 
       - name: 🚀 Deploy to Azure Functions
         id: deploy-to-functions
