@@ -1,4 +1,4 @@
-name: 🚀 Build and deploy to Azure Function App
+name: 🥰 Build and deploy to Azure Function App
 
 on:
 #   push
@@ -32,7 +32,7 @@ jobs:
 
       - name: 🛠️ Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
-        
+
       - name: 🔖 Get release tag name
         id: get_release
         uses: cardinalby/git-get-release-action@v1
