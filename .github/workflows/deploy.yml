@@ -48,12 +48,13 @@ jobs:
       TAG: ${{ needs.setup.outputs.TAG }}
     strategy:
       matrix:
-        directory: ${{ fromJson(needs.setup.outputs.MATRIX) }}
-          # - services/emails/deployment-functionapps
-        
+        directory:
+          - services/emails/deployment-functionapps
+        #  ${{ fromJson(needs.setup.outputs.MATRIX) }}
     steps:
       - name: 📂 Checkout repository
         uses: actions/checkout@v4
+        
       - name: 🔑 Log in to registry
         uses: docker/login-action@v3
         with:
@@ -73,9 +74,9 @@ jobs:
       #       cp "./${{ env.WORKING_DIR }}/${file}" "${{ matrix.directory }}/"
       #     done
 
-      - name: print
-        run: |
-          echo $(cat ${{ matrix.directory }}/////host.json)
+      # - name: print
+      #   run: |
+      #     echo $(cat ${{ matrix.directory }}/host.json)
 
       - name: 🔄 Extract Last Directory Level
         id: get-last-level
