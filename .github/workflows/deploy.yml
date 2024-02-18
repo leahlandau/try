@@ -111,4 +111,4 @@ jobs:
         uses: Azure/functions-container-action@v1
         with:
           app-name: ${{ env.LAST_LEVEL }}
-          image: ghcr.io/${{ github.repository }}/${{ env.LAST_LEVEL }}:${{ env.TAG }}
+          image: 'ghcr.io/${{ github.repository }}/${{ env.LAST_LEVEL }}:${{ env.TAG }}'
