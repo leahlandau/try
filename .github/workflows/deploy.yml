@@ -67,8 +67,7 @@ jobs:
         run: |
           REQUIRED_FILES=(".funcignore" "host.json" "Dockerfile" ".dockerignore" )
           for file in "${REQUIRED_FILES[@]}"; do
-            echo "${file} found in ${COMMON_FILES_PATH}, copying from there"
-            cp "./${{ env.WORKING_DIR }}/${file}" "${{ matrix.directory }}/"
+            cp "./${{ env.WORKING_DIR }}/${file}" "${{ matrix.directory }}"
           done
 
       - name: 🔄 Extract Last Directory Level
@@ -96,7 +95,7 @@ jobs:
           push: true
           tags: ${{ steps.docker_meta.outputs.tags }}
           labels: ${{ steps.docker_meta.outputs.labels }}
-          file: ./${{ matrix.directory }}/Dockerfile
+          file: ./${{ matrix.directory }}Dockerfile
 
       - name: 🚀 Deploy to Azure Functions
         id: deploy-to-functions
