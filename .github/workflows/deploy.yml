@@ -63,12 +63,12 @@ jobs:
         uses: azure/login@v1
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
-      - name: 🧰 Check and copy necessary files
-        run: |
-          REQUIRED_FILES=(".funcignore" "host.json" "Dockerfile" ".dockerignore" )
-          for file in "${REQUIRED_FILES[@]}"; do
-            cp "./${{ env.WORKING_DIR }}/${file}" "${{ matrix.directory }}"
-          done
+      # - name: 🧰 Check and copy necessary files
+      #   run: |
+      #     REQUIRED_FILES=(".funcignore" "host.json" "Dockerfile" ".dockerignore" )
+      #     for file in "${REQUIRED_FILES[@]}"; do
+      #       cp "./${{ env.WORKING_DIR }}/${file}" "${{ matrix.directory }}"
+      #     done
 
       - name: 🔄 Extract Last Directory Level
         id: get-last-level
