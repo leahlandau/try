@@ -53,8 +53,8 @@ jobs:
       TAG: ${{ needs.setup.outputs.TAG }}
     strategy:
       matrix:
-        directory: 
-          - services/emails/deployment-functionapps
+        directory: ${{ needs.setup.outputs.MATRIX }}
+          # - services/emails/deployment-functionapps
     steps:
       - name: 📂 Checkout repository
         uses: actions/checkout@v4
