@@ -73,6 +73,10 @@ jobs:
       #       cp "./${{ env.WORKING_DIR }}/${file}" "${{ matrix.directory }}/"
       #     done
 
+      - name: print
+        run: |
+          echo $(cat ${{ matrix.directory }}/host.json)
+          
       - name: 🔄 Extract Last Directory Level
         id: get-last-level
         run: |
@@ -99,7 +103,7 @@ jobs:
           tags: ${{ steps.docker_meta.outputs.tags }}
           labels: ${{ steps.docker_meta.outputs.labels }}
           file: ./${{ matrix.directory }}/Dockerfile
-
+     
       - name: 🚀 Deploy to Azure Functions
         id: deploy-to-functions
         uses: Azure/functions-container-action@v1
