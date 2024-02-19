@@ -52,6 +52,12 @@ jobs:
           dir_names: true
           dir_names_max_depth: 3
           escape_json: false
+
+      - name: print
+        id: print
+        run: |
+          echo ${{ env.COMMIT }}
+
         # if: ${{ github.event.inputs.deploy }} == only_changed_directories
 
   #     - name: ♻️ Set correct environment
