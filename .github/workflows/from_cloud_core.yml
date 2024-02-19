@@ -78,12 +78,6 @@ jobs:
             fi
           done
 
-      - name: 🔄 Extract Last Directory Level
-        id: get-last-level
-        run: |
-          LAST_LEVEL=$(echo ${{ matrix.directory }} | xargs -n 1 basename)
-          echo "::set-output name=last_level::$LAST_LEVEL"
-
       - name: 🔑 Log in to registry
         uses: docker/login-action@v2
         with:
