@@ -1,9 +1,11 @@
 name: 🚀 Build and deploy to Azure Function App
 
 on:
-  push:
-    tags:
-      - 'v*'
+  workflow_dispatch
+#   push:
+#     tags:
+#       - 'v*'
+
 
 jobs:
   set-up:
@@ -21,16 +23,16 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Get changed files
-        id: changed-files
-        uses: tj-actions/changed-files@v42
-        with:
-         json: true
-         files: |
-            {services/emails,services/subscriptions}/**
-         dir_names: true
-         dir_names_max_depth: 3
-         escape_json: false
+      # - name: Get changed files
+      #   id: changed-files
+      #   uses: tj-actions/changed-files@v42
+      #   with:
+      #    json: true
+      #    files: |
+      #       {services/emails,services/subscriptions}/**
+      #    dir_names: true
+      #    dir_names_max_depth: 3
+      #    escape_json: false
 
       - name: 🛠️ Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
@@ -74,8 +76,9 @@ jobs:
 
     strategy:
       matrix:
-        directory: ${{fromJson(needs.set-up.outputs.MATRIX)}}
-
+        # directory: ${{fromJson(needs.set-up.outputs.MATRIX)}}
+        directory:
+          - services/emails/func-ripos
     steps:
       - name: 📂 Checkout repository
         uses: actions/checkout@v4
