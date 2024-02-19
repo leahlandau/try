@@ -27,12 +27,14 @@ jobs:
       # - name: list sub-directories
       #   id: sub-directories
       #   run: echo "DIRS=$(ls -d services/*/*/ | jq --raw-input --slurp --compact-output 'split("\n")[:-1]')" >> ${GITHUB_ENV}
+
+      #  $(git rev-list -n 1 ${{ env.TAG}})
       
       - name: Get changed directories
         id: changed-directories
         uses: tj-actions/changed-files@v42
         with:
-          base_sha: $(git diff --name-only $(git rev-list -n 1 ${{ steps.get_release.outputs.tag_name }}) HEAD)
+          base_sha: $(git rev-list -n 1 ${{ steps.get_release.outputs.tag_name }})
           json: true
           files: |
             ${{ env.WORKING_DIR }}/**
