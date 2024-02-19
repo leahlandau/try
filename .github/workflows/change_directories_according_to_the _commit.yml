@@ -38,7 +38,11 @@ jobs:
       #  $(git rev-list -n 1 ${{ env.TAG}})
       - name: get previous tag commit
         id: get-previous-tag-commit
-        run: echo $(git rev-list -n 1 ${{ steps.get_release.outputs.tag_name }})
+        run: |
+          echo "COMMIT=$(git rev-list -n 1 ${{ steps.get_release.outputs.tag_name }})" >> ${GITHUB_ENV}
+          echo ${{ env.COMMIT }}
+
+  #         echo "DIRS=${{ steps.changed-directories.outputs.all_changed_files }}" >> "$GITHUB_ENV"
 
   #     - name: Get changed directories
   #       id: changed-directories
