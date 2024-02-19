@@ -24,9 +24,26 @@ jobs:
           fetch-depth: 0
           ref: ${{ github.event.inputs.branchName }}
 
-      - name: list sub-directories
-        id: sub-directories
-        run: echo "DIRS=$(ls -d services/*/*/ | jq --raw-input --slurp --compact-output 'split("\n")[:-1]')" >> ${GITHUB_ENV}
+      # - name: list sub-directories
+      #   id: sub-directories
+      #   run: echo "DIRS=$(ls -d services/*/*/ | jq --raw-input --slurp --compact-output 'split("\n")[:-1]')" >> ${GITHUB_ENV}
+      - name: Get changed directories
+        id: changed-directories
+        uses: tj-actions/changed-files@v42
+        with:
+          base_sha: $(git diff --name-only $(git rev-list -n 1 ${{ steps.get_release.outputs.tag_name }}) HEAD)
+          json: true
+          files: |
+            ${{ env.WORKING_DIR }}/**
+          dir_names: true
+          dir_names_max_depth: 3
+          escape_json: false
+        # if: ${{ github.event.inputs.deploy }} == only_changed_directories
+
+      - name: ♻️ Set correct environment
+        run: |
+          echo "DIRS=${{ steps.changed-directories.outputs.all_changed_files }}" >> "$GITHUB_ENV"
+        # if: ${{ github.event.inputs.deploy }} == only_changed_directories
 
       - name: 🛠️ Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
@@ -72,11 +89,13 @@ jobs:
           for file in "${REQUIRED_FILES[@]}"; do
             cp "./${{ env.WORKING_DIR }}/${file}" "${{ matrix.directory }}/"
           done
+          
       - name: 🔄 Extract Last Directory Level
         id: get-last-level
         run: |
           LAST_LEVEL=$(echo ${{ matrix.directory }} | xargs -n 1 basename)
           echo "LAST_LEVEL=$LAST_LEVEL" >> "$GITHUB_ENV"
+
       - name: 🐳 Docker metadata
         id: docker_meta
         uses: docker/metadata-action@v5
@@ -87,6 +106,7 @@ jobs:
             type=semver,pattern=v{{major}}.{{minor}}.{{patch}},value=${{ env.TAG }}
             type=semver,pattern=v{{major}}.{{minor}},value=${{ env.TAG }}
             type=semver,pattern=v{{major}},value=${{ env.TAG }}
+
       - name: 🏗️ Build and push container image to registry
         id: build-and-push
         uses: docker/build-push-action@v5
