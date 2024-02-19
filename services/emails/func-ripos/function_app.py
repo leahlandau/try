@@ -42,7 +42,6 @@ def func_subscriptions_automation(req: func.HttpRequest) -> func.HttpResponse:
                     }
                 )
         body_to_excel = build_email_body_to_excel(activity,low_price)
-        # body_to_excel = build_email_body_to_excel(activity,low_price)
         subscriptions_to_excel = {"display_name":subscription_name,"subscription_id":subscription_id,"body":body_to_excel}
         upload_to_emails(recipient_email, activity, low_price)
         upload_subscriptions_to_delete(subscription_id,subscription_name, activity, low_price)
