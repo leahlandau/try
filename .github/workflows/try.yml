@@ -1,0 +1,163 @@
+name: 🚀 Build and deploy to Azure Function Apps
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  common-steps:
+    runs-on: "ubuntu-latest"
+
+    outputs:
+      REPO: ${{ steps.downcase.outputs.lowercase }}
+      TAG: ${{ steps.get_release.outputs.tag_name }}
+      MATRIX: ${{ steps.determine_directories.outputs.changed_directories }}
+      LABELS: ${{ steps.docker_meta.outputs.labels }}
+
+    steps:
+      - name: 📂 Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: 🔎 Determine modified directories
+        id: determine_directories
+        run: |
+          changed_files=$(git diff --name-only HEAD^ HEAD)
+          paths=(
+            'services/emails' 
+            'services/subscriptions' 
+          )
+          declare -A changed_dirs=() 
+          for file in $changed_files; do
+            for path in "${paths[@]}"; do
+              if [[ "$file" =~ ^$path/[^/]+ ]]; then
+                dir=$(echo "$file" | cut -d'/' -f1,2,3) 
+                changed_dirs["$dir"]=1 
+              fi
+            done
+          done
+          json_array=""
+          for dir in "${!changed_dirs[@]}"; do
+            json_array+="\"$dir\","
+          done
+          json_array="[${json_array%,}]" 
+          echo "Changed directories: $json_array"
+          echo "::set-output name=changed_directories::$json_array"
+
+      - name: 🛠️ Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: 🔖 Get release tag name
+        id: get_release
+        uses: cardinalby/git-get-release-action@v1
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        with:
+          latest: true
+
+      - name: 🔄 downcase REPO
+        uses: ASzc/change-string-case-action@v1
+        id: downcase
+        with:
+          string: ${{ github.repository }}
+
+      - name: 🐳 Docker metadata
+        id: docker_meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ghcr.io/${{ env.REPO }}/${{ matrix.directory }}
+          tags: |
+            type=semver,pattern={{major}}.{{minor}}.{{patch}},value=${{ steps.get_release.outputs.tag_name }}
+            type=semver,pattern={{major}}.{{minor}},value=${{ steps.get_release.outputs.tag_name }}
+            type=semver,pattern={{major}},value=${{ steps.get_release.outputs.tag_name }}
+
+  build-and-deploy:
+    runs-on: "ubuntu-latest"
+
+    permissions:
+      contents: read
+      packages: write
+
+    needs: common-steps
+    env:
+      REPO: ${{ needs.common-steps.outputs.REPO }}
+      TAG: ${{ needs.common-steps.outputs.TAG }}
+      MATRIX: ${{ needs.common-steps.outputs.MATRIX }}
+      LABELS: ${{ needs.common-steps.outputs.LABELS }}
+
+    strategy:
+      matrix:
+        directory: ${{fromJson(needs.common-steps.outputs.MATRIX)}}
+
+    steps:
+      - name: 📂 Checkout repository
+        uses: actions/checkout@v4
+
+      - name: 🔄 Extract First Directory Level
+        id: get-first-level
+        run: |
+           FIRST_LEVEL=$(echo ${{ matrix.directory }} | cut -d'/' -f1)
+           echo "::set-output name=first_level::$FIRST_LEVEL"
+
+      - name: 🧰 Check and copy necessary files and merge the requirements.txt files
+        run: |
+          REQUIRED_FILES=(".funcignore" ".gitignore" "host.json" "requirements.txt" "Dockerfile")
+          ROOT_DIRECTORY=$(pwd)
+          CURRENT_DIRECTORY="$ROOT_DIRECTORY/${{ matrix.directory }}"
+          COMMON_FILES_PATH="$ROOT_DIRECTORY/${{ steps.get-first-level.outputs.first_level }}"
+          for file in "${REQUIRED_FILES[@]}"; do
+            if [ ! -f "${CURRENT_DIRECTORY}/${file}" ]; then
+              if [ ! -f "${COMMON_FILES_PATH}/${file}" ]; then
+                echo "${file} not found in ${COMMON_FILES_PATH}, cannot copy"
+              else 
+                echo "${file} found in ${COMMON_FILES_PATH}, copying from there"
+                cp "${COMMON_FILES_PATH}/${file}" "${CURRENT_DIRECTORY}/"
+              fi
+            else
+              echo "this ${file} found in ${CURRENT_DIRECTORY} merge it!"
+              if [[ "${file}" == "requirements.txt" ]]; then
+                if [ -f "${COMMON_FILES_PATH}/${file}" ]; then
+                  cat ${CURRENT_DIRECTORY}/${file} ${COMMON_FILES_PATH}/${file} | sort -u >> merge.txt
+                  mv merge.txt ${CURRENT_DIRECTORY}/${file}
+                fi
+              fi  
+            fi
+          done
+
+        
+
+      - name: 🔑 Log in to registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: 🔑 Login to Azure
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: 🔄 Extract Last Directory Level
+        id: get-last-level
+        run: |
+          LAST_LEVEL=$(echo ${{ matrix.directory }} | xargs -n 1 basename)
+          echo "::set-output name=last_level::$LAST_LEVEL"
+
+      - name: 🏗️ Build and push container image to registry
+        uses: docker/build-push-action@v5
+        with:
+          context: ./${{ matrix.directory }}
+          push: true
+          tags: ghcr.io/${{ env.REPO }}/${{ steps.get-last-level.outputs.last_level }}:${{ env.TAG }}
+          labels: ${{ env.LABELS }}
+          file: ./${{ matrix.directory }}/Dockerfile
+
+      - name: 🚀 Deploy to Azure Functions
+        id: deploy-to-functions
+        uses: Azure/functions-container-action@v1
+        with:
+          app-name: ${{ steps.get-last-level.outputs.last_level }}
+          image: "ghcr.io/${{ env.REPO }}/${{ steps.get-last-level.outputs.last_level }}:${{ env.TAG }}"
