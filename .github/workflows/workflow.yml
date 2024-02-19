@@ -10,9 +10,9 @@ jobs:
 
     runs-on: ubuntu-latest
     
-    defaults:
-      run:
-        working-directory: services
+    # defaults:
+    #   run:
+    #     working-directory: services
 
     # environment:
     #   name: 'production'
@@ -26,7 +26,7 @@ jobs:
           # - func-try
           # - func-emails-try
           # - func-subscriptions-list1
-          - func-ripos
+          - services/emails/func-ripos
 
 
 
@@ -58,11 +58,11 @@ jobs:
 
 
 
-    - run: |
-        echo "DIRECTORY=${{ matrix.directory }}" >> "$GITHUB_ENV"
+    # - run: |
+    #     echo "DIRECTORY=${{ matrix.directory }}" >> "$GITHUB_ENV"
 
-    - run: |
-        echo "WORKING_DIRECTORY=trraform-for-run" >> "$GITHUB_ENV"
+    # - run: |
+    #     echo "WORKING_DIRECTORY=trraform-for-run" >> "$GITHUB_ENV"
 
     - name: 🛠️ Set up Docker Buildx
       uses: docker/setup-buildx-action@v2
