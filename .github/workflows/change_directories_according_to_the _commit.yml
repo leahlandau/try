@@ -34,7 +34,7 @@ jobs:
         id: changed-directories
         uses: tj-actions/changed-files@v42
         with:
-          base_sha: $(git rev-list -n 1 ${{ steps.get_release.outputs.tag_name }})
+          base_sha: 777d55f
           json: true
           files: |
             ${{ env.WORKING_DIR }}/**
