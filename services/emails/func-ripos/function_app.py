@@ -8,7 +8,7 @@ from project.write_to_excel import write_to_excel
 import config.config_variables 
 import azure.functions as func
 import logging
-# import logging
+
 
 app = func.FunctionApp()
 
