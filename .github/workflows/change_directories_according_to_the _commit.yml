@@ -30,6 +30,7 @@ jobs:
 
       #  $(git rev-list -n 1 ${{ env.TAG}})
       
+      
       - name: Get changed directories
         id: changed-directories
         uses: tj-actions/changed-files@v42
