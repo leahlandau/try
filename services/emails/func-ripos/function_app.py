@@ -47,6 +47,7 @@ def func_subscriptions_automation(req: func.HttpRequest) -> func.HttpResponse:
         upload_subscriptions_to_delete(subscription_id,subscription_name, activity, low_price)
         write_to_excel(subscriptions_to_excel)
         # write_to_excel(subscriptions_to_excel)
+        # write_to_excel(subscriptions_to_excel)
 
    
     return func.HttpResponse(
