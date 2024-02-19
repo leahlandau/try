@@ -42,11 +42,6 @@ jobs:
         with:
           latest: true
 
-      - name: 🔄 Extract Last Directory Level
-        id: get-last-level
-        run: |
-          LAST_LEVEL=$(echo ${{ matrix.directory }} | xargs -n 1 basename)
-          echo "LAST_LEVEL=$LAST_LEVEL" >> "$GITHUB_ENV"
 
   build-and-deploy:
     runs-on: 'ubuntu-latest'
@@ -100,6 +95,12 @@ jobs:
         uses: azure/login@v1
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: 🔄 Extract Last Directory Level
+        id: get-last-level
+        run: |
+           LAST_LEVEL=$(echo ${{ matrix.directory }} | xargs -n 1 basename)
+           echo "LAST_LEVEL=$LAST_LEVEL" >> "$GITHUB_ENV"
 
       - name: 🐳 Docker metadata
         id: docker_meta
