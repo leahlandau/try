@@ -40,22 +40,19 @@ jobs:
         id: get-previous-tag-commit
         run: |
           echo "COMMIT=$(git rev-list -n 1 ${{ steps.get_release.outputs.tag_name }})" >> $GITHUB_ENV
-          echo ${{ env.COMMIT }}
-
-  #         echo "DIRS=${{ steps.changed-directories.outputs.all_changed_files }}" >> "$GITHUB_ENV"
-
-  #     - name: Get changed directories
-  #       id: changed-directories
-  #       uses: tj-actions/changed-files@v42
-  #       with:
-  #         base_sha: "777d55f"
-  #         json: true
-  #         files: |
-  #           ${{ env.WORKING_DIR }}/**
-  #         dir_names: true
-  #         dir_names_max_depth: 3
-  #         escape_json: false
-  #       # if: ${{ github.event.inputs.deploy }} == only_changed_directories
+         
+      - name: Get changed directories
+        id: changed-directories
+        uses: tj-actions/changed-files@v42
+        with:
+          base_sha: ${{ env.COMMIT }}
+          json: true
+          files: |
+            ${{ env.WORKING_DIR }}/**
+          dir_names: true
+          dir_names_max_depth: 3
+          escape_json: false
+        # if: ${{ github.event.inputs.deploy }} == only_changed_directories
 
   #     - name: ♻️ Set correct environment
   #       run: |
