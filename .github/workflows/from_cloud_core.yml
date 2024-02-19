@@ -12,7 +12,6 @@ jobs:
     outputs:
       TAG: ${{ steps.get_release.outputs.tag_name }}
       MATRIX: ${{ steps.changed-files.outputs.all_changed_files }}
-      LABELS: ${{ steps.docker_meta.outputs.labels }}
 
     steps:
       - name: 📂 Checkout repository
@@ -32,7 +31,7 @@ jobs:
          escape_json: false
 
       - name: 🛠️ Set up Docker Buildx
-        uses: docker/setup-buildx-action@v2
+        uses: docker/setup-buildx-action@v3
 
       - name: 🔖 Get release tag name
         id: get_release
@@ -49,7 +48,6 @@ jobs:
     env:
       TAG: ${{ needs.set-up.outputs.TAG }}
       MATRIX: ${{ needs.set-up.outputs.MATRIX }}
-      LABELS: ${{ needs.set-up.outputs.LABELS }}
 
     strategy:
       matrix:
@@ -99,9 +97,9 @@ jobs:
           images: ghcr.io/${{ github.repository }}/${{ env.LAST_LEVEL }}
           tags: |
             type=raw,value=latest,enable={{is_default_branch}}
-            type=semver,pattern={{major}}.{{minor}}.{{patch}},value=${{ steps.get_release.outputs.tag_name }}
-            type=semver,pattern={{major}}.{{minor}},value=${{ steps.get_release.outputs.tag_name }}
-            type=semver,pattern={{major}},value=${{ steps.get_release.outputs.tag_name }}
+            type=semver,pattern={{major}}.{{minor}}.{{patch}},value=${{ env.TAG }}
+            type=semver,pattern={{major}}.{{minor}},value=${{ env.TAG }}
+            type=semver,pattern={{major}},value=${{ env.TAG }}
 
 
       - name: 🏗️ Build and push container image to registry
