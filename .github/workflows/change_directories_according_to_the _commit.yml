@@ -24,6 +24,12 @@ jobs:
           fetch-depth: 0
           ref: ${{ github.event.inputs.branchName }}
 
+      - name: 🔖 Get release tag name
+        id: get_release
+        uses: cardinalby/git-get-release-action@v1
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+
       # - name: list sub-directories
       #   id: sub-directories
       #   run: echo "DIRS=$(ls -d services/*/*/ | jq --raw-input --slurp --compact-output 'split("\n")[:-1]')" >> ${GITHUB_ENV}
@@ -54,11 +60,7 @@ jobs:
   #     - name: 🛠️ Set up Docker Buildx
   #       uses: docker/setup-buildx-action@v3
 
-  #     - name: 🔖 Get release tag name
-  #       id: get_release
-  #       uses: cardinalby/git-get-release-action@v1
-  #       env:
-  #         GITHUB_TOKEN: ${{ github.token }}
+
 
   # build-and-deploy:
   #   runs-on: "ubuntu-latest"
