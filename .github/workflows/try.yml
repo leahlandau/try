@@ -13,7 +13,7 @@ jobs:
       REPO: ${{ steps.downcase.outputs.lowercase }}
       TAG: ${{ steps.get_release.outputs.tag_name }}
       MATRIX: ${{ steps.determine_directories.outputs.changed_directories }}
-      LABELS: ${{ steps.docker_meta.outputs.labels }}
+      # LABELS: ${{ steps.docker_meta.outputs.labels }}
 
     steps:
       - name: 📂 Checkout repository
@@ -63,16 +63,7 @@ jobs:
         with:
           string: ${{ github.repository }}
 
-      - name: 🐳 Docker metadata
-        id: docker_meta
-        uses: docker/metadata-action@v5
-        with:
-          images: ghcr.io/${{ env.REPO }}/${{ matrix.directory }}
-          tags: |
-            type=semver,pattern={{major}}.{{minor}}.{{patch}},value=${{ steps.get_release.outputs.tag_name }}
-            type=semver,pattern={{major}}.{{minor}},value=${{ steps.get_release.outputs.tag_name }}
-            type=semver,pattern={{major}},value=${{ steps.get_release.outputs.tag_name }}
-
+     
   build-and-deploy:
     runs-on: "ubuntu-latest"
 
@@ -85,7 +76,7 @@ jobs:
       REPO: ${{ needs.common-steps.outputs.REPO }}
       TAG: ${{ needs.common-steps.outputs.TAG }}
       MATRIX: ${{ needs.common-steps.outputs.MATRIX }}
-      LABELS: ${{ needs.common-steps.outputs.LABELS }}
+      # LABELS: ${{ needs.common-steps.outputs.LABELS }}
 
     strategy:
       matrix:
@@ -145,6 +136,17 @@ jobs:
         run: |
           LAST_LEVEL=$(echo ${{ matrix.directory }} | xargs -n 1 basename)
           echo "::set-output name=last_level::$LAST_LEVEL"
+
+      - name: 🐳 Docker metadata
+        id: docker_meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ghcr.io/${{ env.REPO }}/${{ steps.get-last-level.outputs.last_level }}
+          tags: |
+            type=semver,pattern={{major}}.{{minor}}.{{patch}},value=${{ env.TAG }}
+            type=semver,pattern={{major}}.{{minor}},value=${{ env.TAG }}
+            type=semver,pattern={{major}},value=${{ env.TAG }}
+
 
       - name: 🏗️ Build and push container image to registry
         uses: docker/build-push-action@v5
