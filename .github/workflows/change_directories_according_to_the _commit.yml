@@ -56,6 +56,7 @@ jobs:
       - name: print
         id: print
         run: |
+          echo ${{ env.COMMIT }}
           echo ${{ steps.changed-directories.outputs.all_changed_files }}
         # if: ${{ github.event.inputs.deploy }} == only_changed_directories
 
