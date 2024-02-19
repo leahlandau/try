@@ -35,7 +35,7 @@ jobs:
         uses: cardinalby/git-get-release-action@v1
         env:
           GITHUB_TOKEN: ${{ github.token }}
-          
+
   build-and-deploy:
     runs-on: "ubuntu-latest"
 
@@ -98,10 +98,10 @@ jobs:
           tags: ${{ steps.docker_meta.outputs.tags }}
           labels: ${{ steps.docker_meta.outputs.labels }}
           file: ./${{ matrix.directory }}/Dockerfile
-     
+
       - name: 🚀 Deploy to Azure Functions
         id: deploy-to-functions
         uses: Azure/functions-container-action@v1
         with:
           app-name: ${{ env.LAST_LEVEL }}
-          image: 'ghcr.io/${{ github.repository }}/${{ env.LAST_LEVEL }}:${{ env.TAG }}'
+          image: "ghcr.io/${{ github.repository }}/${{ env.LAST_LEVEL }}:${{ env.TAG }}"
