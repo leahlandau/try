@@ -31,14 +31,14 @@ jobs:
           fetch-depth: 0
           ref: ${{ github.event.inputs.branchName }}
       
-      - name: print
-        id: print
+      - name: print1
+        id: print1
         run: echo "all"
         if: ${{ github.event.inputs.deploy }} == all
 
 
-      - name: print
-        id: print
+      - name: print2
+        id: print2
         run: echo "changed-directories"
         if: ${{ github.event.inputs.deploy }} == only_changed_directories
 
