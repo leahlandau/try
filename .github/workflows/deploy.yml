@@ -6,6 +6,13 @@ on:
       branchName:
         description: "branch name"
         required: true
+      deploy:
+        type: choice
+        description: deploy directories to function apps
+        options: 
+        - all
+        - only_changed_directories
+
 
 env:
   WORKING_DIR: services
@@ -23,66 +30,64 @@ jobs:
         with:
           fetch-depth: 0
           ref: ${{ github.event.inputs.branchName }}
+      
+      - name: print
+        id: print
+        run: echo "all"
+        if: ${{ github.event.inputs.deploy }} == all
 
-      - name: 🔖 Get release tag name
-        id: get_release
-        uses: cardinalby/git-get-release-action@v1
-        env:
-          GITHUB_TOKEN: ${{ github.token }}
-
-
-      # - name: list sub-directories
-      #   id: sub-directories
-      #   run: echo "DIRS=$(ls -d services/*/*/ | jq --raw-input --slurp --compact-output 'split("\n")[:-1]')" >> ${GITHUB_ENV}
-
-      #  $(git rev-list -n 1 ${{ env.TAG}})
-      - name: get previous tag commit
-        id: get-previous-tag-commit
-        run: |
-          echo "COMMIT=$(git rev-list -n 1 $(git tag | tail -n 2 | head -n 1 ))" >> $GITHUB_ENV
-         
-      - name: Get changed directories
-        id: changed-directories
-        uses: tj-actions/changed-files@v42
-        with:
-          base_sha: ${{ env.COMMIT }}
-          json: true
-          files: |
-            ${{ env.WORKING_DIR }}/**
-          dir_names: true
-          dir_names_max_depth: 3
-          escape_json: false
 
       - name: print
         id: print
-        run: |
-          echo ${{ env.COMMIT }}
-          echo ${{ steps.changed-directories.outputs.all_changed_files }}
-        # if: ${{ github.event.inputs.deploy }} == only_changed_directories
+        run: echo "changed-directories"
+        if: ${{ github.event.inputs.deploy }} == only_changed_directories
 
-  #     - name: ♻️ Set correct environment
+  #     - name: list sub-directories
+  #       id: sub-directories
+  #       run: echo "DIRS=$(ls -d services/*/*/ | jq --raw-input --slurp --compact-output 'split("\n")[:-1]')" >> ${GITHUB_ENV}
+  #       if: ${{ github.event.inputs.deploy }} == all
+
+
+  #     - name: get previous tag commit
+  #       id: get-previous-tag-commit
   #       run: |
-  #         echo "DIRS=${{ steps.changed-directories.outputs.all_changed_files }}" >> "$GITHUB_ENV"
-  #       # if: ${{ github.event.inputs.deploy }} == only_changed_directories
+  #         echo "COMMIT=$(git rev-list -n 1 $(git tag | tail -n 2 | head -n 1 ))" >> $GITHUB_ENV
+  #       if: ${{ github.event.inputs.deploy }} == only_changed_directories
+
+  #     - name: Get changed directories
+  #       id: changed-directories
+  #       uses: tj-actions/changed-files@v42
+  #       with:
+  #         base_sha: ${{ env.COMMIT }}
+  #         json: true
+  #         files: |
+  #           ${{ env.WORKING_DIR }}/**
+  #         dir_names: true
+  #         dir_names_max_depth: 3
+  #         escape_json: false
+  #       if: ${{ github.event.inputs.deploy }} == only_changed_directories
 
   #     - name: 🛠️ Set up Docker Buildx
   #       uses: docker/setup-buildx-action@v3
 
-
+  #     - name: 🔖 Get release tag name
+  #       id: get_release
+  #       uses: cardinalby/git-get-release-action@v1
+  #       env:
+  #         GITHUB_TOKEN: ${{ github.token }}
 
   # build-and-deploy:
   #   runs-on: "ubuntu-latest"
-
   #   permissions:
   #     contents: read
   #     packages: write
-
   #   needs: setup
   #   env:
   #     TAG: ${{ needs.setup.outputs.TAG }}
   #   strategy:
   #     matrix:
   #       directory: ${{ fromJson(needs.setup.outputs.MATRIX) }}
+
   #   steps:
   #     - name: 📂 Checkout repository
   #       uses: actions/checkout@v4
