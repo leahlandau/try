@@ -34,13 +34,13 @@ jobs:
       - name: print1
         id: print1
         run: echo "all"
-        if: ${{ inputs.deploy }} == all
+        if: ${{ inputs.deploy }} == 'all'
 
 
       - name: print2
         id: print2
         run: echo "changed-directories"
-        if: ${{ inputs.deploy }} == only_changed_directories
+        if: ${{ inputs.deploy }} == 'only_changed_directories'
 
   #     - name: list sub-directories
   #       id: sub-directories
