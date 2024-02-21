@@ -36,7 +36,7 @@ jobs:
 
         # run: echo "DIRS=$(ls -d services/*/*/ | jq --raw-input --slurp --compact-output 'split("\n")[:-1]')" >> $GITHUB_ENV
       - name: ♻️ Set correct environment
-        run: echo "DIRS=${{ steps.changed-directories.outputs.all_changed_files }}" >> $GITHUB_ENV
+        run: echo "DIRS=${{ steps.changed-directories.outputs.all_changed_files }}" >> ${GITHUB_ENV}
 
       - name: print
         id: print
