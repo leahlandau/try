@@ -55,10 +55,10 @@ jobs:
     defaults:
       run:
         working-directory: ./services
+    needs: build    
     strategy:
       matrix: 
         directory: ${{ fromJson(needs.setup.outputs.MATRIX) }}
-    needs: build    
         
     steps:
     - name: ✅ Run tests
