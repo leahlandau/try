@@ -39,7 +39,7 @@ jobs:
       - name: get previous tag commit
         id: get-previous-tag-commit
         run: |
-          echo "COMMIT=$(git rev-list -n 1 ${{ steps.get_release.outputs.tag_name }})" >> $GITHUB_ENV
+          echo "COMMIT=$(git rev-list ${{ steps.get_release.outputs.tag_name }} --skip=1 --max-count=1)" >> $GITHUB_ENV
          
       - name: Get changed directories
         id: changed-directories

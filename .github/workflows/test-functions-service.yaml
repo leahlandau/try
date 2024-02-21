@@ -46,10 +46,15 @@ jobs:
 
     - name: list sub-directories
       id: sub-directories
-      run: echo "DIRS=$(ls -d services/*/*/ | jq --raw-input --slurp --compact-output 'split("\n")[:-1]')" >> ${GITHUB_ENV}
-      
+      run: echo "DIRS=$(ls -d */*/ | jq --raw-input --slurp --compact-output 'split("\n")[:-1]')" >> ${GITHUB_ENV}
+
+    - name: print
+      id: print
+      run: |
+        echo ${{ env.DIRS }}
+
     - name: ✅ Run tests
       run: |
-        for dir in "${ ${{ env.DIRS}}[@]}"; do
+        for dir in "${ ${{ env.DIRS }}[@]}"; do
           pytest dir
         done
