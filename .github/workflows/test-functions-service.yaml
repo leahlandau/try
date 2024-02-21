@@ -25,12 +25,10 @@ jobs:
     strategy:
       matrix:
         python-version: ['3.10.13']
-    outputs:
-      MATRIX: ${{ env.DIRS }}
-
+        
     steps:
     - name: 📂 Checkout
-      uses: actions/checkout@v4
+      uses: actions/checkout@v3
 
     - name: 🐍 Set up Python 3.10.13
       uses: actions/setup-python@v3
@@ -48,16 +46,10 @@ jobs:
 
     - name: list sub-directories
       id: sub-directories
-      run: echo "DIRS=$(ls -d */*/ | jq --raw-input --slurp --compact-output 'split("\n")[:-1]')" >> ${GITHUB_ENV}
-
-  run-tests:
-    runs-on: ubuntu-latest
-    needs: build    
-    strategy:
-      matrix: 
-        directory: ${{ fromJson(needs.build.outputs.MATRIX) }}
-        
-    steps:
+      run: echo "DIRS=$(ls -d services/*/*/ | jq --raw-input --slurp --compact-output 'split("\n")[:-1]')" >> ${GITHUB_ENV}
+      
     - name: ✅ Run tests
       run: |
-        pytest ${{ matrix.directory}}
+        for dir in "${ ${{ env.DIRS}}[@]}"; do
+          pytest dir
+        done
