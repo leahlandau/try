@@ -14,8 +14,8 @@ jobs:
 
     outputs:
       TAG: ${{ steps.get_release.outputs.tag_name }}
-      # MATRIX: ${{ env.DIRS }}
-      MATRIX: ${{ steps.changed-directories.outputs.all_changed_files }}
+      MATRIX: ${{ env.DIRS }}
+      # MATRIX: ${{ steps.changed-directories.outputs.all_changed_files }}
 
     steps:
       - name: 📂 Checkout repository
@@ -34,15 +34,15 @@ jobs:
           dir_names_max_depth: 3
           escape_json: false
 
-      # - name: ♻️ Set correct environment
-      #   run: |
-      #     echo "DIRS=${{ steps.changed-directories.outputs.all_changed_files }}" >> "$GITHUB_ENV"
+      - name: ♻️ Set correct environment
+        run: |
+          echo "DIRS=${{ steps.changed-directories.outputs.all_changed_files }}" >> "$GITHUB_ENV"
 
       - name: print
         id: print
         run: |
-          echo ${{ env.COMMIT }}
           echo ${{ steps.changed-directories.outputs.all_changed_files }}
+          echo ${{ env.DIRS}}
 
       - name: 🛠️ Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
