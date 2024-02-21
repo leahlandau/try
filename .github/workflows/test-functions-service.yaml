@@ -1,0 +1,66 @@
+name: 🧪 Run Python tests
+
+on:
+  push:
+    branches: 
+      - main
+      - development
+      - feature/*
+    paths: 
+      - services/**
+  pull_request:
+    branches: 
+      - main
+      - development
+      - feature/*
+    paths: 
+      - services/**
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./services
+    strategy:
+      matrix:
+        python-version: ['3.10.13']
+    outputs:
+      MATRIX: ${{ env.DIRS }}
+
+    steps:
+    - name: 📂 Checkout
+      uses: actions/checkout@v3
+
+    - name: 🐍 Set up Python 3.10.13
+      uses: actions/setup-python@v3
+      with:
+        python-version: ${{ matrix.python-version }}
+        cache: 'pip'
+
+    - name: 🐍 Export environment
+      run: |
+        export CONTAINER=TEST
+
+    - name: ⏬ Install dependencies
+      run: |
+          pip install -r requirements.txt
+
+    - name: list sub-directories
+      id: sub-directories
+      run: echo "DIRS=$(ls -d */*/ | jq --raw-input --slurp --compact-output 'split("\n")[:-1]')" >> ${GITHUB_ENV}
+
+  run-tests:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./services
+    strategy:
+      matrix: 
+        directory: ${{ fromJson(needs.setup.outputs.MATRIX) }}
+    needs: build    
+        
+    steps:
+    - name: ✅ Run tests
+      run: |
+        pytest ${{ matrix.directory}}
