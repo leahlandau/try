@@ -7,7 +7,7 @@ import azure.functions as func
 import logging
 import os
 import sys
-# gvvhbhbhvvhvhvhvhvhvhvhvhvhvhhvhv
+# gvvhbhbhvvh
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
 app = func.FunctionApp()
