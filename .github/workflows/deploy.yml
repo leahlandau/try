@@ -44,7 +44,7 @@ jobs:
 
       - name: list sub-directories
         id: sub-directories
-        run: echo "DIRS=$(ls -d services/*/*/ | jq --raw-input --slurp --compact-output 'split("\n")[:-1]')" >> ${GITHUB_ENV}
+        run: echo "DIRS=$(ls -d services/*/*/ | jq --raw-input --slurp --compact-output 'split("\n")[:-1]')" >> $GITHUB_ENV
         if:  inputs.deploy  == 'all'
 
 
@@ -65,6 +65,11 @@ jobs:
           dir_names: true
           dir_names_max_depth: 3
           escape_json: false
+        if: inputs.deploy == 'only_changed_directories'
+
+      - name: ♻️ Set correct environment
+        run: |
+          echo "DIRS=${{ steps.changed-directories.outputs.all_changed_files }}" >> "$GITHUB_ENV"
         if: inputs.deploy == 'only_changed_directories'
 
       - name: print
