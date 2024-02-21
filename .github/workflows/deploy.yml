@@ -14,7 +14,7 @@ jobs:
 
     outputs:
       TAG: ${{ steps.get_release.outputs.tag_name }}
-      MATRIX: ${{ steps.changed-directories.outputs.all_changed_files }}
+      MATRIX: ${{ env.DIRS }}
 
     steps:
       - name: 📂 Checkout repository
@@ -32,6 +32,11 @@ jobs:
           dir_names: true
           dir_names_max_depth: 3
           escape_json: false
+
+      - name: ♻️ Set correct environment
+        run: |
+          echo "DIRS=${{ steps.changed-directories.outputs.all_changed_files }}" >> "$GITHUB_ENV"
+
 
 
       - name: 🛠️ Set up Docker Buildx
