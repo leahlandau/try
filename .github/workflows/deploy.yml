@@ -22,8 +22,8 @@ jobs:
     runs-on: "ubuntu-latest"
     outputs:
       TAG: ${{ steps.get_release.outputs.tag_name }}
-      # MATRIX: ${{ env.DIRS }}
-      MATRIX: ${{ steps.changed-directories.outputs.all_changed_files }}
+      MATRIX: ${{ env.DIRS }}
+      # MATRIX: ${{ steps.changed-directories.outputs.all_changed_files }}
 
     steps:
       - name: 📂 Checkout repository
