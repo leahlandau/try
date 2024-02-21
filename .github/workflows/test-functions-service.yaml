@@ -52,9 +52,6 @@ jobs:
 
   run-tests:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: ./services
     needs: build    
     strategy:
       matrix: 
