@@ -30,7 +30,7 @@ jobs:
 
     steps:
     - name: 📂 Checkout
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
 
     - name: 🐍 Set up Python 3.10.13
       uses: actions/setup-python@v3
@@ -58,7 +58,7 @@ jobs:
     needs: build    
     strategy:
       matrix: 
-        directory: ${{ fromJson(needs.setup.outputs.MATRIX) }}
+        directory: ${{ fromJson(needs.build.outputs.MATRIX) }}
         
     steps:
     - name: ✅ Run tests
