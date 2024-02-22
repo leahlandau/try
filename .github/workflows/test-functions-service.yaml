@@ -55,6 +55,6 @@ jobs:
 
     - name: ✅ Run tests
       run: |
-        for dir in "${{ env.DIRS[@] }}"; do
+        for dir in "${ ${{ toJson(env.DIRS) }}[@] }}"; do
           pytest dir
         done
