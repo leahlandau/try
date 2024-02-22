@@ -57,11 +57,12 @@ jobs:
 
     - name: ✅ Run tests
       run: |
-        # DIRS=$(ls -d */*/ | jq --raw-input --slurp --compact-output 'split("\n")[:-1]')
+        arrVar=($(ls -d */*/ | jq --raw-input --slurp --compact-output 'split("\n")[:-1]'))
+        echo $arrVar
         # for dir in ${DIRS[@]}; do
         #    echo $dir
         # done
-        arrVar=( "emails/func-tow/" "subscriptions/func-four-1/" "subscriptions/func-four-2/" )
+        # arrVar=( "emails/func-tow/" "subscriptions/func-four-1/" "subscriptions/func-four-2/" )
 
         for item in "${arrVar[@]}"
         do
