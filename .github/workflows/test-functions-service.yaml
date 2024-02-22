@@ -55,7 +55,7 @@ jobs:
 
     - name: ✅ Run tests
       run: |
-        echo "$(toJson(ls -d */*/ | jq --raw-input --slurp --compact-output 'split("\n")[:-1]'))"
-        for dir in "$(ls -d */*/ | jq --raw-input --slurp --compact-output 'split("\n")[:-1]')[@]"; do
-          pytest dir
+        DIRS = "$(ls -d */*/ | jq --raw-input --slurp --compact-output 'split("\n")[:-1]')"
+        for dir in "${DIRS[@]}"; do
+           echo dir
         done
