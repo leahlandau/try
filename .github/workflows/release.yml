@@ -9,6 +9,11 @@ jobs:
   build:
     name: Upload Python Release Asset
     runs-on: ubuntu-latest
+
+    # permissions:
+    #   contents: write
+    #   packages: write
+
     steps:
       - name: 📂 Checkout code
         uses: actions/checkout@v4
@@ -26,23 +31,17 @@ jobs:
       - name: 📁 Create ZIP Archive
         run: |
           zip -r repository.zip .
-        
+
       - name: 🔖 Create Release
-        uses: softprops/action-gh-release@v1
-        if: startsWith(github.ref, 'refs/tags/')
+        uses: ncipollo/release-action@v1
         with:
-          files: 
-            ./repository.zip
-           
-      # - name: ⬆️ Upload Release Asset
-      #   id: upload-release-asset 
-      #   uses: actions/upload-release-asset@v1
-      #   env:
-      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          artifacts: ./repository.zip
+      # - name: 🔖 Create Release
+      #   uses: softprops/action-gh-release@v1
+      #   if: startsWith(github.ref, 'refs/tags/')
       #   with:
-      #     upload_url: ${{ steps.create_release.outputs.upload_url }} 
-      #     asset_path: ./repository.zip
-      #     asset_name: repository.zip
-      #     asset_content_type: application/zip 
+      #     files: 
+      #       ./repository.zip
+  
 
    
