@@ -30,19 +30,19 @@ jobs:
     - name: 📂 Checkout
       uses: actions/checkout@v4
 
-    # - name: 🐍 Set up Python 3.10.13
-    #   uses: actions/setup-python@v3
-    #   with:
-    #     python-version: ${{ matrix.python-version }}
-    #     cache: 'pip'
+    - name: 🐍 Set up Python 3.10.13
+      uses: actions/setup-python@v3
+      with:
+        python-version: ${{ matrix.python-version }}
+        cache: 'pip'
 
-    # - name: 🐍 Export environment
-    #   run: |
-    #     export CONTAINER=TEST
+    - name: 🐍 Export environment
+      run: |
+        export CONTAINER=TEST
 
-    # - name: ⏬ Install dependencies
-    #   run: |
-    #       pip install -r requirements.txt
+    - name: ⏬ Install dependencies
+      run: |
+          pip install -r requirements.txt
 
     # # - name: list sub-directories
     # #   id: sub-directories
@@ -61,9 +61,9 @@ jobs:
         # for dir in ${DIRS[@]}; do
         #    echo $dir
         # done
-        arrVar=( "One" "Two" "Three" )
+        arrVar=( ""emails/func-tow/" "subscriptions/func-four-1/" "subscriptions/func-four-2/" )
 
         for item in "${arrVar[@]}"
         do
-          echo $item
+         pytest $item
         done
