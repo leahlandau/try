@@ -61,7 +61,7 @@ jobs:
         # for dir in ${DIRS[@]}; do
         #    echo $dir
         # done
-        arrVar=( ""emails/func-tow/" "subscriptions/func-four-1/" "subscriptions/func-four-2/" )
+        arrVar=( "emails/func-tow/" "subscriptions/func-four-1/" "subscriptions/func-four-2/" )
 
         for item in "${arrVar[@]}"
         do
