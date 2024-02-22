@@ -54,6 +54,7 @@ jobs:
     #     echo ${{ env.DIRS }}
 
 
+
     - name: ✅ Run tests
       run: |
         DIRS=$(ls -d */*/ | jq --raw-input --slurp --compact-output 'split("\n")[:-1]')
