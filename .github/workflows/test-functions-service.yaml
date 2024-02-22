@@ -57,7 +57,7 @@ jobs:
 
     - name: ✅ Run tests
       run: |
-        arrVar=($(ls -d */*/ | jq --raw-input --slurp --compact-output 'split("\n")[:-1]'))
+        arrVar=($(ls -d */*/ | jq --raw-input --slurp --compact-output 'split("\n")[:-1]' | jq -r '.[]'))
         echo $arrVar
         # for dir in ${DIRS[@]}; do
         #    echo $dir
