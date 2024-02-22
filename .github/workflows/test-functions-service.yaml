@@ -66,5 +66,6 @@ jobs:
 
         for item in "${arrVar[@]}"
         do
+         echo $item
          pytest $item
         done
