@@ -55,7 +55,7 @@ jobs:
 
     - name: ✅ Run tests
       run: |
-        DIRS = "$(ls -d */*/ | jq --raw-input --slurp --compact-output 'split("\n")[:-1]')"
+        DIRS = $(ls -d */*/ | jq --raw-input --slurp --compact-output 'split("\n")[:-1]')
         for dir in "${DIRS[@]}"; do
            echo dir
         done
