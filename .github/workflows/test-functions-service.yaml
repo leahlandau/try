@@ -56,6 +56,6 @@ jobs:
     - name: ✅ Run tests
       run: |
         echo "$(ls -d */*/ | jq --raw-input --slurp --compact-output 'split("\n")[:-1]')"
-        for dir in "$(ls -d */*/ | jq --raw-input --slurp --compact-output 'split("\n")[:-1]')"; do
+        for dir in "$(ls -d */*/ | jq --raw-input --slurp --compact-output 'split("\n")[:-1]')[@]"; do
           pytest dir
         done
