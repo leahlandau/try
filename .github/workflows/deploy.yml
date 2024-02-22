@@ -68,7 +68,10 @@ jobs:
         if: inputs.deploy == 'only_changed_directories'
 
       - name: ♻️ Set correct environment
-        run: echo "DIRS= steps.changed-directories.outputs.all_changed_files" >> $GITHUB_ENV
+        run: |
+          DIRS=${{ steps.changed-directories.outputs.all_changed_files }}
+          echo "DIRS=$DIRS" >> "$GITHUB_ENV"
+        # run: echo "DIRS=${{ steps.changed-directories.outputs.all_changed_files }}" >> $GITHUB_ENV
         if: inputs.deploy == 'only_changed_directories'
 
       - name: print
