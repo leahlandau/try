@@ -1,0 +1,53 @@
+name: 🐍 Create Python Release  
+
+on:
+  push:
+    tags:
+    - 'v*' 
+
+jobs:
+  build:
+    name: Upload Python Release Asset
+    runs-on: ubuntu-latest
+    steps:
+      - name: 📂 Checkout code
+        uses: actions/checkout@v2
+
+      - name: 🔵 Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.11'  
+          
+      - name: ⏬ Install Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt  
+        
+      - name: 🔖 Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ github.ref }}
+          draft: false
+          prerelease: false
+
+
+      - name: 📁 Create ZIP Archive
+        run: |
+          zip -r repository.zip .
+
+      - name: ⬆️ Upload Release Asset
+        id: upload-release-asset 
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }} 
+          asset_path: ./repository.zip
+          asset_name: repository.zip
+          asset_content_type: application/zip 
+
+   
