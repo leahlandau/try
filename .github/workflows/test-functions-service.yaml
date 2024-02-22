@@ -44,9 +44,9 @@ jobs:
       run: |
           pip install -r requirements.txt
 
-    - name: list sub-directories
-      id: sub-directories
-      run: echo "DIRS=$(ls -d */*/ | jq --raw-input --slurp --compact-output 'split("\n")[:-1]')" >> ${GITHUB_ENV}
+    # - name: list sub-directories
+    #   id: sub-directories
+    #   run: echo "DIRS=$(ls -d */*/ | jq --raw-input --slurp --compact-output 'split("\n")[:-1]')" >> ${GITHUB_ENV}
 
     - name: print
       id: print
@@ -55,6 +55,7 @@ jobs:
 
     - name: ✅ Run tests
       run: |
-        for dir in "${ ${{ toJson(env.DIRS) }}[@] }}"; do
+        arr=()
+        for dir in "$(ls -d */*/ | jq --raw-input --slurp --compact-output 'split("\n")[:-1]')"; do
           pytest dir
         done
