@@ -28,7 +28,7 @@ jobs:
         
     steps:
     - name: 📂 Checkout
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
 
     # - name: 🐍 Set up Python 3.10.13
     #   uses: actions/setup-python@v3
@@ -58,7 +58,7 @@ jobs:
     - name: ✅ Run tests
       run: |
         DIRS=$(ls -d */*/ | jq --raw-input --slurp --compact-output 'split("\n")[:-1]')
-        echo $DIRS
-        for dir in "${DIRS[@]}"; do
-           echo $dir
-        done
+        echo $DIRS[0]
+        # for dir in "${DIRS[@]}"; do
+        #    echo $dir
+        # done
