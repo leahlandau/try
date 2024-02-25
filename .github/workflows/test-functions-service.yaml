@@ -16,6 +16,8 @@ on:
     paths: 
       - services/**
       - '.github/workflows/test-functions-service.yaml'
+
+      # yyujk
 jobs:
   build:
     runs-on: ubuntu-latest
