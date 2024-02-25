@@ -9,11 +9,7 @@ on:
     paths: 
       - services/**
       - '.github/workflows/test-functions-service.yaml'
-  
 
-
-
-  
 jobs:
   build:
     runs-on: ubuntu-latest
