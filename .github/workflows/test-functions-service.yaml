@@ -8,16 +8,8 @@ on:
       - feature/*
     paths: 
       - services/**
-  pull_request:
-    branches: 
-      - main
-      - development
-      - feature/*
-    paths: 
-      - services/**
       - '.github/workflows/test-functions-service.yaml'
-
-      # yyujk
+  
 jobs:
   build:
     runs-on: ubuntu-latest
