@@ -35,7 +35,11 @@ jobs:
 
       - name: Get previous release tag
         id: previous-release
-        uses: sammcoe/get-previous-release-action@v1
+        uses: actions/get-previous-release-action@v1
+
+      # - name: Get previous release tag
+      #   id: previous-release
+      #   uses: sammcoe/get-previous-release-action@v1
       # - name: Get previous stable releases
       #   uses: ankur-lt/get-previous-stable-releases@1.0.2
       #   id: previousstableversions
