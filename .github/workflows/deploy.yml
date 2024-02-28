@@ -12,9 +12,9 @@ on:
         options:
           - only_changed_directories
           - all
-      previous-tag:
-        type: string
-        description: "tag name"
+      # previous-tag:
+      #   type: string
+      #   description: "tag name"
 
 env:
   WORKING_DIR: services
