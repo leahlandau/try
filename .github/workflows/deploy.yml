@@ -45,6 +45,7 @@ jobs:
       #     echo "${{ steps.previous-release.output.release }}"
 
 
+
       - name: list sub-directories
         id: sub-directories
         run: echo "DIRS=$(ls -d services/*/*/ | jq --raw-input --slurp --compact-output 'split("\n")[:-1]')" >> $GITHUB_ENV
