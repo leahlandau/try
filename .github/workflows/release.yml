@@ -1,12 +1,25 @@
 name: 🐍 Create Python Release  
 
+# on:
+#   push:
+#     tags:
+#       - "v*.*.*"
+# on:
+#   pull_request:
+#     types:
+#       - closed
+#     branches:
+#       - 'release/**'
 on:
-  push:
-    tags:
-      - "v*.*.*"
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'New tag name'
+        required: true
 
 jobs:
   build:
+    if: github.event.pull_request.merged == true
     name: Upload Python Release Asset
     runs-on: ubuntu-latest
 
@@ -17,6 +30,11 @@ jobs:
     steps:
       - name: 📂 Checkout code
         uses: actions/checkout@v4
+
+      - name: create tag
+        run: |
+          git tag ${{ github.event.inputs.tag }}
+          git push origin ${{ github.event.inputs.tag }}
 
       - name: 🔵 Set up Python
         uses: actions/setup-python@v5
