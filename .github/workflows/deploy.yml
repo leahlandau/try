@@ -33,16 +33,16 @@ jobs:
           fetch-depth: 0
           ref: ${{ github.event.inputs.branchName }}
 
-      # - name: Get previous release tag
-      #   id: previous-release
-      #   uses: sammcoe/get-previous-release-action@v1
-      - name: Get previous stable releases
-        uses: ankur-lt/get-previous-stable-releases@1.0.2
-        id: previousstableversions
+      - name: Get previous release tag
+        id: previous-release
+        uses: sammcoe/get-previous-release-action@v1
+      # - name: Get previous stable releases
+      #   uses: ankur-lt/get-previous-stable-releases@1.0.2
+      #   id: previousstableversions
 
-      - name: print
-        run: |
-          echo "${{ steps.previous-release.output.release }}"
+      # - name: print
+      #   run: |
+      #     echo "${{ steps.previous-release.output.release }}"
 
       - name: list sub-directories
         id: sub-directories
