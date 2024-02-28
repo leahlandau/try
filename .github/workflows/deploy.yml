@@ -39,7 +39,7 @@ jobs:
 
       - name: print
         run: |
-          echo ${{ steps.previous-release.output.release }}
+          echo "${{ steps.previous-release.output.release }}""
 
   #     - name: list sub-directories
   #       id: sub-directories
