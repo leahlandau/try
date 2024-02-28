@@ -15,7 +15,6 @@ on:
       previous-tag:
         type: string
         description: "tag name"
-        default: $(git rev-list -n 1 $(git tag | tail -n 2 | head -n 1 ))
 
 env:
   WORKING_DIR: services
@@ -33,6 +32,10 @@ jobs:
         with:
           fetch-depth: 0
           ref: ${{ github.event.inputs.branchName }}
+
+      - name: Get previous release tag
+        id: previous-release
+        uses: sammcoe/get-previous-release-action@v1
 
       - name: list sub-directories
         id: sub-directories
