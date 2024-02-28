@@ -53,6 +53,7 @@ jobs:
       - name: 🔖 Create Release
         uses: ncipollo/release-action@v1
         with:
+          tag: ${{ github.event.inputs.tag }}
           artifacts: ./repository.zip
     
   
