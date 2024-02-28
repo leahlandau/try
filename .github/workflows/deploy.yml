@@ -37,9 +37,9 @@ jobs:
         id: previous-release
         uses: sammcoe/get-previous-release-action@v1
 
-      - name: print
-        run: |
-          echo "${{ steps.previous-release.output.release }}"
+      # - name: print
+      #   run: |
+      #     echo "${{ steps.previous-release.output.release }}"
 
   #     - name: list sub-directories
   #       id: sub-directories
