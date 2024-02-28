@@ -12,6 +12,10 @@ on:
         options:
           - only_changed_directories
           - all
+      previous-tag:
+        type: string
+        description: "tag name"
+        default: $(git rev-list -n 1 $(git tag | tail -n 2 | head -n 1 ))
 
 env:
   WORKING_DIR: services
