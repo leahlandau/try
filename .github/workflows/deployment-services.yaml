@@ -35,16 +35,24 @@ jobs:
         run: echo "DIRS=$(ls -d services/*/*/ | jq --raw-input --slurp --compact-output 'split("\n")[:-1]')" >> $GITHUB_ENV
         if: inputs.deploy  == 'all'
 
-      - name: get previous tag commit
-        id: get-previous-tag-commit
-        run: echo "COMMIT=$(git rev-list -n 1 $(git tag | tail -n 2 | head -n 1 ))" >> $GITHUB_ENV
-        if: inputs.deploy == 'only_changed_directories'
+      # - name: get previous tag commit
+      #   id: get-previous-tag-commit
+      #   run: echo "COMMIT=$(git rev-list -n 1 $(git tag | tail -n 2 | head -n 1 ))" >> $GITHUB_ENV
+      #   if: inputs.deploy == 'only_changed_directories'
+      - name: 🔍 Find matching workflow
+        id: get-previous-deployment-success-commit
+        uses: SamhammerAG/last-successful-build-action@v4
+        with:  
+         token: "${{ secrets.GITHUB_TOKEN }}"
+         branch: "main"
+         workflow: "🚀 Build and deploy to Azure Function App"
 
       - name: Get changed directories
         id: changed-directories
         uses: tj-actions/changed-files@v42
         with:
-          base_sha: ${{ env.COMMIT }}
+          # base_sha: ${{ env.COMMIT }}
+          base_sha: ${{ steps.get-previous-deployment-success-commit.outputs.sha }}
           json: true
           files: |
             ${{ env.WORKING_DIR }}/**
