@@ -1,4 +1,4 @@
-name: Deploy Website
+name: 📂 Deploy to function-app
 
 on:
   workflow_dispatch:

@@ -1,4 +1,4 @@
-name: Deploy Website
+name: 🚀 Deploy Website
 
 on:
   push:
@@ -16,7 +16,7 @@ jobs:
         with:
           token: "${{ secrets.GITHUB_TOKEN }}"
           branch: "main"
-          workflow: "Deploy Website"
+          workflow: "🚀 Deploy Website"
 
 
 # name: 🚀 Build and deploy to Azure Function App
