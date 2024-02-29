@@ -35,6 +35,7 @@ jobs:
       #   id: sub-directories
       #   run: echo "DIRS=$(ls -d services/*/*/ | jq --raw-input --slurp --compact-output 'split("\n")[:-1]')" >> ${GITHUB_ENV}
 
+
       - name: get previous tag commit
         id: get-previous-tag-commit
         run: |
