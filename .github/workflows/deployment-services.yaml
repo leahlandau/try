@@ -1,5 +1,4 @@
-name: 📂 Deploy to function-app
-
+name: 🚀 Build and deploy to Azure-Function-App
 on:
   workflow_dispatch:
     inputs:
@@ -45,7 +44,7 @@ jobs:
         with:  
           token: "${{ secrets.GITHUB_TOKEN }}"
           branch: "main"
-          workflow: "Deploy Website"
+          workflow: "🚀 Build and deploy to Azure-Function-App"
         if: inputs.deploy == 'only_changed_directories'
 
       - name: Get changed directories
