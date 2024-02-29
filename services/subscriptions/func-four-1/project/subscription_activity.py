@@ -5,10 +5,12 @@ from azure.mgmt.monitor import MonitorManagementClient
 from azure.mgmt.consumption import ConsumptionManagementClient
 import os
 import sys
+
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 import config.config_variables
 
 credentials = DefaultAzureCredential()
+
 
 def check_subscription_activity(subscription_id):
     try:
@@ -17,12 +19,12 @@ def check_subscription_activity(subscription_id):
         filter_condition = (
             f"eventTimestamp ge '{date[0]}' and eventTimestamp le '{date[1]}'"
         )
-        activity_logs = monitor_client.activity_logs.list(filter = filter_condition)
+        activity_logs = monitor_client.activity_logs.list(filter=filter_condition)
         if next(activity_logs, None):
             return True
         else:
             return False
-    except:
+    except Exception:
         return "The start time cannot be more than 90 days in the past."
 
 
@@ -30,20 +32,20 @@ def get_start_date():
     try:
         num_of_months = config.config_variables.num_of_months
         current_date = datetime.now().date()
-        start_date = current_date - relativedelta(months = int(num_of_months))
+        start_date = current_date - relativedelta(months=int(num_of_months))
         return start_date, current_date
-    except:
+    except Exception:
         return "An error occurred in the calculation"
 
 
 def is_lower_than_the_set_price(subscription_id):
-    cost = config.config_variables.cost 
+    cost = config.config_variables.cost
     try:
         consumption_client = ConsumptionManagementClient(credentials, subscription_id)
         results = consumption_client.usage_details.list(
-            scope = f"/subscriptions/{subscription_id}"
+            scope=f"/subscriptions/{subscription_id}"
         )
         total_cost = sum(result.cost for result in results)
         return total_cost < float(cost)
-    except:
+    except Exception:
         return "An error occurred in the process"

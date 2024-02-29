@@ -7,7 +7,7 @@ azure-mgmt-resource
 azure-storage-blob
 pytest
 pytest_mock
-black
+ruff
 python-dateutil
 pytest-cov
 python-dotenv

@@ -1,5 +1,6 @@
 import os
 import sys
+
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 import config.config_variables
 import project.get_connection_string
@@ -8,17 +9,18 @@ from datetime import datetime
 from pytz import timezone
 from azure.data.tables import TableServiceClient
 
+
 def get_subscriptions_to_delete():
     secret = config.config_variables.subscription_secret
-    connection_string = project.get_connection_string.get_connection_string_from_keyvault(secret)
+    connection_string = (
+        project.get_connection_string.get_connection_string_from_keyvault(secret)
+    )
     try:
         table_name = config.config_variables.table_subscriptions_to_delete
         table_service_client = TableServiceClient.from_connection_string(
-            conn_str = connection_string
+            conn_str=connection_string
         )
-        table_client = table_service_client.get_table_client(
-            table_name = table_name
-        )
+        table_client = table_service_client.get_table_client(table_name=table_name)
         sub_to_delete = table_client.list_entities()
     except Exception as ex:
         return ex
@@ -35,15 +37,15 @@ def upload_deleted_subscriptions(subscriptions):
             deleted_sub = build_sub_object(sub)
             try:
                 upload_to_table(
-                    table_name = config.config_variables.table_subscriptions_to_delete,
-                    entity = deleted_sub,
+                    table_name=config.config_variables.table_subscriptions_to_delete,
+                    entity=deleted_sub,
                 )
             except Exception as ex:
                 return Exception(ex)
 
 
 def build_sub_object(sub):
-    date = datetime.now(tz = timezone("Asia/Jerusalem"))
+    date = datetime.now(tz=timezone("Asia/Jerusalem"))
     try:
         return {
             "PartitionKey": date.strftime("%Y-%m-%d %H:%M:%S"),

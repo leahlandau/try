@@ -1,15 +1,20 @@
-from datetime import datetime
 from unittest.mock import patch
-from project.upload_to_subs_to_delete import *
+from project.upload_to_subs_to_delete import (
+    upload_subscriptions_to_delete,
+    build_sub_object,
+)
 import pytest
+
 
 def test_build_sub_object_activity():
     subscription_id = "123"
     subscription_name = "Example Subscription"
     is_activity = True
     is_high_cost = False
-    
-    result = build_sub_object(subscription_id, subscription_name, is_activity, is_high_cost)
+
+    result = build_sub_object(
+        subscription_id, subscription_name, is_activity, is_high_cost
+    )
     expected_result = {
         "PartitionKey": result["PartitionKey"],
         "RowKey": result["RowKey"],
@@ -26,7 +31,9 @@ def test_build_sub_object_not_activity():
     subscription_name = "Example Subscription"
     is_activity = False
     is_high_cost = False
-    result = build_sub_object(subscription_id, subscription_name, is_activity, is_high_cost)
+    result = build_sub_object(
+        subscription_id, subscription_name, is_activity, is_high_cost
+    )
 
     expected_result = {
         "PartitionKey": result["PartitionKey"],
@@ -49,8 +56,10 @@ def test_build_sub_object_with_none_values():
         build_sub_object(subscription_id, subscription_name, is_activity, is_high_cost)
 
 
-@patch("project.upload_to_subs_to_delete.build_sub_object",return_value = [{"subscription_id": "id"}])
+@patch(
+    "project.upload_to_subs_to_delete.build_sub_object",
+    return_value=[{"subscription_id": "id"}],
+)
 @patch("project.upload_to_subs_to_delete.upload_to_table")
 def test_upload_deleted_subscriptions(build_email_object, upload_to_table):
-    assert upload_subscriptions_to_delete("id","name" ,False, False) == None
-    
+    assert upload_subscriptions_to_delete("id", "name", False, False) is None
