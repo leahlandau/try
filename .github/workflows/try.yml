@@ -26,8 +26,8 @@ jobs:
       
       - name: print
         run: |
-           echo "CI_COMMIT_BEFORE_SHA ${{ github.event.before }}"
-           echo "CI_COMMIT_SHA${{ github.event.after }}"
+           echo ${{ github.event.before }}
+           echo ${{ github.event.after }}
 
   #     - name: 🔖 Get release tag name
   #       id: get_release 
