@@ -35,10 +35,10 @@ jobs:
       #   id: sub-directories
       #   run: echo "DIRS=$(ls -d services/*/*/ | jq --raw-input --slurp --compact-output 'split("\n")[:-1]')" >> ${GITHUB_ENV}
 
-      # - name: get previous tag commit
-      #   id: get-previous-tag-commit
-      #   run: |
-      #     echo "COMMIT=$(git rev-list -n 1 $(git tag | tail -n 2 | head -n 1 ))" >> $GITHUB_ENV
+      - name: get previous tag commit
+        id: get-previous-tag-commit
+        run: |
+          echo "COMMIT=$(git rev-list -n 1 $(git tag | tail -n 2 | head -n 1 ))" >> $GITHUB_ENV
          
       - name: Get changed directories
         id: changed-directories
