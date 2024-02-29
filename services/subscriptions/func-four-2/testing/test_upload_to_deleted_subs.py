@@ -1,10 +1,16 @@
 from datetime import datetime
 from unittest.mock import patch, Mock
-from project.upload_to_deleted_subs import *
-import project.get_connection_string
+from project.upload_to_deleted_subs import (
+    build_sub_object,
+    upload_deleted_subscriptions,
+    get_subscriptions_to_delete,
+)
+
+from pytz import timezone
+
 
 def test_build_sub_object():
-    date = datetime.now(tz = timezone("Asia/Jerusalem"))
+    date = datetime.now(tz=timezone("Asia/Jerusalem"))
     sub = dict(
         {
             "subscription_id": "id",
@@ -39,12 +45,18 @@ class table_service_client:
     def __init__(self):
         self.table_client = table_client()
 
-    def get_table_client(self, table_name = "table_name"):
+    def get_table_client(self, table_name="table_name"):
         return self.table_client
 
 
-@patch("project.get_connection_string.get_connection_string_from_keyvault",return_value = "connection_string")
-@patch("project.upload_to_deleted_subs.TableServiceClient.from_connection_string", Mock(return_value = table_service_client()))
+@patch(
+    "project.get_connection_string.get_connection_string_from_keyvault",
+    return_value="connection_string",
+)
+@patch(
+    "project.upload_to_deleted_subs.TableServiceClient.from_connection_string",
+    Mock(return_value=table_service_client()),
+)
 def test_get_subscriptions_to_delete(get_connection_string_from_keyvault):
     assert get_subscriptions_to_delete() == []
 
@@ -57,8 +69,15 @@ class sub:
 subs_to_delete = [sub()]
 
 
-@patch("project.upload_to_deleted_subs.get_subscriptions_to_delete",return_value = [{"subscription_id": "id"}])
-@patch("project.upload_to_deleted_subs.build_sub_object", return_value = {"test": "object"})
+@patch(
+    "project.upload_to_deleted_subs.get_subscriptions_to_delete",
+    return_value=[{"subscription_id": "id"}],
+)
+@patch(
+    "project.upload_to_deleted_subs.build_sub_object", return_value={"test": "object"}
+)
 @patch("project.upload_to_deleted_subs.upload_to_table")
-def test_upload_deleted_subscriptions(get_subscriptions_to_delete, build_sub_object, upload_to_table):
-    assert upload_deleted_subscriptions(subs_to_delete) == None
+def test_upload_deleted_subscriptions(
+    get_subscriptions_to_delete, build_sub_object, upload_to_table
+):
+    assert upload_deleted_subscriptions(subs_to_delete) is None

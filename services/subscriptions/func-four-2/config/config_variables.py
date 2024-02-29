@@ -11,4 +11,6 @@ keyvault_name = os.getenv("KEYVAULT_NAME")
 keyvault_uri = os.getenv("KEYVAULT_URI")
 cloud_email = os.getenv("CLOUD_EMAIL")
 http_trigger_url = os.getenv("HTTP_TRIGGER_URL")
-http_trigger_url_subscription_automation = os.getenv("HTTP_TRIGGER_URL_SUBSCRIPTION_AUTOMATION")
+http_trigger_url_subscription_automation = os.getenv(
+    "HTTP_TRIGGER_URL_SUBSCRIPTION_AUTOMATION"
+)

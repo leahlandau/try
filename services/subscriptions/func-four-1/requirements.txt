@@ -10,7 +10,7 @@ azure-mgmt-storage
 azure-keyvault-secrets
 pytest
 pytest_mock
-black
+ruff
 python-dateutil
 pytest-cov
 python-dotenv
