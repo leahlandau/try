@@ -16,7 +16,7 @@ jobs:
         with:
           token: "${{ secrets.GITHUB_TOKEN }}"
           branch: "main"
-          workflow: "deployment-services"
+          workflow: "Deploy Website"
 
 
 # name: 🚀 Build and deploy to Azure Function App
