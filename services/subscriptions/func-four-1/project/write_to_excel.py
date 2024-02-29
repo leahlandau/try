@@ -60,5 +60,6 @@ def write_to_excel(subscription_obj):
         container=container_name, blob=blob_name
     )
     blob_client.upload_blob(file_stream.getvalue(), overwrite=True)
+    
     # except Exception as ex:
         # return str(ex)
