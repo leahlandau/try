@@ -18,7 +18,10 @@ jobs:
           branch: 'main'
           workflow_id: 'deployment-services.yaml'
           github_token: ${{ secrets.GITHUB_TOKEN }}
-      - run: echo ${{ steps.last_successful_commit.outputs.commit_hash }} 
+      - run: |
+          echo "LAST=${{ steps.last_successful_commit.outputs.commit_hash }}" >> ${GITHUB_ENV}
+          echo ${{ env.LAST }}
+
 
 # name: 🚀 Build and deploy to Azure Function App
 
