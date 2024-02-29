@@ -43,9 +43,10 @@ jobs:
         id: get-previous-deployment-success-commit
         uses: SamhammerAG/last-successful-build-action@v4
         with:  
-         token: "${{ secrets.GITHUB_TOKEN }}"
-         branch: "main"
-         workflow: "🚀 Build and deploy to Azure Function App"
+          token: "${{ secrets.GITHUB_TOKEN }}"
+          branch: "main"
+          workflow: "Build and deploy to Azure Function App"
+        if: inputs.deploy == 'only_changed_directories'
 
       - name: Get changed directories
         id: changed-directories
