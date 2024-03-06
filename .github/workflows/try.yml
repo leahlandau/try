@@ -1,22 +1,20 @@
-name: Release tag
+name: 🐍 Create Python Release  
 
 on:
-  pull_request:
-    types:
-      - closed
+  push:
+    tags:
+      - "v*.*.*"
 
 jobs:
-  tag:
-    if: contains(github.head_ref, 'release/') && contains(github.base_ref, 'main') && github.event.action == 'closed' && github.event.pull_request.merged == true
+  releasenotes:
     runs-on: ubuntu-latest
-    outputs:
-      tag: ${{ steps.tag.outputs.tag }}
+    name: Generate release notes
     steps:
-
-      - name: Extract branch tag
-        id: tag
-        run: |
-          BRANCH=${{ github.head_ref }}
-          TAG="${BRANCH//release/"" | sed 's/.*\///'}" 
-          echo $TAG 
-          echo "tag=$TAG >> $GITHUB_OUTPUT
+      - name: Checkout repository
+        uses: actions/checkout@v3
+      - name: Generate release notes
+        uses: kuvaus/changelog-releasenotes-action@v2
+        with:
+          changelog_format: 'auto-changelog'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
