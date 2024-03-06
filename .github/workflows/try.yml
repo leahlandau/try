@@ -17,6 +17,6 @@ jobs:
         id: tag
         run: |
           BRANCH=${{ github.head_ref }}
-          TAG="${BRANCH//release/""} | sed 's/.*\///'" 
-          echo $TAG
+          TAG="${BRANCH//release/""}" 
+          echo $TAG | sed 's/.*\///'
           echo "tag=$TAG" >> $GITHUB_OUTPUT
