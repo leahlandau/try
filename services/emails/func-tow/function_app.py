@@ -12,6 +12,7 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")
 
 app = func.FunctionApp()
 # gftgyuguygygygy
+# gftgyuguygygygy
 
 @app.function_name(name="HttpTrigger1")
 @app.route(route="")
