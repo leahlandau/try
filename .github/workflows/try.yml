@@ -5,19 +5,28 @@ on:
     tags:
       - "v*.*.*"
 
+
 jobs:
-  releasenotes:
+  job-name:
     runs-on: ubuntu-latest
-    name: Generate release notes
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-      - name: Generate release notes
-        uses: kuvaus/changelog-releasenotes-action@v2
-        with:
-          changelog_format: 'auto-changelog'
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    - uses: mougenko/create-release-note@v1.0.0
+      with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+
+# jobs:
+#   releasenotes:
+#     runs-on: ubuntu-latest
+#     name: Generate release notes
+#     steps:
+#       - name: Checkout repository
+#         uses: actions/checkout@v3
+#       - name: Generate release notes
+#         uses: kuvaus/changelog-releasenotes-action@v2
+#         with:
+#           changelog_format: 'auto-changelog'
+#         env:
+#           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           
 # name: Release tag
 
