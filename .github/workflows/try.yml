@@ -10,8 +10,8 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - name: Set env.BRANCH
-      run: echo "BRANCH=$(echo $GITHUB_REF | cut -d'/' -f 3)" >> $GITHUB_ENV
+    # - name: Set env.BRANCH
+    #   run: echo "BRANCH=$(echo $GITHUB_REF | cut -d'/' -f 3)" >> $GITHUB_ENV
 
     - name: Is main?
-      run: echo ${{ env.BRANCH }}
+      run: echo ${{ github.event.pull_request.head.ref }}
