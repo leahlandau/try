@@ -12,6 +12,7 @@ jobs:
     outputs:
       tag: ${{ steps.tag.outputs.tag }}
     steps:
+    
       - name: Extract branch tag
         id: tag
         run: |
