@@ -1,17 +1,21 @@
 name: Release tag
 
 on:
-  push:
-    branches:
-      - main
+  pull_request:
+    types:
+      - closed
 
 jobs:
-
-  build:
+  tag:
+    if: contains(github.head_ref, 'release-') && contains(github.base_ref, 'main') && github.event.action == 'closed' && github.event.pull_request.merged == true
     runs-on: ubuntu-latest
+    outputs:
+      tag: ${{ steps.tag.outputs.tag }}
     steps:
-    # - name: Set env.BRANCH
-    #   run: echo "BRANCH=$(echo $GITHUB_REF | cut -d'/' -f 3)" >> $GITHUB_ENV
-
-    - name: Is main?
-      run: echo ${{ github.event.pull_request.head.ref }}
+      - name: Extract branch tag
+        id: tag
+        run: |
+          BRANCH=${{ github.head_ref }}
+          TAG="${BRANCH//release-/""}"
+          echo $TAG
+          echo "tag=$TAG" >> $GITHUB_OUTPUT
