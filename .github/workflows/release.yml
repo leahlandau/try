@@ -1,12 +1,17 @@
 name: 🐍 Create Python Release  
 
+# on:
+#   push:
+#     tags:
+#       - "v*.*.*"
 on:
-  push:
-    tags:
-      - "v*.*.*"
+  pull_request:
+    types:
+      - closed
 
 jobs:
   build:
+    if: contains(github.head_ref, 'release/') && contains(github.base_ref, 'main') && github.event.action == 'closed' && github.event.pull_request.merged == true
     name: Upload Python Release Asset
     runs-on: ubuntu-latest
 
@@ -28,11 +33,23 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt  
 
+      - name: 🔖 get current tag name
+        id: tag_name
+        run: |
+          branch_name=$(echo "${GITHUB_REF##*/}")
+          tag="${branch_name#release/}"
+          echo "tag=$TAG" >> $GITHUB_ENV
+
+      - name: 🔖 create tag
+        run: |
+          git tag ${{ env.TAG }}
+          git push origin ${{ env.TAG }}
+          
       - name: 📁 Create ZIP Archive
         run: |
           zip -r repository.zip .
 
-      - name: 🔖 Create Release
+      - name: 🐍 Create Release
         uses: ncipollo/release-action@v1
         with:
           artifacts: ./repository.zip
