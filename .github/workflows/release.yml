@@ -1,9 +1,5 @@
 name: 🐍 Create Python Release  
 
-# on:
-#   push:
-#     tags:
-#       - "v*.*.*"
 on:
   pull_request:
     types:
@@ -38,7 +34,7 @@ jobs:
         run: |
           branch_name=$(echo "${GITHUB_REF##*/}")
           tag="${branch_name#release/}"
-          echo "tag=$TAG" >> $GITHUB_ENV
+          echo "TAG=$TAG" >> $GITHUB_ENV
 
       - name: 🔖 create tag
         run: |
@@ -49,10 +45,12 @@ jobs:
         run: |
           zip -r repository.zip .
 
+
       - name: 🐍 Create Release
         uses: ncipollo/release-action@v1
         with:
           artifacts: ./repository.zip
+          tag: ${{ env.TAG }}
     
   
 
