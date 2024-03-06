@@ -18,3 +18,34 @@ jobs:
           changelog_format: 'auto-changelog'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          
+# name: Release tag
+
+# on:
+#   pull_request:
+#     types:
+#       - closed
+
+# jobs:
+#   tag:
+#     if: contains(github.head_ref, 'release/') && contains(github.base_ref, 'main') && github.event.action == 'closed' && github.event.pull_request.merged == true
+#     runs-on: ubuntu-latest
+#     outputs:
+#       tag: ${{ steps.tag.outputs.tag }}
+#     steps:
+
+#       - name: Extract branch tag
+#         id: tag
+#         run: |
+#           BRANCH=${{ github.head_ref }}
+#           TAG="${BRANCH//release/"" }" 
+#           # echo $TAG | sed 's/.*\///'
+#           echo "tag=$TAG | sed 's/.*\///'" >> $GITHUB_ENV
+
+#       - name:  Create Tag
+#         id: create_tag
+#         run: |
+#           branch_name=$(echo "${GITHUB_REF##*/}")
+#           tag="${branch_name#release/}"
+#           echo "tag=$TAG" >> $GITHUB_ENV
+          

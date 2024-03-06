@@ -1,9 +1,5 @@
 name: 🐍 Create Python Release  
 
-# on:
-#   push:
-#     tags:
-#       - "v*.*.*"
 on:
   pull_request:
     types:
