@@ -10,6 +10,8 @@ jobs:
   job-name:
     runs-on: ubuntu-latest
     steps:
-    - uses: mougenko/create-release-note@v1.0.0
-      with:
-        github-token: ${{ secrets.GITHUB_TOKEN }}
+    # - uses: mougenko/create-release-note@v1.0.0
+    #   with:
+    #     github-token: ${{ secrets.GITHUB_TOKEN }}
+    - name: 📝 Comment on related issues and pull requests
+      uses: remix-run/release-comment-action@0.4.1
