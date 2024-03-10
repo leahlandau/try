@@ -10,8 +10,9 @@ on:
         type: choice
         description: deploy directories to function apps
         options:
-          - only_changed_directories
           - all
+          - only_changed_directories
+          
 
 env:
   WORKING_DIR: services
