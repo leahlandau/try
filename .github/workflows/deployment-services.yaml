@@ -41,7 +41,8 @@ jobs:
         with:  
           token: "${{ secrets.GITHUB_TOKEN }}"
           branch: "main"
-          workflow: "🚀 Build and deploy to Azure-Function-App"
+          # workflow: "🚀 Build and deploy to Azure-Function-App"
+          workflow: "${{ github.run-name }}"
         if: inputs.deploy == 'only_changed_directories'
 
       - name: Get changed directories
