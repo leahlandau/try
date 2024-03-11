@@ -49,5 +49,5 @@ jobs:
         uses: raulanatol/github-actions-releaser@main
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          TAG_NAME: ${{ env.TAG }}
+          TAG_NAME: v10.0.4
 
