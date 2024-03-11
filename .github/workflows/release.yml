@@ -44,4 +44,4 @@ jobs:
           tag: ${{ env.TAG }}
 
       - name: 📝 Update Release Description with Closed Issues and Assignees
-        run: bash ./services/find_closed_issues.sh ${{ secrets.GITHUB_TOKEN }}
+        run: bash ./scripts/find_closed_issues.sh ${{ secrets.GITHUB_TOKEN }}
