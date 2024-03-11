@@ -31,19 +31,20 @@ jobs:
           pr_branch=${{ github.event.pull_request.head.ref }}
           tag=$(echo "$pr_branch" | awk -F'/' '{print $NF}')
           echo "TAG=$tag" >> $GITHUB_ENV
-
       - name: 🔖 Create Tag
         id: create_tag
         run: |
           git tag ${{ env.TAG }}
           git push origin ${{ env.TAG }}
-
       - name: 📦️ Create Release
         uses: ncipollo/release-action@v1
         with:
           artifacts: ./repository.zip
           tag: ${{ env.TAG }}
 
-# 
-      - name: 📝 Update Release Description with Closed Issues and Assignees
-        run: bash ./scripts/find_closed_issues.sh ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Generate release notes
+        uses: raulanatol/github-actions-releaser@main
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAG_NAME: v10.0.4
