@@ -1,54 +1,68 @@
-name: 🐍 Create Image-reduction Tag and Release 
+# name: 🐍 Create Image-reduction Tag and Release 
 
+# on:
+#   pull_request:
+#     branches:
+#       - main
+#     types:
+#       - closed
+
+# jobs:
+#   build:
+#     name: Upload Image-reduction Release Asset
+#     if: startsWith(github.head_ref, 'release/') && github.base_ref == 'main' && github.event.action == 'closed' && github.event.pull_request.merged == true
+#     runs-on: ubuntu-latest
+
+#     permissions:
+#       issues: write
+#       contents: write
+
+
+#     steps:
+
+#       - name: 📂 Checkout code
+#         uses: actions/checkout@v4
+
+#       - name: 📦️ Create ZIP Archive
+#         run: zip -r repository.zip .           
+
+#       - name: 🏷️ get tag name
+#         run: |
+#           pr_branch=${{ github.event.pull_request.head.ref }}
+#           tag=$(echo "$pr_branch" | awk -F'/' '{print $NF}')
+#           echo "TAG=$tag" >> $GITHUB_ENV
+
+#       - name: 🔖 Create Tag
+#         id: create_tag
+#         run: |
+#           git tag ${{ env.TAG }}
+#           git push origin ${{ env.TAG }}
+
+#       - name: 📦️ Create Release
+#         uses: ncipollo/release-action@v1
+#         with:
+#           artifacts: ./repository.zip
+#           tag: ${{ env.TAG }}
+
+
+#       - name: Generate release notes
+#         uses: raulanatol/github-actions-releaser@main
+#         env:
+#           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+#           TAG_NAME: v10.0.4
+
+# 
+name: Release
 on:
-  pull_request:
-    branches:
-      - main
-    types:
-      - closed
-
+  push:
+    tags:
+      - 'v*'
 jobs:
-  build:
-    name: Upload Image-reduction Release Asset
-    if: startsWith(github.head_ref, 'release/') && github.base_ref == 'main' && github.event.action == 'closed' && github.event.pull_request.merged == true
+  deploy:
     runs-on: ubuntu-latest
-
-    permissions:
-      issues: write
-      contents: write
-
-
     steps:
-
-      - name: 📂 Checkout code
-        uses: actions/checkout@v4
-
-      - name: 📦️ Create ZIP Archive
-        run: zip -r repository.zip .           
-
-      - name: 🏷️ get tag name
-        run: |
-          pr_branch=${{ github.event.pull_request.head.ref }}
-          tag=$(echo "$pr_branch" | awk -F'/' '{print $NF}')
-          echo "TAG=$tag" >> $GITHUB_ENV
-
-      - name: 🔖 Create Tag
-        id: create_tag
-        run: |
-          git tag ${{ env.TAG }}
-          git push origin ${{ env.TAG }}
-
-      - name: 📦️ Create Release
-        uses: ncipollo/release-action@v1
-        with:
-          artifacts: ./repository.zip
-          tag: ${{ env.TAG }}
-
-
+      - uses: actions/checkout@v2
       - name: Generate release notes
         uses: raulanatol/github-actions-releaser@main
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          TAG_NAME: v10.0.4
-
-# 
