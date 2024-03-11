@@ -44,5 +44,11 @@ jobs:
           artifacts: ./repository.zip
           tag: ${{ env.TAG }}
 
-      - name: 📝 Update Release Description with Closed Issues and Assignees
-        run: bash ./services/find_closed_issues.sh ${{ secrets.GITHUB_TOKEN }}
+      - name: Generate release notes
+        uses: raulanatol/github-actions-releaser@main
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAG_NAME: ${{ env.TAG }}
+
+      # - name: 📝 Update Release Description with Closed Issues and Assignees
+      #   run: bash ./services/find_closed_issues.sh ${{ secrets.GITHUB_TOKEN }}
