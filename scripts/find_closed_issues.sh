@@ -42,4 +42,5 @@ while IFS= read -r row; do
 done < <(echo "$issues" | jq -c '.[]')
 
 # release_id=$(curl -s -H "Authorization: Bearer $GITHUB_TOKEN" "$API_PATH/releases/tags/$CURRENT_RELEASE_TAG" | jq -r '.id')
-curl -X PATCH -H "Authorization: token $GITHUB_TOKEN" -d '{"body": "Whats Changed:\n\n'"$issues_list"'"}' "$API_PATH/releases/$release_id"
+# curl -X PATCH -H "Authorization: token $GITHUB_TOKEN" -d '{"body": "Whats Changed:\n\n'"$issues_list"'"}' "$API_PATH/releases/$release_id"
+curl -X PATCH -H "Authorization: token $GITHUB_TOKEN" -d '{"body": "Whats Changed:\n\n'"$issues_list"'"}' "$CURRENT_RELEASE_TAG"
