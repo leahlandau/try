@@ -9,13 +9,12 @@ issues_list=""
 while IFS= read -r row; do
     number=$(echo "$row" | jq -r '.number')
     title=$(echo "$row" | jq -r '.title')
-    label=$(echo "$row" | jq -r '.label')
     assignees=$(curl $CURLARGS "$AUTHORIZE" "$URL/issues/$number" | jq -r '.assignees[].login ' | xargs)
     url=$(echo "$row" | jq -r '.html_url')
     assignee_links=""
     for assignee in $assignees; do
         assignee_links="$assignee_links[@$assignee](https://github.com/$assignee) "
     done
-    issues_list="${issues_list}- $title in [#$number]($url) by $assignee_links\n $label"
+    issues_list="${issues_list}- $title in [#$number]($url) by $assignee_links\n"
 done < <(echo "$issues" | jq -c '.[]')
 curl -X PATCH -H "$AUTHORIZE" -d '{"body": "Whats Changed:\n\n'"$issues_list"'"}' "$CURRENT_RELEASE_PATH"
