@@ -23,6 +23,6 @@ jobs:
         with:
           upload_url: ${{ github.event.release.upload_url }}
           asset_path: ./${{ github.event.repository.name }}.zip
-   
+
       - name: 📝 Update Release Description with Closed Issues and Assignees
         run: bash scripts/find_closed_issues.sh ${{ secrets.GITHUB_TOKEN }} ${{ github.event.release.url }}
