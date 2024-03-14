@@ -40,10 +40,7 @@ jobs:
       - name: get the tag name
         run: echo ${GITHUB_REF#refs/tags/}
 
-      # - name: 📝 Update Release Description with Closed Issues and Assignees
-      #   run: bash scripts/find_closed_issues.sh ${{ secrets.GITHUB_TOKEN }} ${GITHUB_REF#refs/tags/}
-
       - name: 📝 Update Release Description with Closed Issues and Assignees
-        run: |
-          latest_release_id=$(curl -s -H "Authorization: Bearer ${{ github.token }}" "https://api.github.com/repos/${GITHUB_REPOSITORY}/releases/tags/v10.1.0" | jq -r '.id')
-          echo $latest_release_id
+        run: bash scripts/find_closed_issues.sh ${{ secrets.GITHUB_TOKEN }} ${GITHUB_REF#refs/tags/}
+
+  
