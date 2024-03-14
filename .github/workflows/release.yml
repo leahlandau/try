@@ -1,6 +1,8 @@
 name: 🐍 Create Tag and Release
 
-on: release
+on:
+  release:
+    type: [created]
 
 jobs:
   build:
@@ -35,11 +37,6 @@ jobs:
       #   with:
       #     artifacts: ./repository.zip
       #     tag: ${{ env.TAG }}
-
-
-      - name: get the tag name
-        run: echo ${GITHUB_REF#refs/tags/}
-
       - name: 📝 Update Release Description with Closed Issues and Assignees
         run: bash scripts/find_closed_issues.sh ${{ secrets.GITHUB_TOKEN }} ${GITHUB_REF#refs/tags/}
 
