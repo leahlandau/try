@@ -25,7 +25,7 @@ jobs:
           asset_path: ./${{ github.event.repository.name }}.zip
       - name: PRINT 
         run: |
-          echo ${{ github.event.release}}
+          echo ${{ toJson(github.event.release) }}
       - name: 📝 Update Release Description with Closed Issues and Assignees
         # run: bash scripts/find_closed_issues.sh ${{ secrets.GITHUB_TOKEN }} ${GITHUB_REF#refs/tags/}
         run: bash scripts/find_closed_issues.sh ${{ secrets.GITHUB_TOKEN }} ${GITHUB_REF#refs/tags/}
