@@ -22,7 +22,7 @@
 # curl -X PATCH -H "Authorization: token $GITHUB_TOKEN" -d '{"body": "Whats Changed:\n\n'"$issues_list"'"}' "$API_PATH/releases/$release_id"
 
 GITHUB_TOKEN=$1
-CURRENT_RELEASE_TAG=$2
+CURRENT_RELEASE_PATH=$2
 API_PATH="https://api.github.com/repos/${GITHUB_REPOSITORY}"
 previous_release_created_at=$(curl -s -H "Authorization: Bearer $GITHUB_TOKEN" "$API_PATH/releases" | jq -r '.[] | "\(.tag_name)\t\(.created_at)"' | sort -k2,2r | awk 'NR==2 {print $2}')
 issues=$(curl -s -H "Authorization: Bearer $GITHUB_TOKEN" "$API_PATH/issues?state=closed&per_page=100&since=$previous_release_created_at&until=$(date -u +'%Y-%m-%dT%H:%M:%SZ')")
@@ -41,8 +41,6 @@ while IFS= read -r row; do
     issues_list="${issues_list}- $title in [#$number]($url) by $assignee_links\n"
 done < <(echo "$issues" | jq -c '.[]')
 
-# release_id=$(curl -s -H "Authorization: Bearer $GITHUB_TOKEN" "$API_PATH/releases/tags/$CURRENT_RELEASE_TAG" | jq -r '.id')
-# curl -X PATCH -H "Authorization: token $GITHUB_TOKEN" -d '{"body": "Whats Changed:\n\n'"$issues_list"'"}' "$API_PATH/releases/$release_id"
-curl -X PATCH -H "Authorization: token $GITHUB_TOKEN" -d '{"body": "Whats Changed:\n\n'"$issues_list"'"}' "$API_PATH/releases/$CURRENT_RELEASE_TAG"
 
-# curl -X PATCH -H "Authorization: token $GITHUB_TOKEN" -d '{"body": "Whats Changed:\n\n'"$issues_list"'"}' "$CURRENT_RELEASE_TAG"
+curl -X PATCH -H "Authorization: token $GITHUB_TOKEN" -d '{"body": "Whats Changed:\n\n'"$issues_list"'"}' "$CURRENT_RELEASE_PATH"
+
