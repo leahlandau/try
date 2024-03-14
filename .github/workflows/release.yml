@@ -1,4 +1,4 @@
-name: 🐍 Create Tag and Release
+name: 🐍 release
 
 on:
   release:
