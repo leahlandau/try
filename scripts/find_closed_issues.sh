@@ -41,4 +41,4 @@ while IFS= read -r row; do
     issues_list="${issues_list}- $title in [#$number]($url) by $assignee_links\n"
 done < <(echo "$issues" | jq -c '.[]')
 
-curl -X PATCH -H "Authorization: token $GITHUB_TOKEN" -d '{"body": "Whats Changed:\n\n'"$issues_list"'"}' "https://api.github.com/repos/${GITHUB_REPOSITORY}/releases/$CURRENT_RELEASE_TAG"
+curl -X PATCH -H "Authorization: token $GITHUB_TOKEN" -d '{"body": "Whats Changed:\n\n'"$issues_list"'"}' "https://api.github.com/repos/${GITHUB_REPOSITORY}/releases/v10.1.0"
