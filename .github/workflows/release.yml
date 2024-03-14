@@ -2,7 +2,7 @@ name: 🐍 Create Tag and Release
 
 on:
   release:
-    type: [created]
+    types: [created]
 
 jobs:
   build:
