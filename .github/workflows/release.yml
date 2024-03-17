@@ -51,7 +51,7 @@ jobs:
               if length == 1 then
                   "- \(.[0].title) in [#\(.[0].number)](\(.[0].html_url)) by [@\(.[0].assignee.login)](https://github.com/\(.[0].assignee.login))"
               else
-                  map("- \(.title) in [#\(.number)](\(.html_url)) by [@\(.assignee.login)](https://github.com/\(.assignee.login))") | join("\n")
+                  map("- \(.title) in [#\(.number)](\(.html_url)) by [@\(.assignee.login)](https://github.com/\(.[0].assignee.login))") | join("\n")
               end
           ')
 
