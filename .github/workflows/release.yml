@@ -38,20 +38,21 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
            URL="https://api.github.com/repos/${{ github.repository }}"
-           AUTHORIZE="Authorization: Bearer $GITHUB_TOKEN"
-           CURRENT_RELEASE_PATH=${{ github.event.release.url }}
-       
-           previous_release_created_at=$(curl -s -H "$AUTHORIZE" "$URL/releases" | jq -r '.[1].created_at')
-           echo "previous_release_created_at - $previous_release_created_at"
-       
-           issues=$(curl -s -H "$AUTHORIZE" "$URL/issues?state=closed&per_page=100&since=$previous_release_created_at&until=$(date -u +'%Y-%m-%dT%H:%M:%SZ')")
-       
-           if [ -n "$issues" ]; then
-             issue_list=$(echo "$issues" | jq -r 'map("- \(.title) in [#\(.number)](\(.html_url)) by [@\(.assignee.login)](https://github.com/\(.assignee.login))") | join("\n")' | sed 's/"/\\"/g')
-             echo "issue_list - $issue_list"
-       
-             curl -X PATCH -H "$AUTHORIZE" -d "{\"body\": \"Whats Changed:\\n\\n$issue_list\"}" "$CURRENT_RELEASE_PATH"
-           else
-             issue_list="No closed issues found since the last release."
-             echo "$issue_list"
-           fi
+            AUTHORIZE="Authorization: Bearer $GITHUB_TOKEN"
+            CURRENT_RELEASE_PATH=${{ github.event.release.url }}
+
+            previous_release_created_at=$(curl -s -H "$AUTHORIZE" "$URL/releases" | jq -r '.[1].created_at')
+            echo "previous_release_created_at - $previous_release_created_at"
+
+            issues=$(curl -s -H "$AUTHORIZE" "$URL/issues?state=closed&per_page=100&since=$previous_release_created_at&until=$(date -u +'%Y-%m-%dT%H:%M:%SZ')")
+
+            if [ -n "$issues" ]; then
+              issue_list=$(echo "$issues" | jq -r 'map("- \(.title) in [#\(.number)](\(.html_url)) by [@\(.assignee.login)](https://github.com/\(.assignee.login))") | join("\n")' | sed 's/"/\\"/g')
+              echo "issue_list - $issue_list"
+            else
+              issue_list="No closed issues found since the last release."
+              echo "$issue_list"
+            fi
+
+    # Update the release description with the generated issue list
+    curl -X PATCH -H "$AUTHORIZE" -H "Content-Type: application/json" -d "{\"body\": \"Whats Changed:\\n\\n$issue_list\"}" "$CURRENT_RELEASE_PATH"
