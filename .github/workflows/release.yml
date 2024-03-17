@@ -17,28 +17,34 @@ jobs:
       - name: 📂 Checkout code
         uses: actions/checkout@v4
 
-      - name: 📦️ Create ZIP Archive
-        run: zip -r ${{ github.event.repository.name }}.zip .
-
-      - name: ⬆️ Upload-release-asset
-        uses: actions/upload-release-asset@v1
+      - name: Generate release notes
+        uses: raulanatol/github-actions-releaser@main
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ github.event.release.upload_url }}
-          asset_path: ./${{ github.event.repository.name }}.zip
-          asset_name: ${{ github.event.repository.name }}.zip
-          asset_content_type: application/zip
+          TAG_NAME: v11.1.1
+
+      # - name: 📦️ Create ZIP Archive
+      #   run: zip -r ${{ github.event.repository.name }}.zip .
+
+      # - name: ⬆️ Upload-release-asset
+      #   uses: actions/upload-release-asset@v1
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #   with:
+      #     upload_url: ${{ github.event.release.upload_url }}
+      #     asset_path: ./${{ github.event.repository.name }}.zip
+      #     asset_name: ${{ github.event.repository.name }}.zip
+      #     asset_content_type: application/zip
 
 
-      # - name: 📝 Update Release Description with Closed Issues and Assignees
-      #   run: bash scripts/find_closed_issues.sh ${{ secrets.GITHUB_TOKEN }} ${{ github.event.release.url }}
-      - name: Update Release Description
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          URL="https://api.github.com/repos/${{ github.repository }}"
-          AUTHORIZE="Authorization: Bearer $GITHUB_TOKEN"
-          RELEASE_INFO=$(curl -s -H "$AUTHORIZE" "$URL/releases" | jq -r '[.[1].created_at, "Whats Changed:", (.[] | select(.state=="closed") | "- \(.title) in [#\(.[1].number)](\(.html_url)) by [@\(.[1].assignee.login)](\(.assignee.html_url))")]' | paste -sd '\n')
-          echo $RELEASE_INFO
-          curl -X PATCH -H "$AUTHORIZE" -H "Content-Type: application/json" -d "{\"body\": \"$RELEASE_INFO\"}" "${{ github.event.release.url }}"
+      # # - name: 📝 Update Release Description with Closed Issues and Assignees
+      # #   run: bash scripts/find_closed_issues.sh ${{ secrets.GITHUB_TOKEN }} ${{ github.event.release.url }}
+      # - name: Update Release Description
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #   run: |
+      #     URL="https://api.github.com/repos/${{ github.repository }}"
+      #     AUTHORIZE="Authorization: Bearer $GITHUB_TOKEN"
+      #     RELEASE_INFO=$(curl -s -H "$AUTHORIZE" "$URL/releases" | jq -r '[.[1].created_at, "Whats Changed:", (.[] | select(.state=="closed") | "- \(.title) in [#\(.[1].number)](\(.html_url)) by [@\(.[1].assignee.login)](\(.assignee.html_url))")]' | paste -sd '\n')
+      #     echo $RELEASE_INFO
+      #     curl -X PATCH -H "$AUTHORIZE" -H "Content-Type: application/json" -d "{\"body\": \"$RELEASE_INFO\"}" "${{ github.event.release.url }}"
