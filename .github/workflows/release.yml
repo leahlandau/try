@@ -40,4 +40,5 @@ jobs:
           URL="https://api.github.com/repos/${{ github.repository }}"
           AUTHORIZE="Authorization: Bearer $GITHUB_TOKEN"
           RELEASE_INFO=$(curl -s -H "$AUTHORIZE" "$URL/releases" | jq -r '[.[1].created_at, "Whats Changed:", (.[] | select(.state=="closed") | "- \(.title) in [#\(.[1].number)](\(.html_url)) by [@\(.[1].assignee.login)](\(.assignee.html_url))")]' | paste -sd '\n')
+          echo $RELEASE_INFO
           curl -X PATCH -H "$AUTHORIZE" -H "Content-Type: application/json" -d "{\"body\": \"$RELEASE_INFO\"}" "${{ github.event.release.url }}"
