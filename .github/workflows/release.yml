@@ -20,10 +20,12 @@ jobs:
         run: zip -r ${{ github.event.repository.name }}.zip .
 
       - name: ⬆️ Upload-release-asset
-        uses:  shogo82148/actions-upload-release-asset@v1
+        uses: actions/upload-release-asset@v1
         with:
           upload_url: ${{ github.event.release.upload_url }}
           asset_path: ./${{ github.event.repository.name }}.zip
+          asset_content_type: application/zip
+
 
       - name: 📝 Update Release Description with Closed Issues and Assignees
         run: bash scripts/find_closed_issues.sh ${{ secrets.GITHUB_TOKEN }} ${{ github.event.release.url }}
