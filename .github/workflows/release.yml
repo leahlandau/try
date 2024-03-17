@@ -43,7 +43,8 @@ jobs:
           echo "previous_release_created_at - $previous_release_created_at"
           issues=$(curl -s -H "$AUTHORIZE" "$URL/issues?state=closed&per_page=100&since=$previous_release_created_at&until=$(date -u +'%Y-%m-%dT%H:%M:%SZ')")
           echo "issues - $issues"
-          issue_list=$(echo "$issues" | jq -r '.[] | "- \(.title) in [#\(.number)](\(.html_url)) by [@\(.assignee.login)](https://github.com/\(.assignee.login)) Labels: \(.labels | map("[\(.name)]") | join(", "))"' | paste -sd '\n' -)
+          
+          issue_list=$(echo "$issues" | jq -r '.[] | "- \(.title) in [#\(.number)](\(.html_url)) by [\(.assignee.login)](https://github.com/\(.assignee.login)) Labels: \(.labels | map("\(.color)<\(.name)>") | join(", "))' | paste -sd '\n' -)
           echo "issue_list - $issue_list"
           curl -X PATCH -H "$AUTHORIZE" -d "{\"body\": \"Whats Changed:\\n\\n$issue_list\"}" "$CURRENT_RELEASE_PATH"
 
