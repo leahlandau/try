@@ -34,25 +34,30 @@ jobs:
 
       # # - name: 📝 Update Release Description with Closed Issues and Assignees
       # #   run: bash scripts/find_closed_issues.sh ${{ secrets.GITHUB_TOKEN }} ${{ github.event.release.url }}
-      - name: Update Release Description
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: 📝 Update Release Description with Closed Issues and Assignees
         run: |
-          URL="https://api.github.com/repos/${{ github.repository }}"
-          AUTHORIZE="Authorization: Bearer $GITHUB_TOKEN"
-          CURRENT_RELEASE_PATH=${{ github.event.release.url }}
+          variable="Hello, world!"
+          echo "$variable" | awk '{print typeof($0)}'
+#       - name: Update Release Description
+#         env:
+#           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+#         run: |
+#           URL="https://api.github.com/repos/${{ github.repository }}"
+#           AUTHORIZE="Authorization: Bearer $GITHUB_TOKEN"
+#           CURRENT_RELEASE_PATH=${{ github.event.release.url }}
           
-          previous_release_created_at=$(curl -s -H "$AUTHORIZE" "$URL/releases" | jq -r '[.[1].tag_name, .[1].created_at] | @tsv')
-          echo "previous_release_created_at - $previous_release_created_at"
+#           previous_release_created_at=$(curl -s -H "$AUTHORIZE" "$URL/releases" | jq -r '[.[1].tag_name, .[1].created_at] | @tsv')
+#           echo "previous_release_created_at - $previous_release_created_at"
           
-          issues=$(curl -s -H "$AUTHORIZE" "$URL/issues?state=closed&per_page=100&since=$previous_release_created_at&until=$(date -u +'%Y-%m-%dT%H:%M:%SZ')")
+#           issues=$(curl -s -H "$AUTHORIZE" "$URL/issues?state=closed&per_page=100&since=$previous_release_created_at&until=$(date -u +'%Y-%m-%dT%H:%M:%SZ')")
           
-          issue_list=$(jq -r '
-            if length > 0 then
-              map("- \(.title) in [#\(.number)](\(.html_url)) by [@\(.assignee.login)](https://github.com/\(.assignee.login))") | join("\n")
-            else
-              ""
-            end
-          ' <<< "$issues")
+#           issue_list=$(jq -r '
+#               if type == "array" then
+#               map("- \(.title) in [#\(.number)](\(.html_url)) by [@\(.assignee.login)](https://github.com/\(.assignee.login))") | join("\n")
+#   else
+#     ""
+#   end
+# ' <<< "$issues"
           
-          curl -X PATCH -H "$AUTHORIZE" -d "{\"body\": \"Whats Changed:\\n\\n$issue_list\"}" "$CURRENT_RELEASE_PATH"
+#           curl -X PATCH -H "$AUTHORIZE" -d "{\"body\": \"Whats Changed:\\n\\n$issue_list\"}" "$CURRENT_RELEASE_PATH"
