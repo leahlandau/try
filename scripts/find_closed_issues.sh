@@ -31,13 +31,13 @@ curl -X PATCH -H "$AUTHORIZE" -d "{\"body\": \"Whats Changed:\\n\\n$(echo "$issu
 # previous_release_created_at=$(curl -s -H "$AUTHORIZE" "$URL/releases" | jq -r '.[1] | .created_at')
 # issue_list=$(echo "$issues" | jq -r '.[] | "- \(.title) in [#\(.number)](\(.html_url)) by \(.user.login)"' | paste -sd '\n' -)
 #################################################################################################################################
-    #  URL="https://api.github.com/repos/${{ github.repository }}"
-    #       AUTHORIZE="Authorization: Bearer $GITHUB_TOKEN"
-    #       CURRENT_RELEASE_PATH=${{ github.event.release.url }}
-    #       previous_release_created_at=$(curl -s -H "$AUTHORIZE" "$URL/releases" | jq -r '.[] | "\(.tag_name)\t\(.created_at)"' | sort -k2,2r | awk 'NR==2 {print $2}')
-    #       echo "previous_release_created_at - $previous_release_created_at"
-    #       issues=$(curl -s -H "$AUTHORIZE" "$URL/issues?state=closed&per_page=100&since=$previous_release_created_at&until=$(date -u +'%Y-%m-%dT%H:%M:%SZ')")
-    #       echo "issues - $issues"
-    #       issue_list=$(echo "$issues" | jq -r '.[] | "- \(.title) in [#\(.number)](\(.html_url)) by [@\(.assignee.login)](https://github.com/\(.assignee.login))"' | paste -sd '\n' -)
-    #       echo "issue_list - $issue_list"
-    #       curl -X PATCH -H "$AUTHORIZE" -d "{\"body\": \"Whats Changed:\\n\\n$issue_list\"}" "$CURRENT_RELEASE_PATH"
+     URL="https://api.github.com/repos/${{ github.repository }}"
+          AUTHORIZE="Authorization: Bearer $GITHUB_TOKEN"
+          CURRENT_RELEASE_PATH=${{ github.event.release.url }}
+          previous_release_created_at=$(curl -s -H "$AUTHORIZE" "$URL/releases" | jq -r '.[] | "\(.tag_name)\t\(.created_at)"' | sort -k2,2r | awk 'NR==2 {print $2}')
+          echo "previous_release_created_at - $previous_release_created_at"
+          issues=$(curl -s -H "$AUTHORIZE" "$URL/issues?state=closed&per_page=100&since=$previous_release_created_at&until=$(date -u +'%Y-%m-%dT%H:%M:%SZ')")
+          echo "issues - $issues"
+          issue_list=$(echo "$issues" | jq -r '.[] | "- \(.title) in [#\(.number)](\(.html_url)) by [@\(.assignee.login)](https://github.com/\(.assignee.login))"' | paste -sd '\n' -)
+          echo "issue_list - $issue_list"
+          curl -X PATCH -H "$AUTHORIZE" -d "{\"body\": \"Whats Changed:\\n\\n$issue_list\"}" "$CURRENT_RELEASE_PATH"
