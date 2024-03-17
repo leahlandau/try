@@ -27,6 +27,7 @@ curl -X PATCH -H "$AUTHORIZE" -d "{\"body\": \"Whats Changed:\\n\\n$(echo "$issu
         #   issue_list=$(echo "$issues" | jq -r '.[] | "- \(.title) in [#\(.number)](\(.html_url)) by \(.assignees[].login | "[@" + . + "](https://github.com/" + . + ")")' | paste -sd '\n' -)
 
 # #################################################################################################################################
+# issue_list=$(echo "$issues" | jq -r '.[] | "- \(.title) in [#\(.number)](\(.html_url)) by [@\(.assignee.login)](https://github.com/\(.assignee.login))"' | paste -sd '\n' -)
 # previous_release_created_at=$(curl -s -H "$AUTHORIZE" "$URL/releases" | jq -r '.[1] | .created_at')
 # issue_list=$(echo "$issues" | jq -r '.[] | "- \(.title) in [#\(.number)](\(.html_url)) by \(.user.login)"' | paste -sd '\n' -)
 #################################################################################################################################
