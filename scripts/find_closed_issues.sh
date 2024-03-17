@@ -18,6 +18,6 @@ while IFS= read -r row; do
         assignee_links="$assignee_links[@$assignee](https://github.com/$assignee) "
     done
     issues_list="${issues_list}- $title in [#$number]($url) by $assignee_links\n"
-done 
+done < <(echo "$issues" | jq -c '.[]')
 issues=$(echo "$issues" | jq -c '.[]')
 curl -X PATCH -H "$AUTHORIZE" -d '{"body": "Whats Changed:\n\n'"$issues"'"}' "$CURRENT_RELEASE_PATH"
