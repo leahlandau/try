@@ -36,7 +36,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          URL="https://api.github.com/repos/${GITHUB_REPOSITORY}"
+          URL="https://api.github.com/repos/${{ github.repository }}"
           AUTHORIZE="Authorization: Bearer $GITHUB_TOKEN"
           CURRENT_RELEASE_PATH=${{ github.event.release.url }}
           previous_release_created_at=$(curl $CURLARGS "$AUTHORIZE" "$URL/releases" | jq -r '.[] | "\(.tag_name)\t\(.created_at)"' | sort -k2,2r | awk 'NR==2 {print $2}')
