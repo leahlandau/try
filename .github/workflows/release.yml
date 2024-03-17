@@ -37,27 +37,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-           URL="https://api.github.com/repos/${{ github.repository }}"
-           AUTHORIZE="Authorization: Bearer $GITHUB_TOKEN"
-           CURRENT_RELEASE_PATH=${{ github.event.release.url }}
-       
-           # Fetch the creation date of the second most recent release
-           previous_release_created_at=$(curl -s -H "$AUTHORIZE" "$URL/releases" | jq -r '.[1].created_at')
-           echo "previous_release_created_at - $previous_release_created_at"
-       
-           # Fetch closed issues since the second most recent release
-           issues=$(curl -s -H "$AUTHORIZE" "$URL/issues?state=closed&per_page=100&since=$previous_release_created_at&until=$(date -u +'%Y-%m-%dT%H:%M:%SZ')")
-       
-           # Check if any closed issues are found
-           if [ -n "$issues" ]; then
-             # Format closed issues into a list
-             issue_list=$(echo "$issues" | jq -aRs 'split("\n") | map(select(length > 0)) | map("- \(.)") | join("\n")')
-             echo "issue_list - $issue_list"
-           else
-             # Set the issue list string to indicate no closed issues found
-             issue_list="No closed issues found since the last release."
-             echo "$issue_list"
-           fi
-       
-           # Update the release description with the generated issue list
-           curl -X PATCH -H "$AUTHORIZE" -H "Content-Type: application/json" -d "{\"body\": \"Whats Changed:\\n\\n$issue_list\"}" "$CURRENT_RELEASE_PATH"
+          URL="https://api.github.com/repos/${{ github.repository }}"
+          AUTHORIZE="Authorization: Bearer $GITHUB_TOKEN"
+          RELEASE_INFO=$(curl -s -H "$AUTHORIZE" "$URL/releases" | jq -r '[.[1].created_at, "Whats Changed:", (.[] | select(.state=="closed") | "- \(.title) in [#\(.[1].number)](\(.html_url)) by [@\(.[1].assignee.login)](\(.assignee.html_url))")]' | paste -sd '\n')
+          curl -X PATCH -H "$AUTHORIZE" -H "Content-Type: application/json" -d "{\"body\": \"$RELEASE_INFO\"}" "${{ github.event.release.url }}"
