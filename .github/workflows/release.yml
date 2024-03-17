@@ -41,14 +41,18 @@ jobs:
           URL="https://api.github.com/repos/${{ github.repository }}"
           AUTHORIZE="Authorization: Bearer $GITHUB_TOKEN"
           CURRENT_RELEASE_PATH=${{ github.event.release.url }}
+
           previous_release_created_at=$(curl -s -H "$AUTHORIZE" "$URL/releases" | jq -r '.[] | "\(.tag_name)\t\(.created_at)"' | sort -k2,2r | awk 'NR==2 {print $2}')
           echo "previous_release_created_at - $previous_release_created_at"
-          issues=$(curl -s -H "$AUTHORIZE" "$URL/issues?state=closed&per_page=100&since=$previous_release_created_at&until=$(date -u +'%Y-%m-%dT%H:%M:%SZ')")
-          echo "issues - $issues"
-          issue_list=$(echo "$issues" | jq -r 
-          'if length == 1 then
-              "- \(.[0].title) in [#\(.[0].number)](\(.[0].html_url)) by [@\(.[0].assignee.login)](https://github.com/\(.[0].assignee.login))"
-           else 
-              map("- \(.title) in [#\(.number)](\(.html_url)) by [@\(.assignee.login)](https://github.com/\(.assignee.login))") | join("\n")end')       
-          echo "issue_list - $issue_list"
+
+          issues=$(curl -s -H "$AUTHORIZE" "$URL/issues?state=closed&per_page=100&since=$previous_release_created_at&until=$(date -u +'%Y-%m-%dT%H:%M:%SZ')')
+
+          issue_list=$(echo "$issues" | jq -r '
+              if length == 1 then
+                  "- \(.[0].title) in [#\(.[0].number)](\(.[0].html_url)) by [@\(.[0].assignee.login)](https://github.com/\(.[0].assignee.login))"
+              else
+                  map("- \(.title) in [#\(.number)](\(.html_url)) by [@\(.assignee.login)](https://github.com/\(.assignee.login))") | join("\n")
+              end
+          ')
+
           curl -X PATCH -H "$AUTHORIZE" -d "{\"body\": \"Whats Changed:\\n\\n$issue_list\"}" "$CURRENT_RELEASE_PATH"
