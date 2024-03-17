@@ -41,7 +41,7 @@ jobs:
           CURRENT_RELEASE_PATH=${{ github.event.release.url }}
           previous_release_created_at=$(curl $CURLARGS "$AUTHORIZE" "$URL/releases" | jq -r '.[] | "\(.tag_name)\t\(.created_at)"' | sort -k2,2r | awk 'NR==2 {print $2}')
           issues=$(curl -s -H "$AUTHORIZE" "$URL/issues?state=closed&per_page=100&since=$previous_release_created_at&until=$(date -u +'%Y-%m-%dT%H:%M:%SZ')")
-          issue_list=$(echo "$issues" | jq -r '.[] | "- \(.title) in [#\(.number)](\(.html_url)) ")' | paste -sd '\n' -)
+          issue_list=$(echo "$issues" | jq -r '.[] | "- \(.title) in [#\(.number)](\(.html_url)) by \(.assignees[].login)"' | paste -sd '\n' -)
           curl -X PATCH -H "$AUTHORIZE" -d "{\"body\": \"Whats Changed:\\n\\n$issue_list\"}" "$CURRENT_RELEASE_PATH"
 
 
