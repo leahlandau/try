@@ -6,7 +6,7 @@ CURLARGS="-s -H"
 echo $(curl $CURLARGS "$AUTHORIZE" "$URL/releases" | jq -r '.[] | "\(.tag_name)\t\(.created_at)"' | sort -k2,2r)
 previous_release_created_at=$(curl $CURLARGS "$AUTHORIZE" "$URL/releases" | jq -r '.[] | "\(.tag_name)\t\(.created_at)"' | sort -k2,2r | awk 'NR==2 {print $2}')
 echo $previous_release_created_at
-issues=$(curl $CURLARGS "$AUTHORIZE" "$URL/issues?state=closed&per_page=100&since=$previous_release_created_at&until=$(date -u +'%Y-%m-%dT%H:%M:%SZ')" | jq -c '.[]')
+issues=$(curl $CURLARGS "$AUTHORIZE" "$URL/issues?state=closed&per_page=100&since=$previous_release_created_at&until=$(date -u +'%Y-%m-%dT%H:%M:%SZ')" | jq -r '.[] | ')
 # issues_list=""
 # while IFS= read -r row; do
 #     number=$(echo "$row" | jq -r '.number')
@@ -20,4 +20,5 @@ issues=$(curl $CURLARGS "$AUTHORIZE" "$URL/issues?state=closed&per_page=100&sinc
 #     issues_list="${issues_list}- $title in [#$number]($url) by $assignee_links\n"
 # done < <(echo "$issues" | jq -c '.[]')
 # issues=$(echo "$issues" | jq -c '.[]')
+
 curl -X PATCH -H "$AUTHORIZE" -d '{"body": "Whats Changed:\n\n'"$issues"'"}' "$CURRENT_RELEASE_PATH"
