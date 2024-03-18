@@ -1,3 +1,4 @@
+
 name: 🐍 release
 
 on:
@@ -16,6 +17,7 @@ jobs:
       - name: 📂 Checkout code
         uses: actions/checkout@v4
 
+
       # - name: 📦️ Create ZIP Archive
       #   run: zip -r ${{ github.event.repository.name }}.zip .
 
@@ -29,9 +31,10 @@ jobs:
       #     asset_name: ${{ github.event.repository.name }}.zip
       #     asset_content_type: application/zip
 
+
       # # - name: 📝 Update Release Description with Closed Issues and Assignees
       # #   run: bash scripts/find_closed_issues.sh ${{ secrets.GITHUB_TOKEN }} ${{ github.event.release.url }}
-
+      
       - name: 📝 Update Release Description with Closed Issues and Assignees
         run: |
           variable="Hello, world!"
@@ -46,10 +49,7 @@ jobs:
           previous_release_created_at=$(curl -s -H "$AUTHORIZE" "$URL/releases" | jq -r '.[] | "\(.tag_name)\t\(.created_at)"' | sort -k2,2r | awk 'NR==2 {print $2}')
           echo "previous_release_created_at - $previous_release_created_at"
           issues=$(curl -s -H "$AUTHORIZE" "$URL/issues?state=closed&per_page=100&since=$previous_release_created_at&until=$(date -u +'%Y-%m-%dT%H:%M:%SZ')")
-          echo "$issues" | awk '{print typeof($0)}'
           echo "issues - $issues"
           issue_list=$(echo "$issues" | jq -r '.[] | "- \(.title) in [#\(.number)](\(.html_url)) by [@\(.assignee.login)](https://github.com/\(.assignee.login))"' | paste -sd '\n' -)
-          echo "$issue_list" | awk '{print typeof($0)}'
           echo "issue_list - $issue_list"
-          echo "issue_list1=${{ toJson(issue_list) }}" >> $GITHUB_ENV
-          curl -X PATCH -H "$AUTHORIZE" -d "{\"body\": \"Whats Changed:\\n\\n${{ env.issue_list1 }}\"}" "$CURRENT_RELEASE_PATH"
+          curl -X PATCH -H "$AUTHORIZE" -d "{\"body\": \"Whats Changed:\\n\\n$issue_list\"}" "$CURRENT_RELEASE_PATH"
