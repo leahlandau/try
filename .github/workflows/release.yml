@@ -1,4 +1,3 @@
-
 name: 🐍 release
 
 on:
@@ -17,7 +16,6 @@ jobs:
       - name: 📂 Checkout code
         uses: actions/checkout@v4
 
-
       # - name: 📦️ Create ZIP Archive
       #   run: zip -r ${{ github.event.repository.name }}.zip .
 
@@ -31,10 +29,9 @@ jobs:
       #     asset_name: ${{ github.event.repository.name }}.zip
       #     asset_content_type: application/zip
 
-
       # # - name: 📝 Update Release Description with Closed Issues and Assignees
       # #   run: bash scripts/find_closed_issues.sh ${{ secrets.GITHUB_TOKEN }} ${{ github.event.release.url }}
-      
+
       - name: 📝 Update Release Description with Closed Issues and Assignees
         run: |
           variable="Hello, world!"
@@ -54,4 +51,5 @@ jobs:
           issue_list=$(echo "$issues" | jq -r '.[] | "- \(.title) in [#\(.number)](\(.html_url)) by [@\(.assignee.login)](https://github.com/\(.assignee.login))"' | paste -sd '\n' -)
           echo "$issue_list" | awk '{print typeof($0)}'
           echo "issue_list - $issue_list"
+          issue_list= ${{ toJson(issue_list) }}
           curl -X PATCH -H "$AUTHORIZE" -d "{\"body\": \"Whats Changed:\\n\\n$issue_list\"}" "$CURRENT_RELEASE_PATH"
