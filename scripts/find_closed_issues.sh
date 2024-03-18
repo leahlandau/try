@@ -40,6 +40,4 @@ curl -X PATCH -H "$AUTHORIZE" -d "{\"body\": \"Whats Changed:\\n\\n$(echo "$issu
           echo "issues - $issues"
           issue_list=$(echo "$issues" | jq -r '.[] | "- \(.title) in [#\(.number)](\(.html_url)) by [@\(.assignee.login)](https://github.com/\(.assignee.login))"' | paste -sd '\n' -)
           echo "issue_list - $issue_list"
-          escaped="$(printf '%s' "$issue_list" | jq -Rs '.')"
-          echo "issue_list - $issue_list"
-          curl -X PATCH -H "$AUTHORIZE" -d "{\"body\": \"Whats Changed:\\n\\n$escaped\"}" "$CURRENT_RELEASE_PATH"
+          curl -X PATCH -H "$AUTHORIZE" -d "{\"body\": \"Whats Changed:\\n\\n$issue_list\"}" "$CURRENT_RELEASE_PATH"
