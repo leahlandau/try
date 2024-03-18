@@ -46,4 +46,4 @@ jobs:
           URL="https://api.github.com/repos/${{ github.repository }}"
           AUTHORIZE="Authorization: Bearer $GITHUB_TOKEN"
           CURRENT_RELEASE_PATH=${{ github.event.release.url }}
-          curl -X PATCH -H "$AUTHORIZE" -d '{\"body\":"\Whats Changed:\\n\\n- fgfghfghcv in [#137](https://github.com/leahlandau/try/issues/137) by [@leahlandau](https://github.com/leahlandau)- jjhjhj in [#136](https://github.com/leahlandau/try/issues/136) by [@leahlandau](https://github.com/leahlandau)\"}' "$CURRENT_RELEASE_PATH"
+          curl -X PATCH -H "$AUTHORIZE" -d '{"body":"Whats Changed:- fgfghfghcv in [#137](https://github.com/leahlandau/try/issues/137) by [@leahlandau](https://github.com/leahlandau)- jjhjhj in [#136](https://github.com/leahlandau/try/issues/136) by [@leahlandau](https://github.com/leahlandau)"}' "$CURRENT_RELEASE_PATH"
