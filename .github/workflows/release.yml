@@ -46,4 +46,10 @@ jobs:
           URL="https://api.github.com/repos/${{ github.repository }}"
           AUTHORIZE="Authorization: Bearer $GITHUB_TOKEN"
           CURRENT_RELEASE_PATH=${{ github.event.release.url }}
-          curl -X PATCH -H "$AUTHORIZE" -d '{"body":"Whats Changed:- fgfghfghcv in [#137](https://github.com/leahlandau/try/issues/137) by [@leahlandau](https://github.com/leahlandau)- jjhjhj in [#136](https://github.com/leahlandau/try/issues/136) by [@leahlandau](https://github.com/leahlandau)"}' "$CURRENT_RELEASE_PATH"
+          previous_release_created_at=$(curl -s -H "$AUTHORIZE" "$URL/releases" | jq -r '.[] | "\(.tag_name)\t\(.created_at)"' | sort -k2,2r | awk 'NR==2 {print $2}')
+          echo "previous_release_created_at - $previous_release_created_at"
+          issues=$(curl -s -H "$AUTHORIZE" "$URL/issues?state=closed&per_page=100&since=$previous_release_created_at&until=$(date -u +'%Y-%m-%dT%H:%M:%SZ')")
+          echo "issues - $issues"
+          issue_list=$(echo "$issues" | jq -r '.[] | "- \(.title) in [#\(.number)](\(.html_url)) by [@\(.assignee.login)](https://github.com/\(.assignee.login))"' | paste -sd '\n' -)
+          echo "issue_list - $issue_list"
+          curl -X PATCH -H "$AUTHORIZE" -d '{"body":"Whats Changed:$issue_list"}' "$CURRENT_RELEASE_PATH"
